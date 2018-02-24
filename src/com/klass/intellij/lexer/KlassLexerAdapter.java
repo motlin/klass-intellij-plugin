@@ -1,4 +1,4 @@
-package com.klass.intellij;
+package com.klass.intellij.lexer;
 
 import com.intellij.lexer.FlexAdapter;
 

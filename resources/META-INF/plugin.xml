@@ -26,10 +26,14 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="com.klass.intellij.KlassFileTypeFactory"/>
+    <lang.parserDefinition language="Klass" implementationClass="com.klass.intellij.parser.KlassParserDefinition"/>
+    <lang.syntaxHighlighterFactory language="Klass" implementationClass="com.klass.intellij.highlighter.KlassSyntaxHighlighterFactory"/>
+
   </extensions>
 
   <actions>
     <!-- Add your actions here -->
   </actions>
+
 
 </idea-plugin>

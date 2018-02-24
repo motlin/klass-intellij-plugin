@@ -1,6 +1,6 @@
 package com.klass.intellij.lexer;
 
-import com.klass.intellij.psi.KlassTokenType;
+import com.klass.intellij.psi.KlassTypes;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.impl.source.tree.JavaDocElementType;
 import com.intellij.psi.tree.IElementType;
@@ -59,129 +59,129 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 
 <YYINITIAL> {
 
-  {WHITE_SPACE_CHAR}+ { return KlassTokenType.WHITE_SPACE; }
+  {WHITE_SPACE_CHAR}+ { return TokenType.WHITE_SPACE; }
 
-  {C_STYLE_COMMENT} { return KlassTokenType.C_STYLE_COMMENT; }
-  {END_OF_LINE_COMMENT} { return KlassTokenType.END_OF_LINE_COMMENT; }
-  {DOC_COMMENT} { return JavaDocElementType.DOC_COMMENT; }
+//  {C_STYLE_COMMENT} { return KlassTypes.C_STYLE_COMMENT; }
+//  {END_OF_LINE_COMMENT} { return KlassTypes.END_OF_LINE_COMMENT; }
+//  {DOC_COMMENT} { return JavaDocElementType.DOC_COMMENT; }
+//
+//  {LONG_LITERAL} { return KlassTypes.LONG_LITERAL; }
+//  {INTEGER_LITERAL} { return KlassTypes.INTEGER_LITERAL; }
+//  {FLOAT_LITERAL} { return KlassTypes.FLOAT_LITERAL; }
+//  {DOUBLE_LITERAL} { return KlassTypes.DOUBLE_LITERAL; }
+//  {CHARACTER_LITERAL} { return KlassTypes.CHARACTER_LITERAL; }
+//  {STRING_LITERAL} { return KlassTypes.STRING_LITERAL; }
+//
+//  "true" { return KlassTypes.TRUE_KEYWORD; }
+//  "false" { return KlassTypes.FALSE_KEYWORD; }
+//  "null" { return KlassTypes.NULL_KEYWORD; }
 
-  {LONG_LITERAL} { return KlassTokenType.LONG_LITERAL; }
-  {INTEGER_LITERAL} { return KlassTokenType.INTEGER_LITERAL; }
-  {FLOAT_LITERAL} { return KlassTokenType.FLOAT_LITERAL; }
-  {DOUBLE_LITERAL} { return KlassTokenType.DOUBLE_LITERAL; }
-  {CHARACTER_LITERAL} { return KlassTokenType.CHARACTER_LITERAL; }
-  {STRING_LITERAL} { return KlassTokenType.STRING_LITERAL; }
+  "association" { return KlassTypes.ASSOCIATION_KEYWORD; }
+//  "projection" { return KlassTypes.PROJECTION_KEYWORD; }
+//  "enumeration" { return KlassTypes.ENUMERATION_KEYWORD; }
 
-  "true" { return KlassTokenType.TRUE_KEYWORD; }
-  "false" { return KlassTokenType.FALSE_KEYWORD; }
-  "null" { return KlassTokenType.NULL_KEYWORD; }
+//  "abstract" { return KlassTypes.ABSTRACT_KEYWORD; }
+//  "boolean" { return KlassTypes.BOOLEAN_KEYWORD; }
+//  "break" { return KlassTypes.BREAK_KEYWORD; }
+//  "byte" { return KlassTypes.BYTE_KEYWORD; }
+//  "case" { return KlassTypes.CASE_KEYWORD; }
+//  "catch" { return KlassTypes.CATCH_KEYWORD; }
+//  "char" { return KlassTypes.CHAR_KEYWORD; }
+  "class" { return KlassTypes.CLASS_KEYWORD; }
+//  "const" { return KlassTypes.CONST_KEYWORD; }
+//  "continue" { return KlassTypes.CONTINUE_KEYWORD; }
+//  "default" { return KlassTypes.DEFAULT_KEYWORD; }
+//  "do" { return KlassTypes.DO_KEYWORD; }
+//  "double" { return KlassTypes.DOUBLE_KEYWORD; }
+//  "else" { return KlassTypes.ELSE_KEYWORD; }
+//  "extends" { return KlassTypes.EXTENDS_KEYWORD; }
+//  "final" { return KlassTypes.FINAL_KEYWORD; }
+//  "finally" { return KlassTypes.FINALLY_KEYWORD; }
+//  "float" { return KlassTypes.FLOAT_KEYWORD; }
+//  "for" { return KlassTypes.FOR_KEYWORD; }
+//  "goto" { return KlassTypes.GOTO_KEYWORD; }
+//  "if" { return KlassTypes.IF_KEYWORD; }
+//  "implements" { return KlassTypes.IMPLEMENTS_KEYWORD; }
+//  "import" { return KlassTypes.IMPORT_KEYWORD; }
+//  "instanceof" { return KlassTypes.INSTANCEOF_KEYWORD; }
+//  "int" { return KlassTypes.INT_KEYWORD; }
+//  "interface" { return KlassTypes.INTERFACE_KEYWORD; }
+//  "long" { return KlassTypes.LONG_KEYWORD; }
+//  "native" { return KlassTypes.NATIVE_KEYWORD; }
+//  "new" { return KlassTypes.NEW_KEYWORD; }
+//  "package" { return KlassTypes.PACKAGE_KEYWORD; }
+//  "private" { return KlassTypes.PRIVATE_KEYWORD; }
+//  "public" { return KlassTypes.PUBLIC_KEYWORD; }
+//  "short" { return KlassTypes.SHORT_KEYWORD; }
+//  "super" { return KlassTypes.SUPER_KEYWORD; }
+//  "switch" { return KlassTypes.SWITCH_KEYWORD; }
+//  "synchronized" { return KlassTypes.SYNCHRONIZED_KEYWORD; }
+//  "this" { return KlassTypes.THIS_KEYWORD; }
+//  "throw" { return KlassTypes.THROW_KEYWORD; }
+//  "protected" { return KlassTypes.PROTECTED_KEYWORD; }
+//  "transient" { return KlassTypes.TRANSIENT_KEYWORD; }
+//  "return" { return KlassTypes.RETURN_KEYWORD; }
+//  "void" { return KlassTypes.VOID_KEYWORD; }
+//  "static" { return KlassTypes.STATIC_KEYWORD; }
+//  "strictfp" { return KlassTypes.STRICTFP_KEYWORD; }
+//  "while" { return KlassTypes.WHILE_KEYWORD; }
+//  "try" { return KlassTypes.TRY_KEYWORD; }
+//  "volatile" { return KlassTypes.VOLATILE_KEYWORD; }
+//  "throws" { return KlassTypes.THROWS_KEYWORD; }
 
-  "association" { return KlassTokenType.ASSOCIATION_KEYWORD; }
-  "projection" { return KlassTokenType.PROJECTION_KEYWORD; }
-  "enumeration" { return KlassTokenType.ENUMERATION_KEYWORD; }
+  {IDENTIFIER} { return KlassTypes.IDENTIFIER; }
 
-  "abstract" { return KlassTokenType.ABSTRACT_KEYWORD; }
-  "boolean" { return KlassTokenType.BOOLEAN_KEYWORD; }
-  "break" { return KlassTokenType.BREAK_KEYWORD; }
-  "byte" { return KlassTokenType.BYTE_KEYWORD; }
-  "case" { return KlassTokenType.CASE_KEYWORD; }
-  "catch" { return KlassTokenType.CATCH_KEYWORD; }
-  "char" { return KlassTokenType.CHAR_KEYWORD; }
-  "class" { return KlassTokenType.CLASS_KEYWORD; }
-  "const" { return KlassTokenType.CONST_KEYWORD; }
-  "continue" { return KlassTokenType.CONTINUE_KEYWORD; }
-  "default" { return KlassTokenType.DEFAULT_KEYWORD; }
-  "do" { return KlassTokenType.DO_KEYWORD; }
-  "double" { return KlassTokenType.DOUBLE_KEYWORD; }
-  "else" { return KlassTokenType.ELSE_KEYWORD; }
-  "extends" { return KlassTokenType.EXTENDS_KEYWORD; }
-  "final" { return KlassTokenType.FINAL_KEYWORD; }
-  "finally" { return KlassTokenType.FINALLY_KEYWORD; }
-  "float" { return KlassTokenType.FLOAT_KEYWORD; }
-  "for" { return KlassTokenType.FOR_KEYWORD; }
-  "goto" { return KlassTokenType.GOTO_KEYWORD; }
-  "if" { return KlassTokenType.IF_KEYWORD; }
-  "implements" { return KlassTokenType.IMPLEMENTS_KEYWORD; }
-  "import" { return KlassTokenType.IMPORT_KEYWORD; }
-  "instanceof" { return KlassTokenType.INSTANCEOF_KEYWORD; }
-  "int" { return KlassTokenType.INT_KEYWORD; }
-  "interface" { return KlassTokenType.INTERFACE_KEYWORD; }
-  "long" { return KlassTokenType.LONG_KEYWORD; }
-  "native" { return KlassTokenType.NATIVE_KEYWORD; }
-  "new" { return KlassTokenType.NEW_KEYWORD; }
-  "package" { return KlassTokenType.PACKAGE_KEYWORD; }
-  "private" { return KlassTokenType.PRIVATE_KEYWORD; }
-  "public" { return KlassTokenType.PUBLIC_KEYWORD; }
-  "short" { return KlassTokenType.SHORT_KEYWORD; }
-  "super" { return KlassTokenType.SUPER_KEYWORD; }
-  "switch" { return KlassTokenType.SWITCH_KEYWORD; }
-  "synchronized" { return KlassTokenType.SYNCHRONIZED_KEYWORD; }
-  "this" { return KlassTokenType.THIS_KEYWORD; }
-  "throw" { return KlassTokenType.THROW_KEYWORD; }
-  "protected" { return KlassTokenType.PROTECTED_KEYWORD; }
-  "transient" { return KlassTokenType.TRANSIENT_KEYWORD; }
-  "return" { return KlassTokenType.RETURN_KEYWORD; }
-  "void" { return KlassTokenType.VOID_KEYWORD; }
-  "static" { return KlassTokenType.STATIC_KEYWORD; }
-  "strictfp" { return KlassTokenType.STRICTFP_KEYWORD; }
-  "while" { return KlassTokenType.WHILE_KEYWORD; }
-  "try" { return KlassTokenType.TRY_KEYWORD; }
-  "volatile" { return KlassTokenType.VOLATILE_KEYWORD; }
-  "throws" { return KlassTokenType.THROWS_KEYWORD; }
+//  "==" { return KlassTypes.EQEQ; }
+//  "!=" { return KlassTypes.NE; }
+//  "||" { return KlassTypes.OROR; }
+//  "++" { return KlassTypes.PLUSPLUS; }
+//  "--" { return KlassTypes.MINUSMINUS; }
+//
+//  "<" { return KlassTypes.LT; }
+//  "<=" { return KlassTypes.LE; }
+//  "<<=" { return KlassTypes.LTLTEQ; }
+//  "<<" { return KlassTypes.LTLT; }
+//  ">" { return KlassTypes.GT; }
+//  "&" { return KlassTypes.AND; }
+//  "&&" { return KlassTypes.ANDAND; }
+//
+//  "+=" { return KlassTypes.PLUSEQ; }
+//  "-=" { return KlassTypes.MINUSEQ; }
+//  "*=" { return KlassTypes.ASTERISKEQ; }
+//  "/=" { return KlassTypes.DIVEQ; }
+//  "&=" { return KlassTypes.ANDEQ; }
+//  "|=" { return KlassTypes.OREQ; }
+//  "^=" { return KlassTypes.XOREQ; }
+//  "%=" { return KlassTypes.PERCEQ; }
+//
+//  "("   { return KlassTypes.LPARENTH; }
+//  ")"   { return KlassTypes.RPARENTH; }
+  "{"   { return KlassTypes.LBRACE; }
+  "}"   { return KlassTypes.RBRACE; }
+//  "["   { return KlassTypes.LBRACKET; }
+//  "]"   { return KlassTypes.RBRACKET; }
+//  ";"   { return KlassTypes.SEMICOLON; }
+//  ","   { return KlassTypes.COMMA; }
+//  "..." { return KlassTypes.ELLIPSIS; }
+//  ".."   { return KlassTypes.DOTDOT; }
+//  "."   { return KlassTypes.DOT; }
 
-  {IDENTIFIER} { return KlassTokenType.IDENTIFIER; }
-
-  "==" { return KlassTokenType.EQEQ; }
-  "!=" { return KlassTokenType.NE; }
-  "||" { return KlassTokenType.OROR; }
-  "++" { return KlassTokenType.PLUSPLUS; }
-  "--" { return KlassTokenType.MINUSMINUS; }
-
-  "<" { return KlassTokenType.LT; }
-  "<=" { return KlassTokenType.LE; }
-  "<<=" { return KlassTokenType.LTLTEQ; }
-  "<<" { return KlassTokenType.LTLT; }
-  ">" { return KlassTokenType.GT; }
-  "&" { return KlassTokenType.AND; }
-  "&&" { return KlassTokenType.ANDAND; }
-
-  "+=" { return KlassTokenType.PLUSEQ; }
-  "-=" { return KlassTokenType.MINUSEQ; }
-  "*=" { return KlassTokenType.ASTERISKEQ; }
-  "/=" { return KlassTokenType.DIVEQ; }
-  "&=" { return KlassTokenType.ANDEQ; }
-  "|=" { return KlassTokenType.OREQ; }
-  "^=" { return KlassTokenType.XOREQ; }
-  "%=" { return KlassTokenType.PERCEQ; }
-
-  "("   { return KlassTokenType.LPARENTH; }
-  ")"   { return KlassTokenType.RPARENTH; }
-  "{"   { return KlassTokenType.LBRACE; }
-  "}"   { return KlassTokenType.RBRACE; }
-  "["   { return KlassTokenType.LBRACKET; }
-  "]"   { return KlassTokenType.RBRACKET; }
-  ";"   { return KlassTokenType.SEMICOLON; }
-  ","   { return KlassTokenType.COMMA; }
-  "..." { return KlassTokenType.ELLIPSIS; }
-  ".."   { return KlassTokenType.DOTDOT; }
-  "."   { return KlassTokenType.DOT; }
-
-  "=" { return KlassTokenType.EQ; }
-  "!" { return KlassTokenType.EXCL; }
-  "~" { return KlassTokenType.TILDE; }
-  "?" { return KlassTokenType.QUEST; }
-  ":" { return KlassTokenType.COLON; }
-  "+" { return KlassTokenType.PLUS; }
-  "-" { return KlassTokenType.MINUS; }
-  "*" { return KlassTokenType.ASTERISK; }
-  "/" { return KlassTokenType.DIV; }
-  "|" { return KlassTokenType.OR; }
-  "^" { return KlassTokenType.XOR; }
-  "%" { return KlassTokenType.PERC; }
-  "@" { return KlassTokenType.AT; }
-
-  "::" { return KlassTokenType.DOUBLE_COLON; }
-  "->" { return KlassTokenType.ARROW; }
+//  "=" { return KlassTypes.EQ; }
+//  "!" { return KlassTypes.EXCL; }
+//  "~" { return KlassTypes.TILDE; }
+//  "?" { return KlassTypes.QUEST; }
+//  ":" { return KlassTypes.COLON; }
+//  "+" { return KlassTypes.PLUS; }
+//  "-" { return KlassTypes.MINUS; }
+//  "*" { return KlassTypes.ASTERISK; }
+//  "/" { return KlassTypes.DIV; }
+//  "|" { return KlassTypes.OR; }
+//  "^" { return KlassTypes.XOR; }
+//  "%" { return KlassTypes.PERC; }
+//  "@" { return KlassTypes.AT; }
+//
+//  "::" { return KlassTypes.DOUBLE_COLON; }
+//  "->" { return KlassTypes.ARROW; }
 }
 
-[^]  { return KlassTokenType.BAD_CHARACTER; }
+[^]  { return TokenType.BAD_CHARACTER; }

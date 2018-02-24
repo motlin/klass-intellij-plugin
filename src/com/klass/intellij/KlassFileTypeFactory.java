@@ -1,6 +1,7 @@
 package com.klass.intellij;
 
-import com.intellij.openapi.fileTypes.*;
+import com.intellij.openapi.fileTypes.FileTypeConsumer;
+import com.intellij.openapi.fileTypes.FileTypeFactory;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassFileTypeFactory extends FileTypeFactory

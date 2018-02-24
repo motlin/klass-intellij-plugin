@@ -1,5 +1,6 @@
 {
   parserClass="com.klass.intellij.parser.KlassParser"
+  parserUtilClass="com.klass.intellij.parser.KlassParserUtil"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
@@ -13,8 +14,9 @@
   tokenTypeClass="com.klass.intellij.psi.KlassTokenType"
 }
 
-simpleFile ::= item_*
+compilationUnit ::= topLevelItem_*
 
-private item_ ::= (property|COMMENT|CRLF)
+private topLevelItem_ ::= (class|association|COMMENT|CRLF)
 
-property ::= (KEY? SEPARATOR VALUE?) | KEY
+class ::= CLASS_KEYWORD IDENTIFIER LBRACE RBRACE
+association ::= ASSOCIATION_KEYWORD IDENTIFIER LBRACE RBRACE
