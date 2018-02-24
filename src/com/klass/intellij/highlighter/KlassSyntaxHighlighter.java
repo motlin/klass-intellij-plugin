@@ -10,6 +10,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.xml.XmlTokenType;
 import com.klass.intellij.lexer.KlassLexerAdapter;
 import com.klass.intellij.lexer.TokenSets;
+import com.klass.intellij.psi.KlassTokenType;
 import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +29,7 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
 
         fillMap(ourMap1, TokenSets.KEYWORD_BIT_SET, KlassHighlightingColors.KEYWORD);
         //        fillMap(ourMap1, TokenSets.LITERAL_BIT_SET, KlassHighlightingColors.KEYWORD);
-        //        fillMap(ourMap1, TokenSets.OPERATION_BIT_SET, KlassHighlightingColors.OPERATION_SIGN);
+        fillMap(ourMap1, TokenSets.OPERATION_BIT_SET, KlassHighlightingColors.OPERATION_SIGN);
 
         ourMap1.put(XmlTokenType.XML_DATA_CHARACTERS, KlassHighlightingColors.DOC_COMMENT);
         ourMap1.put(XmlTokenType.XML_REAL_WHITE_SPACE, KlassHighlightingColors.DOC_COMMENT);
@@ -50,15 +51,15 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         ourMap1.put(KlassTypes.LBRACE, KlassHighlightingColors.BRACES);
         ourMap1.put(KlassTypes.RBRACE, KlassHighlightingColors.BRACES);
 
-        //        ourMap1.put(KlassTypes.LBRACKET, KlassHighlightingColors.BRACKETS);
-        //        ourMap1.put(KlassTypes.RBRACKET, KlassHighlightingColors.BRACKETS);
+               // ourMap1.put(KlassTypes.LBRACKET, KlassHighlightingColors.BRACKETS);
+               // ourMap1.put(KlassTypes.RBRACKET, KlassHighlightingColors.BRACKETS);
 
         //        ourMap1.put(KlassTypes.COMMA, KlassHighlightingColors.COMMA);
         //        ourMap1.put(KlassTypes.DOT, KlassHighlightingColors.DOT);
         //        ourMap1.put(KlassTypes.SEMICOLON, KlassHighlightingColors.KLASS_SEMICOLON);
 
-        //        ourMap1.put(KlassTypes.C_STYLE_COMMENT, KlassHighlightingColors.KLASS_BLOCK_COMMENT);
-        //        ourMap1.put(KlassTypes.END_OF_LINE_COMMENT, KlassHighlightingColors.LINE_COMMENT);
+        ourMap1.put(KlassTokenType.C_STYLE_COMMENT, KlassHighlightingColors.KLASS_BLOCK_COMMENT);
+        ourMap1.put(KlassTokenType.END_OF_LINE_COMMENT, KlassHighlightingColors.LINE_COMMENT);
         ourMap1.put(TokenType.BAD_CHARACTER, HighlighterColors.BAD_CHARACTER);
 
         IElementType[] klassDocMarkup = {

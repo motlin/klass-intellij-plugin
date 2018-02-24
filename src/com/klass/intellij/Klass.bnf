@@ -16,7 +16,15 @@
 
 compilationUnit ::= topLevelItem_*
 
-private topLevelItem_ ::= (class|association|COMMENT|CRLF)
+private topLevelItem_ ::= class | association
 
-class ::= CLASS_KEYWORD IDENTIFIER LBRACE RBRACE
-association ::= ASSOCIATION_KEYWORD IDENTIFIER LBRACE RBRACE
+class ::= CLASS_KEYWORD className LBRACE dataTypeProperty* RBRACE
+association ::= ASSOCIATION_KEYWORD associationName LBRACE RBRACE
+
+dataTypeProperty ::= dataTypePropertyName COLON dataType optionalMarker?
+
+className ::= IDENTIFIER
+associationName ::= IDENTIFIER
+dataTypePropertyName ::= IDENTIFIER
+dataType ::= IDENTIFIER
+optionalMarker ::= QUESTION_MARK

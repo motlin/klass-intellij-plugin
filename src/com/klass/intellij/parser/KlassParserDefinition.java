@@ -15,6 +15,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.klass.intellij.KlassLanguage;
 import com.klass.intellij.lexer.KlassLexerAdapter;
 import com.klass.intellij.psi.KlassFile;
+import com.klass.intellij.psi.KlassTokenType;
 import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class KlassParserDefinition implements ParserDefinition
 {
     public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
-    public static final TokenSet COMMENTS = TokenSet.create(KlassTypes.COMMENT);
+    public static final TokenSet COMMENTS = TokenSet.create(KlassTokenType.C_STYLE_COMMENT, KlassTokenType.END_OF_LINE_COMMENT);
 
     public static final IFileElementType FILE = new IFileElementType(KlassLanguage.INSTANCE);
 

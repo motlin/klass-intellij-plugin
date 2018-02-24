@@ -1,6 +1,7 @@
 package com.klass.intellij.psi;
 
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.java.IJavaElementType;
 import com.klass.intellij.KlassLanguage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

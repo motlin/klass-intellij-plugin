@@ -3,25 +3,26 @@ package com.klass.intellij.lexer;
 import com.intellij.psi.tree.TokenSet;
 
 import static com.intellij.psi.TokenType.WHITE_SPACE;
-import static com.klass.intellij.psi.KlassTypes.ASSOCIATION_KEYWORD;
-import static com.klass.intellij.psi.KlassTypes.CLASS_KEYWORD;
+import static com.klass.intellij.psi.KlassTokenType.*;
+import static com.klass.intellij.psi.KlassTypes.*;
 
 public interface TokenSets
 {
     TokenSet KLASS_WHITESPACE_BIT_SET = TokenSet.create(WHITE_SPACE);
 
-    //    TokenSet KLASS_PLAIN_COMMENT_BIT_SET = TokenSet.create(END_OF_LINE_COMMENT, C_STYLE_COMMENT);
-    //
-    //    TokenSet KLASS_COMMENT_OR_WHITESPACE_BIT_SET = TokenSet.orSet(KLASS_WHITESPACE_BIT_SET, KLASS_COMMENT_BIT_SET);
+    TokenSet KLASS_PLAIN_COMMENT_BIT_SET = TokenSet.create(END_OF_LINE_COMMENT, C_STYLE_COMMENT);
+
+    TokenSet KLASS_COMMENT_OR_WHITESPACE_BIT_SET =
+            TokenSet.orSet(KLASS_WHITESPACE_BIT_SET, KLASS_PLAIN_COMMENT_BIT_SET);
 
     TokenSet KEYWORD_BIT_SET = TokenSet.create(ASSOCIATION_KEYWORD, CLASS_KEYWORD);
 
     //    TokenSet LITERAL_BIT_SET = TokenSet.create(TRUE_KEYWORD, FALSE_KEYWORD, NULL_KEYWORD);
     //
-    //    TokenSet OPERATION_BIT_SET = TokenSet.create(
-    //            EQ, GT, LT, EXCL, TILDE, QUEST, COLON, PLUS, MINUS, ASTERISK, DIV, AND, OR, XOR,
-    //            PERC, EQEQ, LE, GE, NE, ANDAND, OROR, PLUSPLUS, MINUSMINUS, LTLT, GTGT, GTGTGT,
-    //            PLUSEQ, MINUSEQ, ASTERISKEQ, DIVEQ, ANDEQ, OREQ, XOREQ, PERCEQ, LTLTEQ, GTGTEQ, GTGTGTEQ);
+    TokenSet OPERATION_BIT_SET = TokenSet.create(
+            /*EQ, GT, LT, EXCL, TILDE,*/ QUESTION_MARK, COLON/*, PLUS, MINUS, ASTERISK, DIV, AND, OR, XOR,
+               PERC, EQEQ, LE, GE, NE, ANDAND, OROR, PLUSPLUS, MINUSMINUS, LTLT, GTGT, GTGTGT,
+               PLUSEQ, MINUSEQ, ASTERISKEQ, DIVEQ, ANDEQ, OREQ, XOREQ, PERCEQ, LTLTEQ, GTGTEQ, GTGTGTEQ*/);
     //
     //    TokenSet MODIFIER_BIT_SET = TokenSet.create(
     //            PUBLIC_KEYWORD, PROTECTED_KEYWORD, PRIVATE_KEYWORD, STATIC_KEYWORD, ABSTRACT_KEYWORD, FINAL_KEYWORD, NATIVE_KEYWORD,
@@ -53,7 +54,7 @@ public interface TokenSets
     //            REQUIRES_STATEMENT, EXPORTS_STATEMENT, OPENS_STATEMENT, USES_STATEMENT, PROVIDES_STATEMENT);
     //
     //    TokenSet IMPORT_STATEMENT_BASE_BIT_SET = TokenSet.create(IMPORT_STATEMENT, IMPORT_STATIC_STATEMENT);
-    //    TokenSet CLASS_KEYWORD_BIT_SET = TokenSet.create(CLASS_KEYWORD, INTERFACE_KEYWORD, ENUM_KEYWORD);
-    //    TokenSet MEMBER_BIT_SET = TokenSet.create(CLASS, FIELD, ENUM_CONSTANT, METHOD, ANNOTATION_METHOD);
+    TokenSet CLASS_KEYWORD_BIT_SET = TokenSet.create(CLASS_KEYWORD, ASSOCIATION_KEYWORD);
+    TokenSet MEMBER_BIT_SET = TokenSet.create(CLASS, ASSOCIATION/*, FIELD, ENUM_CONSTANT, METHOD, ANNOTATION_METHOD*/);
     //    TokenSet FULL_MEMBER_BIT_SET = TokenSet.orSet(MEMBER_BIT_SET, TokenSet.create(CLASS_INITIALIZER));
 }

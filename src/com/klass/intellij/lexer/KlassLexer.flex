@@ -1,10 +1,9 @@
 package com.klass.intellij.lexer;
 
-import com.klass.intellij.psi.KlassTypes;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.impl.source.tree.JavaDocElementType;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.lexer.FlexLexer;
+import com.intellij.psi.TokenType;
+import com.intellij.psi.tree.IElementType;
+import com.klass.intellij.psi.KlassTokenType;
 import com.klass.intellij.psi.KlassTypes;
 
 @SuppressWarnings({"ALL"})
@@ -61,8 +60,8 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 
   {WHITE_SPACE_CHAR}+ { return TokenType.WHITE_SPACE; }
 
-//  {C_STYLE_COMMENT} { return KlassTypes.C_STYLE_COMMENT; }
-//  {END_OF_LINE_COMMENT} { return KlassTypes.END_OF_LINE_COMMENT; }
+  {C_STYLE_COMMENT} { return KlassTokenType.C_STYLE_COMMENT; }
+  {END_OF_LINE_COMMENT} { return KlassTokenType.END_OF_LINE_COMMENT; }
 //  {DOC_COMMENT} { return JavaDocElementType.DOC_COMMENT; }
 //
 //  {LONG_LITERAL} { return KlassTypes.LONG_LITERAL; }
@@ -169,8 +168,8 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  "=" { return KlassTypes.EQ; }
 //  "!" { return KlassTypes.EXCL; }
 //  "~" { return KlassTypes.TILDE; }
-//  "?" { return KlassTypes.QUEST; }
-//  ":" { return KlassTypes.COLON; }
+  "?" { return KlassTypes.QUESTION_MARK; }
+  ":" { return KlassTypes.COLON; }
 //  "+" { return KlassTypes.PLUS; }
 //  "-" { return KlassTypes.MINUS; }
 //  "*" { return KlassTypes.ASTERISK; }
