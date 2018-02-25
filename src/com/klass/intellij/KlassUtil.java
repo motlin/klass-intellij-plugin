@@ -1,0 +1,50 @@
+package com.klass.intellij;
+
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.indexing.FileBasedIndex;
+import com.klass.intellij.psi.KlassAssociation;
+import com.klass.intellij.psi.KlassClass;
+import com.klass.intellij.psi.KlassFile;
+
+import java.util.*;
+
+public class KlassUtil
+{
+    public static List<KlassClass> findClasses(Project project)
+    {
+        return findElementsOfType(project, KlassClass.class);
+    }
+
+    public static List<KlassAssociation> findAssociations(Project project)
+    {
+        return findElementsOfType(project, KlassAssociation.class);
+    }
+
+    public static <T extends PsiElement> List<T> findElementsOfType(Project project, Class<T> klass)
+    {
+        PsiManager psiManager = PsiManager.getInstance(project);
+
+        Collection<VirtualFile> virtualFiles = FileBasedIndex.getInstance()
+                .getContainingFiles(
+                        FileTypeIndex.NAME,
+                        KlassFileType.INSTANCE,
+                        GlobalSearchScope.allScope(project));
+
+        List<T> result = new ArrayList<>();
+
+        virtualFiles.stream()
+                .map(psiManager::findFile)
+                .map(KlassFile.class::cast)
+                .filter(Objects::nonNull)
+                .map(klassFile -> PsiTreeUtil.getChildrenOfType(klassFile, klass))
+                .filter(Objects::nonNull)
+                .forEach(classes -> Collections.addAll(result, classes));
+        return result;
+    }
+}

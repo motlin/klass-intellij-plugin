@@ -28,6 +28,8 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         ourMap2 = new HashMap<>();
 
         fillMap(ourMap1, TokenSets.KEYWORD_BIT_SET, KlassHighlightingColors.KEYWORD);
+        // TODO: Separate color for primitive types?
+        fillMap(ourMap1, TokenSets.PRIMITIVE_TYPE_BIT_SET, KlassHighlightingColors.KEYWORD);
         //        fillMap(ourMap1, TokenSets.LITERAL_BIT_SET, KlassHighlightingColors.KEYWORD);
         fillMap(ourMap1, TokenSets.OPERATION_BIT_SET, KlassHighlightingColors.OPERATION_SIGN);
 
@@ -35,7 +37,9 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         ourMap1.put(XmlTokenType.XML_REAL_WHITE_SPACE, KlassHighlightingColors.DOC_COMMENT);
         ourMap1.put(XmlTokenType.TAG_WHITE_SPACE, KlassHighlightingColors.DOC_COMMENT);
 
-        //        ourMap1.put(KlassTypes.INTEGER_LITERAL, KlassHighlightingColors.NUMBER);
+        // TODO: ASTERISK is used for multiplicities, but maybe multiplicities should be different than other numbers
+        ourMap1.put(KlassTypes.ASTERISK, KlassHighlightingColors.NUMBER);
+        ourMap1.put(KlassTypes.INTEGER_LITERAL, KlassHighlightingColors.NUMBER);
         //        ourMap1.put(KlassTypes.LONG_LITERAL, KlassHighlightingColors.NUMBER);
         //        ourMap1.put(KlassTypes.FLOAT_LITERAL, KlassHighlightingColors.NUMBER);
         //        ourMap1.put(KlassTypes.DOUBLE_LITERAL, KlassHighlightingColors.NUMBER);
@@ -51,11 +55,12 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         ourMap1.put(KlassTypes.LBRACE, KlassHighlightingColors.BRACES);
         ourMap1.put(KlassTypes.RBRACE, KlassHighlightingColors.BRACES);
 
-               // ourMap1.put(KlassTypes.LBRACKET, KlassHighlightingColors.BRACKETS);
-               // ourMap1.put(KlassTypes.RBRACKET, KlassHighlightingColors.BRACKETS);
+        ourMap1.put(KlassTypes.LBRACKET, KlassHighlightingColors.BRACKETS);
+        ourMap1.put(KlassTypes.RBRACKET, KlassHighlightingColors.BRACKETS);
 
         //        ourMap1.put(KlassTypes.COMMA, KlassHighlightingColors.COMMA);
         //        ourMap1.put(KlassTypes.DOT, KlassHighlightingColors.DOT);
+        ourMap1.put(KlassTypes.DOTDOT, KlassHighlightingColors.DOT);
         //        ourMap1.put(KlassTypes.SEMICOLON, KlassHighlightingColors.KLASS_SEMICOLON);
 
         ourMap1.put(KlassTokenType.C_STYLE_COMMENT, KlassHighlightingColors.KLASS_BLOCK_COMMENT);

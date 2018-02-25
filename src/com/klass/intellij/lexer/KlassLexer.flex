@@ -65,7 +65,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  {DOC_COMMENT} { return JavaDocElementType.DOC_COMMENT; }
 //
 //  {LONG_LITERAL} { return KlassTypes.LONG_LITERAL; }
-//  {INTEGER_LITERAL} { return KlassTypes.INTEGER_LITERAL; }
+  {INTEGER_LITERAL} { return KlassTypes.INTEGER_LITERAL; }
 //  {FLOAT_LITERAL} { return KlassTypes.FLOAT_LITERAL; }
 //  {DOUBLE_LITERAL} { return KlassTypes.DOUBLE_LITERAL; }
 //  {CHARACTER_LITERAL} { return KlassTypes.CHARACTER_LITERAL; }
@@ -79,8 +79,16 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  "projection" { return KlassTypes.PROJECTION_KEYWORD; }
 //  "enumeration" { return KlassTypes.ENUMERATION_KEYWORD; }
 
+  "Boolean" { return KlassTypes.BOOLEAN_KEYWORD; }
+  "Integer" { return KlassTypes.INTEGER_KEYWORD; }
+  "Double" { return KlassTypes.DOUBLE_KEYWORD; }
+  "Float" { return KlassTypes.FLOAT_KEYWORD; }
+  "Long" { return KlassTypes.LONG_KEYWORD; }
+  "String" { return KlassTypes.STRING_KEYWORD; }
+  "Instant" { return KlassTypes.INSTANT_KEYWORD; }
+  "LocalDate" { return KlassTypes.LOCAL_DATE_KEYWORD; }
+
 //  "abstract" { return KlassTypes.ABSTRACT_KEYWORD; }
-//  "boolean" { return KlassTypes.BOOLEAN_KEYWORD; }
 //  "break" { return KlassTypes.BREAK_KEYWORD; }
 //  "byte" { return KlassTypes.BYTE_KEYWORD; }
 //  "case" { return KlassTypes.CASE_KEYWORD; }
@@ -91,21 +99,17 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  "continue" { return KlassTypes.CONTINUE_KEYWORD; }
 //  "default" { return KlassTypes.DEFAULT_KEYWORD; }
 //  "do" { return KlassTypes.DO_KEYWORD; }
-//  "double" { return KlassTypes.DOUBLE_KEYWORD; }
 //  "else" { return KlassTypes.ELSE_KEYWORD; }
 //  "extends" { return KlassTypes.EXTENDS_KEYWORD; }
 //  "final" { return KlassTypes.FINAL_KEYWORD; }
 //  "finally" { return KlassTypes.FINALLY_KEYWORD; }
-//  "float" { return KlassTypes.FLOAT_KEYWORD; }
 //  "for" { return KlassTypes.FOR_KEYWORD; }
 //  "goto" { return KlassTypes.GOTO_KEYWORD; }
 //  "if" { return KlassTypes.IF_KEYWORD; }
 //  "implements" { return KlassTypes.IMPLEMENTS_KEYWORD; }
 //  "import" { return KlassTypes.IMPORT_KEYWORD; }
 //  "instanceof" { return KlassTypes.INSTANCEOF_KEYWORD; }
-//  "int" { return KlassTypes.INT_KEYWORD; }
 //  "interface" { return KlassTypes.INTERFACE_KEYWORD; }
-//  "long" { return KlassTypes.LONG_KEYWORD; }
 //  "native" { return KlassTypes.NATIVE_KEYWORD; }
 //  "new" { return KlassTypes.NEW_KEYWORD; }
 //  "package" { return KlassTypes.PACKAGE_KEYWORD; }
@@ -157,12 +161,12 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  ")"   { return KlassTypes.RPARENTH; }
   "{"   { return KlassTypes.LBRACE; }
   "}"   { return KlassTypes.RBRACE; }
-//  "["   { return KlassTypes.LBRACKET; }
-//  "]"   { return KlassTypes.RBRACKET; }
+  "["   { return KlassTypes.LBRACKET; }
+  "]"   { return KlassTypes.RBRACKET; }
 //  ";"   { return KlassTypes.SEMICOLON; }
 //  ","   { return KlassTypes.COMMA; }
 //  "..." { return KlassTypes.ELLIPSIS; }
-//  ".."   { return KlassTypes.DOTDOT; }
+  ".."   { return KlassTypes.DOTDOT; }
 //  "."   { return KlassTypes.DOT; }
 
 //  "=" { return KlassTypes.EQ; }
@@ -172,7 +176,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   ":" { return KlassTypes.COLON; }
 //  "+" { return KlassTypes.PLUS; }
 //  "-" { return KlassTypes.MINUS; }
-//  "*" { return KlassTypes.ASTERISK; }
+  "*" { return KlassTypes.ASTERISK; }
 //  "/" { return KlassTypes.DIV; }
 //  "|" { return KlassTypes.OR; }
 //  "^" { return KlassTypes.XOR; }

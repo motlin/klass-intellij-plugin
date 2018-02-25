@@ -6,11 +6,6 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.*;
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
-/**
- * Highlighting text attributes for Klass language.
- *
- * @author Rustam Vishnyakov
- */
 public class KlassHighlightingColors
 {
     public static final TextAttributesKey LINE_COMMENT =

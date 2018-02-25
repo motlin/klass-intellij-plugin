@@ -12,19 +12,33 @@
   elementTypeHolderClass="com.klass.intellij.psi.KlassTypes"
   elementTypeClass="com.klass.intellij.psi.KlassElementType"
   tokenTypeClass="com.klass.intellij.psi.KlassTokenType"
+
+  psiImplUtilClass="com.klass.intellij.psi.impl.KlassPsiImplUtil"
 }
 
 compilationUnit ::= topLevelItem_*
 
 private topLevelItem_ ::= class | association
 
-class ::= CLASS_KEYWORD className LBRACE dataTypeProperty* RBRACE
-association ::= ASSOCIATION_KEYWORD associationName LBRACE RBRACE
+class ::= CLASS_KEYWORD className LBRACE dataTypeProperty* RBRACE {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[getName setName getNameIdentifier]}
+
+association ::= ASSOCIATION_KEYWORD associationName LBRACE sourceAssociationEnd targetAssociationEnd RBRACE {methods=[getSourceName]}
 
 dataTypeProperty ::= dataTypePropertyName COLON dataType optionalMarker?
+sourceAssociationEnd ::= associationEnd;
+targetAssociationEnd ::= associationEnd;
+
+// TODO: packages, imports, fully qualified class names
+associationEnd ::= associationEndName? COLON associationEndType? multiplicity?
 
 className ::= IDENTIFIER
+associationEndType ::= IDENTIFIER {methods=[getReference]}
 associationName ::= IDENTIFIER
 dataTypePropertyName ::= IDENTIFIER
-dataType ::= IDENTIFIER
+associationEndName ::= IDENTIFIER
+dataType ::= BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD
 optionalMarker ::= QUESTION_MARK
+
+multiplicity ::= LBRACKET lowerBound DOTDOT upperBound RBRACKET
+lowerBound ::= INTEGER_LITERAL
+upperBound ::= INTEGER_LITERAL | ASTERISK

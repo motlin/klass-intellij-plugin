@@ -3,7 +3,8 @@ package com.klass.intellij.lexer;
 import com.intellij.psi.tree.TokenSet;
 
 import static com.intellij.psi.TokenType.WHITE_SPACE;
-import static com.klass.intellij.psi.KlassTokenType.*;
+import static com.klass.intellij.psi.KlassTokenType.C_STYLE_COMMENT;
+import static com.klass.intellij.psi.KlassTokenType.END_OF_LINE_COMMENT;
 import static com.klass.intellij.psi.KlassTypes.*;
 
 public interface TokenSets
@@ -28,9 +29,9 @@ public interface TokenSets
     //            PUBLIC_KEYWORD, PROTECTED_KEYWORD, PRIVATE_KEYWORD, STATIC_KEYWORD, ABSTRACT_KEYWORD, FINAL_KEYWORD, NATIVE_KEYWORD,
     //            SYNCHRONIZED_KEYWORD, STRICTFP_KEYWORD, TRANSIENT_KEYWORD, VOLATILE_KEYWORD, DEFAULT_KEYWORD);
     //
-    //    TokenSet PRIMITIVE_TYPE_BIT_SET = TokenSet.create(
-    //            BOOLEAN_KEYWORD, BYTE_KEYWORD, SHORT_KEYWORD, INT_KEYWORD, LONG_KEYWORD, CHAR_KEYWORD, FLOAT_KEYWORD, DOUBLE_KEYWORD, VOID_KEYWORD);
-    //
+    TokenSet PRIMITIVE_TYPE_BIT_SET = TokenSet.create(
+            BOOLEAN_KEYWORD, INTEGER_KEYWORD, LONG_KEYWORD, FLOAT_KEYWORD, DOUBLE_KEYWORD, STRING_KEYWORD, INSTANT_KEYWORD, LOCAL_DATE_KEYWORD);
+
     //    TokenSet EXPRESSION_BIT_SET = TokenSet.create(
     //            REFERENCE_EXPRESSION, LITERAL_EXPRESSION, THIS_EXPRESSION, SUPER_EXPRESSION, PARENTH_EXPRESSION, METHOD_CALL_EXPRESSION,
     //            TYPE_CAST_EXPRESSION, PREFIX_EXPRESSION, POSTFIX_EXPRESSION, BINARY_EXPRESSION, POLYADIC_EXPRESSION, CONDITIONAL_EXPRESSION,

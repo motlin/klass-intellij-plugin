@@ -14,7 +14,12 @@ import java.util.Map;
 
 public class KlassColorSettingsPage implements ColorSettingsPage
 {
-    private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{new AttributesDescriptor("Keyword", KlassHighlightingColors.KEYWORD), new AttributesDescriptor("Braces", KlassHighlightingColors.BRACES),};
+    private static final AttributesDescriptor[] DESCRIPTORS =
+            {
+                    new AttributesDescriptor("Keyword", KlassHighlightingColors.KEYWORD),
+                    new AttributesDescriptor("Braces", KlassHighlightingColors.BRACES),
+                    new AttributesDescriptor("Class name", KlassHighlightingColors.CLASS_NAME_ATTRIBUTES),
+            };
 
     @Nullable
     @Override

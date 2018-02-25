@@ -29,6 +29,9 @@
     <lang.parserDefinition language="Klass" implementationClass="com.klass.intellij.parser.KlassParserDefinition"/>
     <lang.syntaxHighlighterFactory language="Klass" implementationClass="com.klass.intellij.highlighter.KlassSyntaxHighlighterFactory"/>
     <colorSettingsPage implementation="com.klass.intellij.highlighter.KlassColorSettingsPage"/>
+    <completion.contributor language="Klass" implementationClass="com.klass.intellij.completion.KlassCompletionContributor"/>
+    <psi.referenceContributor implementation="com.klass.intellij.reference.KlassReferenceContributor"/>
+    <annotator language="Klass" implementationClass="com.klass.intellij.highlighter.KlassAnnotator"/>
   </extensions>
 
   <actions>
