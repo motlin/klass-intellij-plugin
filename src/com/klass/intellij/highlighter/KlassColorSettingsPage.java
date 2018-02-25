@@ -17,8 +17,15 @@ public class KlassColorSettingsPage implements ColorSettingsPage
     private static final AttributesDescriptor[] DESCRIPTORS =
             {
                     new AttributesDescriptor("Keyword", KlassHighlightingColors.KEYWORD),
-                    new AttributesDescriptor("Braces", KlassHighlightingColors.BRACES),
                     new AttributesDescriptor("Class name", KlassHighlightingColors.CLASS_NAME_ATTRIBUTES),
+                    new AttributesDescriptor("Number", KlassHighlightingColors.NUMBER),
+                    new AttributesDescriptor("Dot", KlassHighlightingColors.DOT),
+                    new AttributesDescriptor("Comma", KlassHighlightingColors.COMMA),
+                    new AttributesDescriptor("Semicolon", KlassHighlightingColors.KLASS_SEMICOLON),
+                    new AttributesDescriptor("Operation Sign", KlassHighlightingColors.OPERATION_SIGN),
+                    new AttributesDescriptor("Braces", KlassHighlightingColors.BRACES),
+                    new AttributesDescriptor("Brackets", KlassHighlightingColors.BRACKETS),
+                    new AttributesDescriptor("Parenthesis", KlassHighlightingColors.PARENTHESES),
             };
 
     @Nullable
