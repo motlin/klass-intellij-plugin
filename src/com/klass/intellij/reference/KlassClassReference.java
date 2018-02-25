@@ -1,7 +1,10 @@
 package com.klass.intellij.reference;
 
+import com.intellij.codeInsight.completion.InsertionContext;
+import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
@@ -52,16 +55,32 @@ public class KlassClassReference extends PsiReferenceBase<PsiElement> implements
         Project project = this.myElement.getProject();
         List<KlassClass> klassClasses = KlassUtil.findClasses(project);
         List<LookupElement> variants = new ArrayList<>();
+        BracketsInsertHandler insertHandler = new BracketsInsertHandler();
         for (KlassClass klassClass : klassClasses)
         {
             if (klassClass.getName() != null && !klassClass.getName().isEmpty())
             {
-                variants.add(LookupElementBuilder.create(klassClass.getClassName())
-                        .withIcon(KlassIcons.FILE)
+                LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(klassClass.getClassName().getText())
+                        .withIcon(AllIcons.Nodes.Class)
                         .withTypeText(klassClass.getContainingFile().getName())
-                );
+                        .withInsertHandler(insertHandler);
+                variants.add(lookupElementBuilder);
             }
         }
         return variants.toArray();
+    }
+
+    private static class BracketsInsertHandler extends ParenthesesInsertHandler<LookupElement>
+    {
+        private BracketsInsertHandler()
+        {
+            super(false, false, true, false, '[', ']');
+        }
+
+        @Override
+        protected boolean placeCaretInsideParentheses(InsertionContext context, LookupElement item)
+        {
+            return true;
+        }
     }
 }
