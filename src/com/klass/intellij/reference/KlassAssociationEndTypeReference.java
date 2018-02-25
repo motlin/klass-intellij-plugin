@@ -17,11 +17,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KlassClassReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
+public class KlassAssociationEndTypeReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
 {
     private final String className;
 
-    public KlassClassReference(@NotNull PsiElement element, String className)
+    public KlassAssociationEndTypeReference(@NotNull PsiElement element, String className)
     {
         super(element, new TextRange(0, className.length() + 1));
         this.className = className;

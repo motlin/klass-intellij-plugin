@@ -25,6 +25,8 @@ public class KlassCompletionContributor extends CompletionContributor
                 System.out.println("position = " + position);
                 System.out.println("originalPosition = " + originalPosition);
                 resultSet.addElement(LookupElementBuilder.create("Hello"));
+                resultSet.addElement(LookupElementBuilder.create("Answer2"));
+                resultSet.addElement(LookupElementBuilder.create("Question2"));
             }
         };
 

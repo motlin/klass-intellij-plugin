@@ -3,11 +3,9 @@ package com.klass.intellij.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import com.klass.intellij.psi.KlassAssociationEndType;
-import com.klass.intellij.psi.KlassClass;
-import com.klass.intellij.psi.KlassElementFactory;
-import com.klass.intellij.psi.KlassTypes;
-import com.klass.intellij.reference.KlassClassReference;
+import com.klass.intellij.psi.*;
+import com.klass.intellij.reference.KlassAssociationEndTypeReference;
+import com.klass.intellij.reference.KlassDataTypeReference;
 
 public class KlassPsiImplUtil
 {
@@ -33,20 +31,26 @@ public class KlassPsiImplUtil
         return element.getClassName();
     }
 
-    public static String getSourceName(KlassAssociationImpl element)
+    public static String getName(KlassAssociation element)
     {
-        ASTNode keyNode = element
-                .getNode()
-                .findChildByType(KlassTypes.SOURCE_ASSOCIATION_END)
-                .findChildByType(KlassTypes.ASSOCIATION_END_NAME);
+        return element.getAssociationName().getText();
+    }
 
-        if (keyNode == null)
+    public static PsiElement setName(KlassAssociation element, String newName)
+    {
+        ASTNode associationNameNode = element.getAssociationName().getNode();
+        if (associationNameNode != null)
         {
-            return null;
+            KlassAssociation association = KlassElementFactory.createAssociation(element.getProject(), newName);
+            ASTNode newAssociationNameNode = association.getAssociationName().getNode();
+            element.getNode().replaceChild(associationNameNode, newAssociationNameNode);
         }
+        return element;
+    }
 
-        // TODO: Delete
-        return keyNode.getText().replaceAll("\\\\ ", " ");
+    public static PsiElement getNameIdentifier(KlassAssociation element)
+    {
+        return element.getAssociationName();
     }
 
     public static PsiReference getReference(KlassAssociationEndType klassAssociationEndType)
@@ -57,6 +61,17 @@ public class KlassPsiImplUtil
             return null;
         }
 
-        return new KlassClassReference(klassAssociationEndType, className);
+        return new KlassAssociationEndTypeReference(klassAssociationEndType, className);
+    }
+
+    public static PsiReference getReference(KlassDataType klassDataType)
+    {
+        String dataType = klassDataType.getText();
+        if (dataType == null)
+        {
+            return null;
+        }
+
+        return new KlassDataTypeReference(klassDataType, dataType);
     }
 }

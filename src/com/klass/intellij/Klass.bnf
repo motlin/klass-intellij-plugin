@@ -22,7 +22,7 @@ private topLevelItem_ ::= class | association
 
 class ::= CLASS_KEYWORD className LBRACE dataTypeProperty* RBRACE {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[getName setName getNameIdentifier]}
 
-association ::= ASSOCIATION_KEYWORD associationName LBRACE sourceAssociationEnd targetAssociationEnd RBRACE {methods=[getSourceName]}
+association ::= ASSOCIATION_KEYWORD associationName LBRACE sourceAssociationEnd targetAssociationEnd RBRACE {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[getName setName getNameIdentifier]}
 
 dataTypeProperty ::= dataTypePropertyName COLON dataType optionalMarker?
 sourceAssociationEnd ::= associationEnd;
@@ -36,7 +36,7 @@ associationEndType ::= IDENTIFIER {methods=[getReference]}
 associationName ::= IDENTIFIER
 dataTypePropertyName ::= IDENTIFIER
 associationEndName ::= IDENTIFIER
-dataType ::= BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD
+dataType ::= BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD {methods=[getReference]}
 optionalMarker ::= QUESTION_MARK
 
 multiplicity ::= LBRACKET lowerBound DOTDOT upperBound RBRACKET

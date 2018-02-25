@@ -8,8 +8,14 @@ public class KlassElementFactory
 {
     public static KlassClass createClass(Project project, String name)
     {
-        final KlassFile file = createFile(project, name);
+        KlassFile file = KlassElementFactory.createFile(project, String.format("class %s {}", name));
         return (KlassClass) file.getFirstChild();
+    }
+
+    public static KlassAssociation createAssociation(Project project, String name)
+    {
+        KlassFile file = KlassElementFactory.createFile(project, String.format("association %s {}", name));
+        return (KlassAssociation) file.getFirstChild();
     }
 
     public static KlassFile createFile(Project project, String text)

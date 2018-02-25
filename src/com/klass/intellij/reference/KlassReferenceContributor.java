@@ -28,7 +28,7 @@ public class KlassReferenceContributor extends PsiReferenceContributor
                             return PsiReference.EMPTY_ARRAY;
                         }
 
-                        return new PsiReference[]{new KlassClassReference(element, className)};
+                        return new PsiReference[]{new KlassAssociationEndTypeReference(element, className)};
                     }
                 });
     }
