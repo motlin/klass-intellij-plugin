@@ -11,4 +11,10 @@ public abstract class KlassNamedElementImpl extends ASTWrapperPsiElement impleme
     {
         super(node);
     }
+
+    @Override
+    public int getTextOffset()
+    {
+        return this.getNameIdentifier().getTextOffset();
+    }
 }

@@ -34,8 +34,7 @@ public class KlassAssociationEndTypeReference extends PsiReferenceBase<PsiElemen
         Project project = this.myElement.getProject();
         return KlassUtil.findClasses(project)
                 .stream()
-                .map(KlassClass::getClassName)
-                .filter(klassClassName -> klassClassName.getText().equals(this.className))
+                .filter(klassClass -> klassClass.getName().equals(this.className))
                 .map(PsiElementResolveResult::new)
                 .toArray(ResolveResult[]::new);
     }
@@ -60,7 +59,7 @@ public class KlassAssociationEndTypeReference extends PsiReferenceBase<PsiElemen
         {
             if (klassClass.getName() != null && !klassClass.getName().isEmpty())
             {
-                LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(klassClass.getClassName().getText())
+                LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(klassClass.getName())
                         .withIcon(AllIcons.Nodes.Class)
                         .withTypeText(klassClass.getContainingFile().getName())
                         .withInsertHandler(insertHandler);
