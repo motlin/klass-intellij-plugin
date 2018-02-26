@@ -9,6 +9,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.klass.intellij.psi.KlassAssociation;
+import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassClass;
 import com.klass.intellij.psi.KlassFile;
 
@@ -24,6 +25,11 @@ public class KlassUtil
     public static List<KlassAssociation> findAssociations(Project project)
     {
         return findElementsOfType(project, KlassAssociation.class);
+    }
+
+    public static List<KlassAssociationEnd> findAssociationEnds(Project project)
+    {
+        return findElementsOfType(project, KlassAssociationEnd.class);
     }
 
     public static <T extends PsiElement> List<T> findElementsOfType(Project project, Class<T> klass)

@@ -37,6 +37,7 @@
     <lang.elementManipulator
             forClass="com.klass.intellij.psi.impl.KlassAssociationEndTypeImpl"
             implementationClass="com.klass.intellij.psi.impl.KlassAssociationEndTypeManipulator"/>
+    <gotoSymbolContributor implementation="com.klass.intellij.navigation.KlassChooseByNameContributor"/>
   </extensions>
 
   <actions>

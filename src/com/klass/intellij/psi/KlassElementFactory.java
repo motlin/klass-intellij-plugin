@@ -18,6 +18,18 @@ public class KlassElementFactory
         return (KlassAssociation) file.getFirstChild();
     }
 
+    public static KlassAssociationEnd createAssociationEnd(Project project, String name)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "association DummyAssociation\n"
+                + "{\n"
+                + "  " + name + ": DummyType[0..1]\n"
+                + "  target: DummyType[0..*]\n"
+                + "}\n");
+        return ((KlassAssociation) file.getFirstChild()).getSourceAssociationEnd().getAssociationEnd();
+    }
+
     public static KlassAssociationEndType createAssociationEndType(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(
