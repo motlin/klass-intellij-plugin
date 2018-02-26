@@ -23,7 +23,7 @@ public class KlassAssociationEndTypeReference extends PsiReferenceBase<PsiElemen
 
     public KlassAssociationEndTypeReference(@NotNull PsiElement element, String className)
     {
-        super(element, new TextRange(0, className.length() + 1));
+        super(element, new TextRange(0, className.length()));
         this.className = className;
     }
 
