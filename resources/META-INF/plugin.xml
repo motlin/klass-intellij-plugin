@@ -38,6 +38,7 @@
             forClass="com.klass.intellij.psi.impl.KlassAssociationEndTypeImpl"
             implementationClass="com.klass.intellij.psi.impl.KlassAssociationEndTypeManipulator"/>
     <gotoSymbolContributor implementation="com.klass.intellij.navigation.KlassChooseByNameContributor"/>
+    <lang.psiStructureViewFactory language="Klass" implementationClass="com.klass.intellij.structure.KlassStructureViewFactory"/>
   </extensions>
 
   <actions>

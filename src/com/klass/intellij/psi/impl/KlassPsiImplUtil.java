@@ -59,6 +59,29 @@ public class KlassPsiImplUtil
         return element.getAssociationName();
     }
 
+    public static String getName(KlassDataTypeProperty element)
+    {
+        return element.getDataTypePropertyName().getText();
+    }
+
+    public static PsiElement setName(KlassDataTypeProperty element, String newName)
+    {
+        ASTNode dataTypePropertyNameNode = element.getDataTypePropertyName().getNode();
+        if (dataTypePropertyNameNode != null)
+        {
+            KlassDataTypeProperty dataTypeProperty =
+                    KlassElementFactory.createDataTypeProperty(element.getProject(), newName);
+            ASTNode newDataTypePropertyNameNode = dataTypeProperty.getDataTypePropertyName().getNode();
+            element.getNode().replaceChild(dataTypePropertyNameNode, newDataTypePropertyNameNode);
+        }
+        return element;
+    }
+
+    public static PsiElement getNameIdentifier(KlassDataTypeProperty element)
+    {
+        return element.getDataTypePropertyName();
+    }
+
     public static String getName(KlassAssociationEnd element)
     {
         return element.getAssociationEndName().getText();
@@ -69,7 +92,8 @@ public class KlassPsiImplUtil
         ASTNode associationEndNameNode = element.getAssociationEndName().getNode();
         if (associationEndNameNode != null)
         {
-            KlassAssociationEnd associationEnd = KlassElementFactory.createAssociationEnd(element.getProject(), newName);
+            KlassAssociationEnd associationEnd =
+                    KlassElementFactory.createAssociationEnd(element.getProject(), newName);
             ASTNode newAssociationEndNameNode = associationEnd.getAssociationEndName().getNode();
             element.getNode().replaceChild(associationEndNameNode, newAssociationEndNameNode);
         }
@@ -83,13 +107,13 @@ public class KlassPsiImplUtil
 
     public static PsiReference getReference(KlassAssociationEndType klassAssociationEndType)
     {
-        String className = klassAssociationEndType.getText();
-        if (className == null)
+        String associationEndType = klassAssociationEndType.getText();
+        if (associationEndType == null)
         {
             return null;
         }
 
-        return new KlassAssociationEndTypeReference(klassAssociationEndType, className);
+        return new KlassAssociationEndTypeReference(klassAssociationEndType, associationEndType);
     }
 
     public static PsiReference getReference(KlassDataType klassDataType)
@@ -125,7 +149,7 @@ public class KlassPsiImplUtil
             @Override
             public Icon getIcon(boolean unused)
             {
-                return AllIcons.Hierarchy.Class;
+                return AllIcons.Nodes.Class;
             }
         };
     }
@@ -172,7 +196,7 @@ public class KlassPsiImplUtil
             @Override
             public String getLocationString()
             {
-                return element.getContainingFile().getName();
+                return element.getAssociationEndType().getText() + element.getMultiplicity().getText();
             }
 
             @Nullable
@@ -180,6 +204,39 @@ public class KlassPsiImplUtil
             public Icon getIcon(boolean unused)
             {
                 return AllIcons.Nodes.Property;
+            }
+        };
+    }
+
+    public static ItemPresentation getPresentation(KlassDataTypeProperty element)
+    {
+        return new ItemPresentation()
+        {
+            @Nullable
+            @Override
+            public String getPresentableText()
+            {
+                return element.getDataTypePropertyName().getText();
+            }
+
+            @NotNull
+            @Override
+            public String getLocationString()
+            {
+                return element.getDataType().getText() + this.getOptionalMarker();
+            }
+
+            private String getOptionalMarker()
+            {
+                KlassOptionalMarker optionalMarker = element.getOptionalMarker();
+                return optionalMarker == null ? "" : optionalMarker.getText();
+            }
+
+            @Nullable
+            @Override
+            public Icon getIcon(boolean unused)
+            {
+                return AllIcons.Nodes.Field;
             }
         };
     }

@@ -24,7 +24,7 @@ class ::= CLASS_KEYWORD className LBRACE dataTypeProperty* RBRACE {mixin="com.kl
 
 association ::= ASSOCIATION_KEYWORD associationName LBRACE sourceAssociationEnd targetAssociationEnd RBRACE {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[getName setName getNameIdentifier getPresentation]}
 
-dataTypeProperty ::= dataTypePropertyName COLON dataType optionalMarker?
+dataTypeProperty ::= dataTypePropertyName COLON dataType optionalMarker? {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[getName setName getNameIdentifier getPresentation]}
 sourceAssociationEnd ::= associationEnd;
 targetAssociationEnd ::= associationEnd;
 

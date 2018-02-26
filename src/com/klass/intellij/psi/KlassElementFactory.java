@@ -18,6 +18,17 @@ public class KlassElementFactory
         return (KlassAssociation) file.getFirstChild();
     }
 
+    public static KlassDataTypeProperty createDataTypeProperty(Project project, String name)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "class DummyClass\n"
+                + "{\n"
+                + "  " + name + ": String\n"
+                + "}\n");
+        return ((KlassClass) file.getFirstChild()).getDataTypePropertyList().get(0);
+    }
+
     public static KlassAssociationEnd createAssociationEnd(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(
