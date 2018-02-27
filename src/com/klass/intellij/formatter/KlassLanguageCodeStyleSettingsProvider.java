@@ -18,10 +18,18 @@ public class KlassLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
     @Override
     public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType)
     {
+        if (settingsType== SettingsType.SPACING_SETTINGS)
+        {
+
+        }
         if (settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS)
         {
-            consumer.showStandardOptions("ALIGN_GROUP_FIELD_DECLARATIONS");
+            consumer.showStandardOptions("KEEP_LINE_BREAKS", "ALIGN_GROUP_FIELD_DECLARATIONS", "BRACE_STYLE");
             consumer.renameStandardOption("ALIGN_GROUP_FIELD_DECLARATIONS", "Align property declarations");
+        }
+        if (settingsType == SettingsType.BLANK_LINES_SETTINGS)
+        {
+
         }
     }
 
