@@ -42,6 +42,7 @@
         <lang.formatter language="Klass" implementationClass="com.klass.intellij.formatter.KlassFormattingModelBuilder"/>
         <codeStyleSettingsProvider implementation="com.klass.intellij.formatter.KlassCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider implementation="com.klass.intellij.formatter.KlassLanguageCodeStyleSettingsProvider"/>
+        <lang.commenter language="Klass" implementationClass="com.klass.intellij.commenter.KlassCommenter"/>
 
     </extensions>
 
