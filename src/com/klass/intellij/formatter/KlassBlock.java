@@ -3,8 +3,11 @@ package com.klass.intellij.formatter;
 import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.TokenType;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
+import com.klass.intellij.KlassLanguage;
 import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,15 +20,20 @@ public class KlassBlock extends AbstractBlock
     private static final Alignment COLON_ALIGNMENT = Alignment.createAlignment(true);
 
     private final SpacingBuilder spacingBuilder;
+    private final CodeStyleSettings settings;
+    private final CommonCodeStyleSettings commonSettings;
 
     protected KlassBlock(
             @NotNull ASTNode node,
             @Nullable Wrap wrap,
             @Nullable Alignment alignment,
-            SpacingBuilder spacingBuilder)
+            SpacingBuilder spacingBuilder,
+            CodeStyleSettings settings)
     {
         super(node, wrap, alignment);
         this.spacingBuilder = spacingBuilder;
+        this.settings = settings;
+        this.commonSettings = settings.getCommonSettings(KlassLanguage.INSTANCE);
     }
 
     @Override
@@ -39,7 +47,7 @@ public class KlassBlock extends AbstractBlock
             if (elementType != TokenType.WHITE_SPACE)
             {
                 Wrap wrap = Wrap.createWrap(WrapType.NONE, false);
-                Block block = new KlassBlock(child, wrap, this.getAlignment(elementType), this.spacingBuilder);
+                Block block = new KlassBlock(child, wrap, this.getAlignment(elementType), this.spacingBuilder, this.settings);
                 blocks.add(block);
             }
             child = child.getTreeNext();
@@ -49,7 +57,7 @@ public class KlassBlock extends AbstractBlock
 
     private Alignment getAlignment(IElementType elementType)
     {
-        if (elementType == KlassTypes.COLON)
+        if (elementType == KlassTypes.COLON && this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS)
         {
             return COLON_ALIGNMENT;
         }

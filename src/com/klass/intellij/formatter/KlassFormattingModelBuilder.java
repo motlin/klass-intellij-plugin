@@ -26,7 +26,8 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
                         element.getNode(),
                         Wrap.createWrap(WrapType.NONE, false),
                         Alignment.createAlignment(),
-                        KlassFormattingModelBuilder.createSpaceBuilder(settings)),
+                        KlassFormattingModelBuilder.createSpaceBuilder(settings),
+                        settings),
                 settings);
     }
 
