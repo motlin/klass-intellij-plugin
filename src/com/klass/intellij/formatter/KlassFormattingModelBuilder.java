@@ -36,15 +36,17 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
 
         SpacingBuilder spacingBuilder = new SpacingBuilder(settings, KlassLanguage.INSTANCE)
                 .before(KlassTypes.OPTIONAL_MARKER).none()
-                .before(KlassTypes.COLON).none()
+                .before(TokenSet.create(KlassTypes.COLON, KlassTypes.COMMA)).none()
                 .after(KlassTypes.COLON).spaces(1)
+                .after(KlassTypes.COMMA).lineBreakInCode()
                 .around(KlassTypes.DOTDOT).none()
                 .withinPair(KlassTypes.LBRACKET, KlassTypes.RBRACKET).none()
+                .before(KlassTypes.NOMBRE).spaces(1)
                 .around(TokenSet.create(KlassTypes.CLASS, KlassTypes.ASSOCIATION)).spacing(0, 0, 2, true, 1)
                 .between(KlassTypes.ASSOCIATION_END_TYPE, KlassTypes.MULTIPLICITY).none()
-                .withinPair(KlassTypes.LBRACE, KlassTypes.RBRACE).spacing(0, 0, 1, false, 0)
+                .withinPair(KlassTypes.LBRACE, KlassTypes.RBRACE).lineBreakInCode()
                 .before(KlassTypes.LBRACE).lineBreakInCodeIf(commonSettings.BRACE_STYLE != CommonCodeStyleSettings.END_OF_LINE)
-                .after(TokenSet.create(KlassTypes.DATA_TYPE_PROPERTY, KlassTypes.SOURCE_ASSOCIATION_END, KlassTypes.TARGET_ASSOCIATION_END)).spacing(0, 0, 1, false, 0);
+                .after(TokenSet.create(KlassTypes.PROPERTY, KlassTypes.SOURCE_ASSOCIATION_END, KlassTypes.TARGET_ASSOCIATION_END)).lineBreakInCode();
 
         return spacingBuilder;
     }

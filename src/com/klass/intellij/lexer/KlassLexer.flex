@@ -77,7 +77,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 
   "association" { return KlassTypes.ASSOCIATION_KEYWORD; }
 //  "projection" { return KlassTypes.PROJECTION_KEYWORD; }
-//  "enumeration" { return KlassTypes.ENUMERATION_KEYWORD; }
+  "enumeration" { return KlassTypes.ENUMERATION_KEYWORD; }
 
   "Boolean" { return KlassTypes.BOOLEAN_KEYWORD; }
   "Integer" { return KlassTypes.INTEGER_KEYWORD; }
@@ -164,7 +164,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "["   { return KlassTypes.LBRACKET; }
   "]"   { return KlassTypes.RBRACKET; }
 //  ";"   { return KlassTypes.SEMICOLON; }
-//  ","   { return KlassTypes.COMMA; }
+  ","   { return KlassTypes.COMMA; }
 //  "..." { return KlassTypes.ELLIPSIS; }
   ".."   { return KlassTypes.DOTDOT; }
 //  "."   { return KlassTypes.DOT; }

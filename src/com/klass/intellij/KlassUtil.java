@@ -8,10 +8,7 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.klass.intellij.psi.KlassAssociation;
-import com.klass.intellij.psi.KlassAssociationEnd;
-import com.klass.intellij.psi.KlassClass;
-import com.klass.intellij.psi.KlassFile;
+import com.klass.intellij.psi.*;
 
 import java.util.*;
 
@@ -19,17 +16,22 @@ public class KlassUtil
 {
     public static List<KlassClass> findClasses(Project project)
     {
-        return findElementsOfType(project, KlassClass.class);
+        return KlassUtil.findElementsOfType(project, KlassClass.class);
     }
 
     public static List<KlassAssociation> findAssociations(Project project)
     {
-        return findElementsOfType(project, KlassAssociation.class);
+        return KlassUtil.findElementsOfType(project, KlassAssociation.class);
     }
 
     public static List<KlassAssociationEnd> findAssociationEnds(Project project)
     {
-        return findElementsOfType(project, KlassAssociationEnd.class);
+        return KlassUtil.findElementsOfType(project, KlassAssociationEnd.class);
+    }
+
+    public static List<KlassEnumeration> findEnumerations(Project project)
+    {
+        return KlassUtil.findElementsOfType(project, KlassEnumeration.class);
     }
 
     public static <T extends PsiElement> List<T> findElementsOfType(Project project, Class<T> klass)

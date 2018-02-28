@@ -89,7 +89,7 @@ public class KlassStructureViewElement implements StructureViewTreeElement, Sort
 
         if (this.element instanceof KlassClass)
         {
-            return ((KlassClass) this.element).getDataTypePropertyList()
+            return ((KlassClass) this.element).getPropertyList()
                     .stream()
                     .map(KlassStructureViewElement::new)
                     .toArray(TreeElement[]::new);

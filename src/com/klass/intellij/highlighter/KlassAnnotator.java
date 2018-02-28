@@ -32,15 +32,22 @@ public class KlassAnnotator implements Annotator
         }
 
         @Override
-        public void visitClassName(@NotNull KlassClassName klassClassName)
+        public void visitNombre(@NotNull KlassNombre klassNombre)
         {
-            this.applyClassName(klassClassName);
-        }
-
-        @Override
-        public void visitAssociationName(@NotNull KlassAssociationName klassAssociationName)
-        {
-            this.applyClassName(klassAssociationName);
+            Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(klassNombre.getNode(), null);
+            if (klassNombre.getParent() instanceof KlassEnumeration)
+            {
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_NAME_ATTRIBUTES);
+            }
+            else if (klassNombre.getParent().getParent() instanceof KlassProperty
+                    || klassNombre.getParent() instanceof KlassAssociationEnd)
+            {
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES);
+            }
+            else
+            {
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.CLASS_NAME_ATTRIBUTES);
+            }
         }
 
         @Override
@@ -62,15 +69,11 @@ public class KlassAnnotator implements Annotator
         }
 
         @Override
-        public void visitDataTypePropertyName(@NotNull KlassDataTypePropertyName klassDataTypePropertyName)
+        public void visitEnumerationLiteral(@NotNull KlassEnumerationLiteral klassEnumerationLiteral)
         {
-            this.applyPropertyName(klassDataTypePropertyName);
-        }
-
-        @Override
-        public void visitAssociationEndName(@NotNull KlassAssociationEndName klassAssociationEndName)
-        {
-            this.applyPropertyName(klassAssociationEndName);
+            Annotation infoAnnotation =
+                    this.annotationHolder.createInfoAnnotation(klassEnumerationLiteral.getNode(), null);
+            infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES);
         }
     }
 }

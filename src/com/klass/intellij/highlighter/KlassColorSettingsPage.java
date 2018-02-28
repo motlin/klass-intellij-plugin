@@ -18,6 +18,8 @@ public class KlassColorSettingsPage implements ColorSettingsPage
             {
                     new AttributesDescriptor("Keyword", KlassHighlightingColors.KEYWORD),
                     new AttributesDescriptor("Class name", KlassHighlightingColors.CLASS_NAME_ATTRIBUTES),
+                    new AttributesDescriptor("Enumeration name", KlassHighlightingColors.ENUM_NAME_ATTRIBUTES),
+                    new AttributesDescriptor("Enumeration literal", KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES),
                     new AttributesDescriptor("Number", KlassHighlightingColors.NUMBER),
                     new AttributesDescriptor("Dot", KlassHighlightingColors.DOT),
                     new AttributesDescriptor("Comma", KlassHighlightingColors.COMMA),

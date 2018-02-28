@@ -14,7 +14,7 @@ public class KlassDataTypeReference extends PsiReferenceBase<PsiElement> impleme
 
     public KlassDataTypeReference(@NotNull PsiElement element, String substring)
     {
-        super(element, new TextRange(0, substring.length() + 1));
+        super(element, new TextRange(0, substring.length()));
         this.substring = substring;
     }
 

@@ -9,6 +9,8 @@ import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassClass;
+import com.klass.intellij.psi.KlassEnumeration;
+import com.klass.intellij.psi.KlassNombre;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassRefactoringSupportProvider extends RefactoringSupportProvider
@@ -16,13 +18,18 @@ public class KlassRefactoringSupportProvider extends RefactoringSupportProvider
     @Override
     public boolean isSafeDeleteAvailable(@NotNull PsiElement element)
     {
-        return element instanceof KlassClass || element instanceof KlassAssociation;
+        return element instanceof KlassNombre
+                || element instanceof KlassClass
+                || element instanceof KlassAssociation
+                || element instanceof KlassEnumeration;
     }
 
     @Override
     public boolean isMemberInplaceRenameAvailable(@NotNull PsiElement element, PsiElement context)
     {
-        return element instanceof KlassClass || element instanceof KlassAssociation;
+        return element instanceof KlassClass
+                || element instanceof KlassAssociation
+                || element instanceof KlassEnumeration;
     }
 
     @Override

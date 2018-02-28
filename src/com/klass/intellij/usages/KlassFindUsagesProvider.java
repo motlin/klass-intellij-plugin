@@ -19,7 +19,7 @@ public class KlassFindUsagesProvider implements FindUsagesProvider
     {
         return new DefaultWordsScanner(
                 new KlassLexerAdapter(),
-                TokenSet.create(KlassTypes.CLASS_NAME, KlassTypes.ASSOCIATION_NAME, KlassTypes.ASSOCIATION_END_TYPE),
+                TokenSet.create(KlassTypes.NOMBRE),
                 TokenSet.create(KlassTokenType.C_STYLE_COMMENT, KlassTokenType.END_OF_LINE_COMMENT),
                 TokenSet.EMPTY);
     }
@@ -53,6 +53,10 @@ public class KlassFindUsagesProvider implements FindUsagesProvider
         {
             return "association end";
         }
+        if (element instanceof KlassEnumeration)
+        {
+            return "enumeration";
+        }
         return "";
     }
 
@@ -60,17 +64,9 @@ public class KlassFindUsagesProvider implements FindUsagesProvider
     @Override
     public String getDescriptiveName(@NotNull PsiElement element)
     {
-        if (element instanceof KlassClass)
+        if (element instanceof KlassNamedElement)
         {
-            return ((KlassClass) element).getClassName().getText();
-        }
-        if (element instanceof KlassAssociation)
-        {
-            return ((KlassAssociation) element).getAssociationName().getText();
-        }
-        if (element instanceof KlassAssociationEnd)
-        {
-            return ((KlassAssociationEnd) element).getAssociationEndName().getText();
+            return ((KlassNamedElement) element).getName();
         }
         return "";
     }

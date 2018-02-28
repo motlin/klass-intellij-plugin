@@ -75,6 +75,8 @@ public class KlassHighlightingColors
             createTextAttributesKey("INTERFACE_NAME_ATTRIBUTES", INTERFACE_NAME);
     public static final TextAttributesKey ENUM_NAME_ATTRIBUTES =
             createTextAttributesKey("ENUM_NAME_ATTRIBUTES", CLASS_NAME_ATTRIBUTES);
+    public static final TextAttributesKey ENUM_LITERAL_ATTRIBUTES =
+            createTextAttributesKey("ENUM_LITERAL_ATTRIBUTES", CONSTANT);
     public static final TextAttributesKey ABSTRACT_CLASS_NAME_ATTRIBUTES =
             createTextAttributesKey("ABSTRACT_CLASS_NAME_ATTRIBUTES", CLASS_NAME_ATTRIBUTES);
     public static final TextAttributesKey METHOD_CALL_ATTRIBUTES =

@@ -47,7 +47,8 @@ public class KlassBlock extends AbstractBlock
             if (elementType != TokenType.WHITE_SPACE)
             {
                 Wrap wrap = Wrap.createWrap(WrapType.NONE, false);
-                Block block = new KlassBlock(child, wrap, this.getAlignment(elementType), this.spacingBuilder, this.settings);
+                Block block =
+                        new KlassBlock(child, wrap, this.getAlignment(elementType), this.spacingBuilder, this.settings);
                 blocks.add(block);
             }
             child = child.getTreeNext();
@@ -72,11 +73,10 @@ public class KlassBlock extends AbstractBlock
         {
             return Indent.getNoneIndent();
         }
-        if (elementType == KlassTypes.DATA_TYPE_PROPERTY)
-        {
-            return Indent.getNormalIndent();
-        }
-        if (elementType == KlassTypes.ASSOCIATION_END)
+        if (elementType == KlassTypes.DATA_TYPE_PROPERTY
+                || elementType == KlassTypes.ENUMERATION_PROPERTY
+                || elementType == KlassTypes.ASSOCIATION_END
+                || elementType == KlassTypes.ENUMERATION_LITERAL)
         {
             return Indent.getNormalIndent();
         }

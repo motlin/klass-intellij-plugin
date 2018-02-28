@@ -8,101 +8,83 @@ import com.intellij.psi.PsiReference;
 import com.klass.intellij.psi.*;
 import com.klass.intellij.reference.KlassAssociationEndTypeReference;
 import com.klass.intellij.reference.KlassDataTypeReference;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import javax.swing.*;
+import com.klass.intellij.reference.KlassEnumerationReference;
 
 public class KlassPsiImplUtil
 {
-    public static String getName(KlassClass element)
-    {
-        return element.getClassName().getText();
-    }
-
     public static PsiElement setName(KlassClass element, String newName)
     {
-        ASTNode classNameNode = element.getClassName().getNode();
+        ASTNode classNameNode = element.getNombre().getNode();
         if (classNameNode != null)
         {
             KlassClass klass = KlassElementFactory.createClass(element.getProject(), newName);
-            ASTNode newClassNameNode = klass.getClassName().getNode();
+            ASTNode newClassNameNode = klass.getNombre().getNode();
             element.getNode().replaceChild(classNameNode, newClassNameNode);
         }
         return element;
     }
 
-    public static PsiElement getNameIdentifier(KlassClass element)
+    public static PsiElement setName(KlassEnumeration element, String newName)
     {
-        return element.getClassName();
-    }
-
-    public static String getName(KlassAssociation element)
-    {
-        return element.getAssociationName().getText();
+        ASTNode classNameNode = element.getNombre().getNode();
+        if (classNameNode != null)
+        {
+            KlassEnumeration klass = KlassElementFactory.createEnumeration(element.getProject(), newName);
+            ASTNode newEnumerationNameNode = klass.getNombre().getNode();
+            element.getNode().replaceChild(classNameNode, newEnumerationNameNode);
+        }
+        return element;
     }
 
     public static PsiElement setName(KlassAssociation element, String newName)
     {
-        ASTNode associationNameNode = element.getAssociationName().getNode();
+        ASTNode associationNameNode = element.getNombre().getNode();
         if (associationNameNode != null)
         {
             KlassAssociation association = KlassElementFactory.createAssociation(element.getProject(), newName);
-            ASTNode newAssociationNameNode = association.getAssociationName().getNode();
+            ASTNode newAssociationNameNode = association.getNombre().getNode();
             element.getNode().replaceChild(associationNameNode, newAssociationNameNode);
         }
         return element;
     }
 
-    public static PsiElement getNameIdentifier(KlassAssociation element)
-    {
-        return element.getAssociationName();
-    }
-
-    public static String getName(KlassDataTypeProperty element)
-    {
-        return element.getDataTypePropertyName().getText();
-    }
-
     public static PsiElement setName(KlassDataTypeProperty element, String newName)
     {
-        ASTNode dataTypePropertyNameNode = element.getDataTypePropertyName().getNode();
-        if (dataTypePropertyNameNode != null)
+        ASTNode primitivePropertyNameNode = element.getNombre().getNode();
+        if (primitivePropertyNameNode != null)
         {
             KlassDataTypeProperty dataTypeProperty =
                     KlassElementFactory.createDataTypeProperty(element.getProject(), newName);
-            ASTNode newDataTypePropertyNameNode = dataTypeProperty.getDataTypePropertyName().getNode();
-            element.getNode().replaceChild(dataTypePropertyNameNode, newDataTypePropertyNameNode);
+            ASTNode newPrimitivePropertyNameNode = dataTypeProperty.getNombre().getNode();
+            element.getNode().replaceChild(primitivePropertyNameNode, newPrimitivePropertyNameNode);
         }
         return element;
     }
 
-    public static PsiElement getNameIdentifier(KlassDataTypeProperty element)
+    public static PsiElement setName(KlassEnumerationProperty element, String newName)
     {
-        return element.getDataTypePropertyName();
-    }
-
-    public static String getName(KlassAssociationEnd element)
-    {
-        return element.getAssociationEndName().getText();
+        ASTNode primitivePropertyNameNode = element.getNombre().getNode();
+        if (primitivePropertyNameNode != null)
+        {
+            KlassEnumerationProperty enumerationProperty =
+                    KlassElementFactory.createEnumerationProperty(element.getProject(), newName);
+            ASTNode newPrimitivePropertyNameNode = enumerationProperty.getNombre().getNode();
+            element.getNode().replaceChild(primitivePropertyNameNode, newPrimitivePropertyNameNode);
+        }
+        return element;
     }
 
     public static PsiElement setName(KlassAssociationEnd element, String newName)
     {
-        ASTNode associationEndNameNode = element.getAssociationEndName().getNode();
+        ASTNode associationEndNameNode = element.getNombre().getNode();
         if (associationEndNameNode != null)
         {
             KlassAssociationEnd associationEnd =
                     KlassElementFactory.createAssociationEnd(element.getProject(), newName);
-            ASTNode newAssociationEndNameNode = associationEnd.getAssociationEndName().getNode();
+            ASTNode newAssociationEndNameNode = associationEnd.getNombre().getNode();
             element.getNode().replaceChild(associationEndNameNode, newAssociationEndNameNode);
         }
         return element;
-    }
-
-    public static PsiElement getNameIdentifier(KlassAssociationEnd element)
-    {
-        return element.getAssociationEndName();
     }
 
     public static PsiReference getReference(KlassAssociationEndType klassAssociationEndType)
@@ -127,117 +109,47 @@ public class KlassPsiImplUtil
         return new KlassDataTypeReference(klassDataType, dataType);
     }
 
+    public static PsiReference getReference(KlassEnumeration klassEnumeration)
+    {
+        String enumeration = klassEnumeration.getText();
+        if (enumeration == null)
+        {
+            return null;
+        }
+
+        return new KlassEnumerationReference(klassEnumeration, enumeration);
+    }
+
     public static ItemPresentation getPresentation(KlassClass element)
     {
-        return new ItemPresentation()
-        {
-            @Nullable
-            @Override
-            public String getPresentableText()
-            {
-                return element.getClassName().getText();
-            }
-
-            @NotNull
-            @Override
-            public String getLocationString()
-            {
-                return element.getContainingFile().getName();
-            }
-
-            @Nullable
-            @Override
-            public Icon getIcon(boolean unused)
-            {
-                return AllIcons.Nodes.Class;
-            }
-        };
+        return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Nodes.Class);
     }
 
     public static ItemPresentation getPresentation(KlassAssociation element)
     {
-        return new ItemPresentation()
-        {
-            @Nullable
-            @Override
-            public String getPresentableText()
-            {
-                return element.getAssociationName().getText();
-            }
-
-            @NotNull
-            @Override
-            public String getLocationString()
-            {
-                return element.getContainingFile().getName();
-            }
-
-            @Nullable
-            @Override
-            public Icon getIcon(boolean unused)
-            {
-                return AllIcons.Javaee.PersistenceRelationship;
-            }
-        };
+        return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Javaee.PersistenceRelationship);
     }
 
     public static ItemPresentation getPresentation(KlassAssociationEnd element)
     {
-        return new ItemPresentation()
-        {
-            @Nullable
-            @Override
-            public String getPresentableText()
-            {
-                return element.getAssociationEndName().getText();
-            }
-
-            @NotNull
-            @Override
-            public String getLocationString()
-            {
-                return element.getAssociationEndType().getText() + element.getMultiplicity().getText();
-            }
-
-            @Nullable
-            @Override
-            public Icon getIcon(boolean unused)
-            {
-                return AllIcons.Nodes.Property;
-            }
-        };
+        String locationString = element.getAssociationEndType().getText()
+                + element.getMultiplicity().getText();
+        return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Property);
     }
 
     public static ItemPresentation getPresentation(KlassDataTypeProperty element)
     {
-        return new ItemPresentation()
-        {
-            @Nullable
-            @Override
-            public String getPresentableText()
-            {
-                return element.getDataTypePropertyName().getText();
-            }
+        KlassOptionalMarker optionalMarker = element.getOptionalMarker();
+        String optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
+        String locationString = element.getDataType().getText() + optionalMarkerText;
+        return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
+    }
 
-            @NotNull
-            @Override
-            public String getLocationString()
-            {
-                return element.getDataType().getText() + this.getOptionalMarker();
-            }
-
-            private String getOptionalMarker()
-            {
-                KlassOptionalMarker optionalMarker = element.getOptionalMarker();
-                return optionalMarker == null ? "" : optionalMarker.getText();
-            }
-
-            @Nullable
-            @Override
-            public Icon getIcon(boolean unused)
-            {
-                return AllIcons.Nodes.Field;
-            }
-        };
+    public static ItemPresentation getPresentation(KlassEnumerationProperty element)
+    {
+        KlassOptionalMarker optionalMarker = element.getOptionalMarker();
+        String optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
+        String locationString = element.getEnumerationType().getText() + optionalMarkerText;
+        return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
     }
 }
