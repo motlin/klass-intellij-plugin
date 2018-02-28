@@ -62,10 +62,16 @@ public class KlassAnnotator implements Annotator
             this.applyClassName(klassAssociationEndType);
         }
 
-        private void applyPropertyName(PsiElement psiElement)
+        @Override
+        public void visitEnumerationType(@NotNull KlassEnumerationType klassEnumerationType)
         {
-            Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(psiElement.getNode(), null);
-            infoAnnotation.setTextAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES);
+            PsiReference reference = klassEnumerationType.getReference();
+            if (reference != null && reference.resolve() == null)
+            {
+                String message = String.format("Cannot resolve symbol '%s'", klassEnumerationType.getText());
+                this.annotationHolder.createErrorAnnotation(klassEnumerationType.getNode(), message);
+            }
+            this.applyClassName(klassEnumerationType);
         }
 
         @Override

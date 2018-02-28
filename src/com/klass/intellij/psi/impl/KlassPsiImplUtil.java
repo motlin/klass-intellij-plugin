@@ -12,12 +12,12 @@ import com.klass.intellij.reference.KlassEnumerationReference;
 
 public class KlassPsiImplUtil
 {
-    public static PsiElement setName(KlassClass element, String newName)
+    public static PsiElement setName(KlassKlass element, String newName)
     {
         ASTNode classNameNode = element.getNombre().getNode();
         if (classNameNode != null)
         {
-            KlassClass klass = KlassElementFactory.createClass(element.getProject(), newName);
+            KlassKlass klass = KlassElementFactory.createClass(element.getProject(), newName);
             ASTNode newClassNameNode = klass.getNombre().getNode();
             element.getNode().replaceChild(classNameNode, newClassNameNode);
         }
@@ -109,20 +109,25 @@ public class KlassPsiImplUtil
         return new KlassDataTypeReference(klassDataType, dataType);
     }
 
-    public static PsiReference getReference(KlassEnumeration klassEnumeration)
+    public static PsiReference getReference(KlassEnumerationType klassEnumerationType)
     {
-        String enumeration = klassEnumeration.getText();
-        if (enumeration == null)
+        String enumerationType = klassEnumerationType.getText();
+        if (enumerationType == null)
         {
             return null;
         }
 
-        return new KlassEnumerationReference(klassEnumeration, enumeration);
+        return new KlassEnumerationReference(klassEnumerationType, enumerationType);
     }
 
-    public static ItemPresentation getPresentation(KlassClass element)
+    public static ItemPresentation getPresentation(KlassKlass element)
     {
         return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Nodes.Class);
+    }
+
+    public static ItemPresentation getPresentation(KlassEnumeration element)
+    {
+        return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Nodes.Enum);
     }
 
     public static ItemPresentation getPresentation(KlassAssociation element)

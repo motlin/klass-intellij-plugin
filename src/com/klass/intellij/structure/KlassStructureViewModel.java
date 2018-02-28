@@ -5,10 +5,7 @@ import com.intellij.ide.structureView.StructureViewModelBase;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.psi.PsiFile;
-import com.klass.intellij.psi.KlassAssociation;
-import com.klass.intellij.psi.KlassAssociationEnd;
-import com.klass.intellij.psi.KlassClass;
-import com.klass.intellij.psi.KlassDataTypeProperty;
+import com.klass.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassStructureViewModel
@@ -20,6 +17,7 @@ public class KlassStructureViewModel
         super(psiFile, new KlassStructureViewElement(psiFile));
     }
 
+    @Override
     @NotNull
     public Sorter[] getSorters()
     {
@@ -29,14 +27,17 @@ public class KlassStructureViewModel
     @Override
     public boolean isAlwaysShowsPlus(StructureViewTreeElement element)
     {
-        return element instanceof KlassClass
-               || element instanceof KlassAssociation;
+        return element instanceof KlassKlass
+                || element instanceof KlassAssociation
+                || element instanceof KlassEnumeration;
     }
 
     @Override
     public boolean isAlwaysLeaf(StructureViewTreeElement element)
     {
         return element instanceof KlassDataTypeProperty
-               || element instanceof KlassAssociationEnd;
+                || element instanceof KlassEnumerationProperty
+                || element instanceof KlassAssociationEnd
+                || element instanceof KlassEnumerationLiteral;
     }
 }

@@ -42,7 +42,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
                 .around(KlassTypes.DOTDOT).none()
                 .withinPair(KlassTypes.LBRACKET, KlassTypes.RBRACKET).none()
                 .before(KlassTypes.NOMBRE).spaces(1)
-                .around(TokenSet.create(KlassTypes.CLASS, KlassTypes.ASSOCIATION)).spacing(0, 0, 2, true, 1)
+                .around(TokenSet.create(KlassTypes.KLASS, KlassTypes.ASSOCIATION)).spacing(0, 0, 2, true, 1)
                 .between(KlassTypes.ASSOCIATION_END_TYPE, KlassTypes.MULTIPLICITY).none()
                 .withinPair(KlassTypes.LBRACE, KlassTypes.RBRACE).lineBreakInCode()
                 .before(KlassTypes.LBRACE).lineBreakInCodeIf(commonSettings.BRACE_STYLE != CommonCodeStyleSettings.END_OF_LINE)

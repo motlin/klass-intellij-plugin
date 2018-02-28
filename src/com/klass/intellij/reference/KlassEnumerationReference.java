@@ -13,9 +13,25 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class KlassEnumerationReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
 {
+    public static final String[] VARIANTS = {
+            "Boolean",
+            "Integer",
+            "Long",
+            "Double",
+            "Float",
+            "String",
+            "Instant",
+            "LocalDate",
+    };
+    public static final List<LookupElementBuilder> DATA_TYPE_VARIANTS = Stream.of(VARIANTS)
+            .map(variant -> LookupElementBuilder.create(variant).withIcon(AllIcons.Nodes.Enum))
+            .collect(Collectors.toList());
+
     private final String enumerationName;
 
     public KlassEnumerationReference(@NotNull PsiElement element, String enumerationName)
@@ -62,6 +78,9 @@ public class KlassEnumerationReference extends PsiReferenceBase<PsiElement> impl
                 variants.add(lookupElementBuilder);
             }
         }
+
+        variants.addAll(DATA_TYPE_VARIANTS);
+
         return variants.toArray();
     }
 }

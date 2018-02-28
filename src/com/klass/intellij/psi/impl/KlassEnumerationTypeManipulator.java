@@ -5,11 +5,11 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.ElementManipulator;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import com.klass.intellij.psi.KlassAssociationEndType;
 import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassEnumerationType;
 import org.jetbrains.annotations.NotNull;
 
-public class KlassAssociationEndTypeManipulator implements ElementManipulator
+public class KlassEnumerationTypeManipulator implements ElementManipulator
 {
     @Override
     public PsiElement handleContentChange(
@@ -17,13 +17,13 @@ public class KlassAssociationEndTypeManipulator implements ElementManipulator
             @NotNull TextRange range,
             String newContent) throws IncorrectOperationException
     {
-        ASTNode associationEndTypeNode = element.getNode();
-        if (associationEndTypeNode != null)
+        ASTNode enumerationTypeNode = element.getNode();
+        if (enumerationTypeNode != null)
         {
-            KlassAssociationEndType associationEndType =
-                    KlassElementFactory.createAssociationEndType(element.getProject(), newContent);
-            ASTNode newAssociationEndTypeNode = associationEndType.getNode();
-            element.getParent().getNode().replaceChild(associationEndTypeNode, newAssociationEndTypeNode);
+            KlassEnumerationType enumerationType =
+                    KlassElementFactory.createEnumerationType(element.getProject(), newContent);
+            ASTNode newEnumerationTypeNode = enumerationType.getNode();
+            element.getParent().getNode().replaceChild(enumerationTypeNode, newEnumerationTypeNode);
         }
         return element;
     }

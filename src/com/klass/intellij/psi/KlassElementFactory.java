@@ -6,22 +6,22 @@ import com.klass.intellij.KlassFileType;
 
 public class KlassElementFactory
 {
-    public static KlassClass createClass(Project project, String name)
+    public static KlassKlass createClass(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(project, String.format("class %s {}", name));
-        return (KlassClass) file.getFirstChild();
+        return (KlassKlass) file.getFirstChild().getFirstChild();
     }
 
     public static KlassEnumeration createEnumeration(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(project, String.format("enumeration %s {}", name));
-        return (KlassEnumeration) file.getFirstChild();
+        return (KlassEnumeration) file.getFirstChild().getFirstChild();
     }
 
     public static KlassAssociation createAssociation(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(project, String.format("association %s {}", name));
-        return (KlassAssociation) file.getFirstChild();
+        return (KlassAssociation) file.getFirstChild().getFirstChild();
     }
 
     public static KlassDataTypeProperty createDataTypeProperty(Project project, String name)
@@ -32,7 +32,7 @@ public class KlassElementFactory
                 + "{\n"
                 + "  " + name + ": String\n"
                 + "}\n");
-        return ((KlassClass) file.getFirstChild()).getPropertyList().get(0).getDataTypeProperty();
+        return ((KlassKlass) file.getFirstChild().getFirstChild()).getPropertyList().get(0).getDataTypeProperty();
     }
 
     public static KlassEnumerationProperty createEnumerationProperty(Project project, String name)
@@ -43,7 +43,18 @@ public class KlassElementFactory
                         + "{\n"
                         + "  " + name + ": Status\n"
                         + "}\n");
-        return ((KlassClass) file.getFirstChild()).getPropertyList().get(0).getEnumerationProperty();
+        return ((KlassKlass) file.getFirstChild()).getPropertyList().get(0).getEnumerationProperty();
+    }
+
+    public static KlassEnumerationType createEnumerationType(Project project, String name)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "class DummyClass\n"
+                        + "{\n"
+                        + "  dummyProperty: " + name + "\n"
+                        + "}\n");
+        return ((KlassKlass) file.getFirstChild().getFirstChild()).getPropertyList().get(0).getEnumerationProperty().getEnumerationType();
     }
 
     public static KlassAssociationEnd createAssociationEnd(Project project, String name)
@@ -55,7 +66,7 @@ public class KlassElementFactory
                 + "  " + name + ": DummyType[0..1]\n"
                 + "  target: DummyType[0..*]\n"
                 + "}\n");
-        return ((KlassAssociation) file.getFirstChild()).getSourceAssociationEnd().getAssociationEnd();
+        return ((KlassAssociation) file.getFirstChild().getFirstChild()).getSourceAssociationEnd().getAssociationEnd();
     }
 
     public static KlassAssociationEndType createAssociationEndType(Project project, String name)
@@ -67,7 +78,7 @@ public class KlassElementFactory
                 + "  source: " + name + "[0..1]\n"
                 + "  target: " + name + "[0..*]\n"
                 + "}\n");
-        return ((KlassAssociation) file.getFirstChild()).getSourceAssociationEnd().getAssociationEnd().getAssociationEndType();
+        return ((KlassAssociation) file.getFirstChild().getFirstChild()).getSourceAssociationEnd().getAssociationEnd().getAssociationEndType();
     }
 
     public static KlassFile createFile(Project project, String text)

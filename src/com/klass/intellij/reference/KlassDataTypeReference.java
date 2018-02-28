@@ -10,6 +10,17 @@ import org.jetbrains.annotations.Nullable;
 
 public class KlassDataTypeReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
 {
+    public static final String[] VARIANTS = {
+            "Boolean",
+            "Integer",
+            "Long",
+            "Double",
+            "Float",
+            "String",
+            "Instant",
+            "LocalDate",
+    };
+
     private final String substring;
 
     public KlassDataTypeReference(@NotNull PsiElement element, String substring)
@@ -36,6 +47,6 @@ public class KlassDataTypeReference extends PsiReferenceBase<PsiElement> impleme
     @Override
     public Object[] getVariants()
     {
-        return new String[]{"Boolean", "Integer", "Long", "Double", "Float", "String", "Instant", "LocalDate"};
+        return VARIANTS;
     }
 }

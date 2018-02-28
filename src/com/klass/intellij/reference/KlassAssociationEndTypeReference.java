@@ -8,9 +8,8 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import com.klass.intellij.KlassIcons;
 import com.klass.intellij.KlassUtil;
-import com.klass.intellij.psi.KlassClass;
+import com.klass.intellij.psi.KlassKlass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +33,7 @@ public class KlassAssociationEndTypeReference extends PsiReferenceBase<PsiElemen
         Project project = this.myElement.getProject();
         return KlassUtil.findClasses(project)
                 .stream()
-                .filter(klassClass -> klassClass.getName().equals(this.className))
+                .filter(klassKlass -> klassKlass.getName().equals(this.className))
                 .map(PsiElementResolveResult::new)
                 .toArray(ResolveResult[]::new);
     }
@@ -43,7 +42,7 @@ public class KlassAssociationEndTypeReference extends PsiReferenceBase<PsiElemen
     @Override
     public PsiElement resolve()
     {
-        ResolveResult[] resolveResults = multiResolve(false);
+        ResolveResult[] resolveResults = this.multiResolve(false);
         return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
     }
 
@@ -52,16 +51,16 @@ public class KlassAssociationEndTypeReference extends PsiReferenceBase<PsiElemen
     public Object[] getVariants()
     {
         Project project = this.myElement.getProject();
-        List<KlassClass> klassClasses = KlassUtil.findClasses(project);
+        List<KlassKlass> KlassKlasses = KlassUtil.findClasses(project);
         List<LookupElement> variants = new ArrayList<>();
         BracketsInsertHandler insertHandler = new BracketsInsertHandler();
-        for (KlassClass klassClass : klassClasses)
+        for (KlassKlass KlassKlass : KlassKlasses)
         {
-            if (klassClass.getName() != null && !klassClass.getName().isEmpty())
+            if (KlassKlass.getName() != null && !KlassKlass.getName().isEmpty())
             {
-                LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(klassClass.getName())
+                LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(KlassKlass.getName())
                         .withIcon(AllIcons.Nodes.Class)
-                        .withTypeText(klassClass.getContainingFile().getName())
+                        .withTypeText(KlassKlass.getContainingFile().getName())
                         .withInsertHandler(insertHandler);
                 variants.add(lookupElementBuilder);
             }

@@ -5,7 +5,7 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.klass.intellij.KlassUtil;
 import com.klass.intellij.psi.KlassAssociation;
-import com.klass.intellij.psi.KlassClass;
+import com.klass.intellij.psi.KlassKlass;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public abstract class AbstractKlassChooseByNameContributor implements ChooseByNa
     protected void addClassNames(Project project, List<String> names)
     {
         KlassUtil.findClasses(project).stream()
-                .map(KlassClass::getName)
+                .map(KlassKlass::getName)
                 .filter(Objects::nonNull)
                 .filter(name -> !name.isEmpty())
                 .forEachOrdered(names::add);

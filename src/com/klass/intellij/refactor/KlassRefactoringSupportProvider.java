@@ -8,8 +8,8 @@ import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.klass.intellij.psi.KlassAssociation;
-import com.klass.intellij.psi.KlassClass;
 import com.klass.intellij.psi.KlassEnumeration;
+import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassNombre;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,7 @@ public class KlassRefactoringSupportProvider extends RefactoringSupportProvider
     public boolean isSafeDeleteAvailable(@NotNull PsiElement element)
     {
         return element instanceof KlassNombre
-                || element instanceof KlassClass
+                || element instanceof KlassKlass
                 || element instanceof KlassAssociation
                 || element instanceof KlassEnumeration;
     }
@@ -27,7 +27,7 @@ public class KlassRefactoringSupportProvider extends RefactoringSupportProvider
     @Override
     public boolean isMemberInplaceRenameAvailable(@NotNull PsiElement element, PsiElement context)
     {
-        return element instanceof KlassClass
+        return element instanceof KlassKlass
                 || element instanceof KlassAssociation
                 || element instanceof KlassEnumeration;
     }
@@ -41,12 +41,13 @@ public class KlassRefactoringSupportProvider extends RefactoringSupportProvider
     public static boolean mayRenameInplace(PsiElement elementToRename, PsiElement nameSuggestionContext)
     {
         if (nameSuggestionContext != null
-            && nameSuggestionContext.getContainingFile() != elementToRename.getContainingFile())
+                && nameSuggestionContext.getContainingFile() != elementToRename.getContainingFile())
         {
             return false;
         }
-        if (!(elementToRename instanceof KlassClass)
-            && !(elementToRename instanceof KlassAssociation))
+        if (!(elementToRename instanceof KlassKlass)
+                && !(elementToRename instanceof KlassAssociation)
+                && !(elementToRename instanceof KlassEnumeration))
         {
             return false;
         }

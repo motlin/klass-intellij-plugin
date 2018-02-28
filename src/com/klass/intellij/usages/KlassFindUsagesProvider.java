@@ -41,7 +41,7 @@ public class KlassFindUsagesProvider implements FindUsagesProvider
     @Override
     public String getType(@NotNull PsiElement element)
     {
-        if (element instanceof KlassClass)
+        if (element instanceof KlassKlass)
         {
             return "class";
         }

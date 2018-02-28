@@ -11,12 +11,13 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.klass.intellij.psi.*;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class KlassUtil
 {
-    public static List<KlassClass> findClasses(Project project)
+    public static List<KlassKlass> findClasses(Project project)
     {
-        return KlassUtil.findElementsOfType(project, KlassClass.class);
+        return KlassUtil.findElementsOfType(project, KlassKlass.class);
     }
 
     public static List<KlassAssociation> findAssociations(Project project)
@@ -50,7 +51,8 @@ public class KlassUtil
                 .map(psiManager::findFile)
                 .map(KlassFile.class::cast)
                 .filter(Objects::nonNull)
-                .map(klassFile -> PsiTreeUtil.getChildrenOfType(klassFile, klass))
+                .flatMap(klassFile -> Stream.of(PsiTreeUtil.getChildrenOfType(klassFile, KlassTopLevelItem.class)))
+                .map(klassTopLevelItem -> PsiTreeUtil.getChildrenOfType(klassTopLevelItem, klass))
                 .filter(Objects::nonNull)
                 .forEach(classes -> Collections.addAll(result, classes));
         return result;

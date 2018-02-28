@@ -16,11 +16,11 @@
   psiImplUtilClass="com.klass.intellij.psi.impl.KlassPsiImplUtil"
 }
 
-compilationUnit ::= topLevelItem_*
+compilationUnit ::= topLevelItem*
 
-private topLevelItem_ ::= class | association | enumeration
+topLevelItem ::= klass | association | enumeration
 
-class ::= CLASS_KEYWORD nombre LBRACE property* RBRACE {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[setName getPresentation]}
+klass ::= CLASS_KEYWORD nombre LBRACE property* RBRACE {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[setName getPresentation]}
 
 association ::= ASSOCIATION_KEYWORD nombre LBRACE sourceAssociationEnd targetAssociationEnd RBRACE {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[setName getPresentation]}
 
