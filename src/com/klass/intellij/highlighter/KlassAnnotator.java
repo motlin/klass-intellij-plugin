@@ -81,5 +81,39 @@ public class KlassAnnotator implements Annotator
                     this.annotationHolder.createInfoAnnotation(klassEnumerationLiteral.getNode(), null);
             infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES);
         }
+
+        @Override
+        public void visitAssociationEnd(@NotNull KlassAssociationEnd klassAssociationEnd)
+        {
+            if (klassAssociationEnd.getMultiplicity() == null)
+            {
+                String message = String.format("Expected multiplicity", klassAssociationEnd.getText());
+
+                this.annotationHolder.createErrorAnnotation(klassAssociationEnd.getNode(), message);
+            }
+        }
+
+        @Override
+        public void visitAssociation(@NotNull KlassAssociation klassAssociation)
+        {
+            int size = klassAssociation.getAssociationEndList().size();
+            if (size == 0)
+            {
+                String message = "Expected association ends.";
+                this.annotationHolder.createErrorAnnotation(klassAssociation, message);
+            }
+
+            if (size == 1)
+            {
+                String message = "Expected two association ends.";
+                this.annotationHolder.createErrorAnnotation(klassAssociation.getAssociationEndList().get(0), message);
+            }
+
+            if (size > 2)
+            {
+                String message = "Expected two association ends.";
+                this.annotationHolder.createErrorAnnotation(klassAssociation.getAssociationEndList().get(2), message);
+            }
+        }
     }
 }

@@ -22,7 +22,7 @@ topLevelItem ::= klass | association | enumeration
 
 klass ::= CLASS_KEYWORD nombre LBRACE property* RBRACE {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[setName getPresentation]}
 
-association ::= ASSOCIATION_KEYWORD nombre LBRACE sourceAssociationEnd targetAssociationEnd RBRACE {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[setName getPresentation]}
+association ::= ASSOCIATION_KEYWORD nombre LBRACE associationEnd* RBRACE {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[setName getPresentation]}
 
 enumeration ::= ENUMERATION_KEYWORD nombre LBRACE (enumerationLiteral COMMA)* RBRACE {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[setName getPresentation]}
 
@@ -32,11 +32,8 @@ dataTypeProperty ::= nombre COLON dataType optionalMarker? {mixin="com.klass.int
 
 enumerationProperty ::= nombre COLON enumerationType optionalMarker? {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[setName getPresentation]}
 
-sourceAssociationEnd ::= associationEnd;
-targetAssociationEnd ::= associationEnd;
-
 // TODO: packages, imports, fully qualified class names
-associationEnd ::= nombre? COLON associationEndType? multiplicity? {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[setName getPresentation]}
+associationEnd ::= nombre COLON associationEndType? multiplicity? {mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl" implements="com.klass.intellij.psi.KlassNamedElement" methods=[setName getPresentation]}
 
 // Just can't be called name, because the getName method would clash
 nombre ::= IDENTIFIER

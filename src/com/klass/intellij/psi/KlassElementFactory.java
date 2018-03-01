@@ -66,7 +66,7 @@ public class KlassElementFactory
                 + "  " + name + ": DummyType[0..1]\n"
                 + "  target: DummyType[0..*]\n"
                 + "}\n");
-        return ((KlassAssociation) file.getFirstChild().getFirstChild()).getSourceAssociationEnd().getAssociationEnd();
+        return ((KlassAssociation) file.getFirstChild().getFirstChild()).getAssociationEndList().get(0);
     }
 
     public static KlassAssociationEndType createAssociationEndType(Project project, String name)
@@ -78,7 +78,7 @@ public class KlassElementFactory
                 + "  source: " + name + "[0..1]\n"
                 + "  target: " + name + "[0..*]\n"
                 + "}\n");
-        return ((KlassAssociation) file.getFirstChild().getFirstChild()).getSourceAssociationEnd().getAssociationEnd().getAssociationEndType();
+        return ((KlassAssociation) file.getFirstChild().getFirstChild()).getAssociationEndList().get(0).getAssociationEndType();
     }
 
     public static KlassFile createFile(Project project, String text)

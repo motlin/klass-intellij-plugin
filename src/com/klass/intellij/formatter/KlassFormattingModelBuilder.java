@@ -46,7 +46,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
                 .between(KlassTypes.ASSOCIATION_END_TYPE, KlassTypes.MULTIPLICITY).none()
                 .withinPair(KlassTypes.LBRACE, KlassTypes.RBRACE).lineBreakInCode()
                 .before(KlassTypes.LBRACE).lineBreakInCodeIf(commonSettings.BRACE_STYLE != CommonCodeStyleSettings.END_OF_LINE)
-                .after(TokenSet.create(KlassTypes.PROPERTY, KlassTypes.SOURCE_ASSOCIATION_END, KlassTypes.TARGET_ASSOCIATION_END)).lineBreakInCode();
+                .after(TokenSet.create(KlassTypes.PROPERTY, KlassTypes.ASSOCIATION_END)).lineBreakInCode();
 
         return spacingBuilder;
     }
