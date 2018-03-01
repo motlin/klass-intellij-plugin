@@ -23,6 +23,9 @@
     RBRACKET=']'
     COLON=':'
     DOTDOT='..'
+    CLASS_KEYWORD='class'
+    ASSOCIATION_KEYWORD='association'
+    ENUMERATION_KEYWORD='enumeration'
   ]
 
   extends("klass|association|enumeration")=topLevelItem
@@ -31,13 +34,14 @@
 
 compilationUnit ::= topLevelItem*
 
-topLevelItem ::= klass | association | enumeration
+topLevelItem ::= klass | association | enumeration {recoverWhile="topLevelItem_recover"}
+private topLevelItem_recover ::= !('}' | 'class' | 'association' | 'enumeration')
 
-klass ::= CLASS_KEYWORD nombre '{' property* '}' {methods=[setName getPresentation]}
+klass ::= 'class' nombre '{' property* '}' {pin="{" methods=[setName getPresentation]}
 
-association ::= ASSOCIATION_KEYWORD nombre '{' associationEnd* '}' {methods=[setName getPresentation]}
+association ::= 'association' nombre '{' associationEnd* '}' {pin="{" methods=[setName getPresentation]}
 
-enumeration ::= ENUMERATION_KEYWORD nombre '{' (enumerationLiteral COMMA)* '}' {methods=[setName getPresentation]}
+enumeration ::= 'enumeration' nombre '{' (enumerationLiteral COMMA)* '}' {pin="{" methods=[setName getPresentation]}
 
 property ::= dataTypeProperty | enumerationProperty
 

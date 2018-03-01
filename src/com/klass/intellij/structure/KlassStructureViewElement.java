@@ -89,7 +89,10 @@ public class KlassStructureViewElement implements StructureViewTreeElement, Sort
 
         if (this.element instanceof KlassAssociation)
         {
-            ((KlassAssociation) this.element).getAssociationEndList().toArray(new TreeElement[]{});
+            ((KlassAssociation) this.element).getAssociationEndList()
+                    .stream()
+                    .map(KlassStructureViewElement::new)
+                    .toArray(TreeElement[]::new);
         }
 
         return EMPTY_ARRAY;
