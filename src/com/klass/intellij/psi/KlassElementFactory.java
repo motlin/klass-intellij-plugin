@@ -9,19 +9,19 @@ public class KlassElementFactory
     public static KlassKlass createClass(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(project, String.format("class %s {}", name));
-        return (KlassKlass) file.getFirstChild().getFirstChild();
+        return (KlassKlass) file.getFirstChild();
     }
 
     public static KlassEnumeration createEnumeration(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(project, String.format("enumeration %s {}", name));
-        return (KlassEnumeration) file.getFirstChild().getFirstChild();
+        return (KlassEnumeration) file.getFirstChild();
     }
 
     public static KlassAssociation createAssociation(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(project, String.format("association %s {}", name));
-        return (KlassAssociation) file.getFirstChild().getFirstChild();
+        return (KlassAssociation) file.getFirstChild();
     }
 
     public static KlassDataTypeProperty createDataTypeProperty(Project project, String name)
@@ -32,7 +32,7 @@ public class KlassElementFactory
                 + "{\n"
                 + "  " + name + ": String\n"
                 + "}\n");
-        return ((KlassKlass) file.getFirstChild().getFirstChild()).getPropertyList().get(0).getDataTypeProperty();
+        return (KlassDataTypeProperty) ((KlassKlass) file.getFirstChild()).getPropertyList().get(0);
     }
 
     public static KlassEnumerationProperty createEnumerationProperty(Project project, String name)
@@ -43,7 +43,7 @@ public class KlassElementFactory
                         + "{\n"
                         + "  " + name + ": Status\n"
                         + "}\n");
-        return ((KlassKlass) file.getFirstChild()).getPropertyList().get(0).getEnumerationProperty();
+        return (KlassEnumerationProperty) ((KlassKlass) file.getFirstChild()).getPropertyList().get(0);
     }
 
     public static KlassEnumerationType createEnumerationType(Project project, String name)
@@ -54,7 +54,7 @@ public class KlassElementFactory
                         + "{\n"
                         + "  dummyProperty: " + name + "\n"
                         + "}\n");
-        return ((KlassKlass) file.getFirstChild().getFirstChild()).getPropertyList().get(0).getEnumerationProperty().getEnumerationType();
+        return (KlassEnumerationType) ((KlassKlass) file.getFirstChild()).getPropertyList().get(0);
     }
 
     public static KlassAssociationEnd createAssociationEnd(Project project, String name)
@@ -66,7 +66,7 @@ public class KlassElementFactory
                 + "  " + name + ": DummyType[0..1]\n"
                 + "  target: DummyType[0..*]\n"
                 + "}\n");
-        return ((KlassAssociation) file.getFirstChild().getFirstChild()).getAssociationEndList().get(0);
+        return ((KlassAssociation) file.getFirstChild()).getAssociationEndList().get(0);
     }
 
     public static KlassAssociationEndType createAssociationEndType(Project project, String name)
@@ -78,7 +78,7 @@ public class KlassElementFactory
                 + "  source: " + name + "[0..1]\n"
                 + "  target: " + name + "[0..*]\n"
                 + "}\n");
-        return ((KlassAssociation) file.getFirstChild().getFirstChild()).getAssociationEndList().get(0).getAssociationEndType();
+        return ((KlassAssociation) file.getFirstChild()).getAssociationEndList().get(0).getAssociationEndType();
     }
 
     public static KlassFile createFile(Project project, String text)

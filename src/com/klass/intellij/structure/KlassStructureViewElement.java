@@ -14,8 +14,6 @@ import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassTopLevelItem;
 
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 public class KlassStructureViewElement implements StructureViewTreeElement, SortableTreeElement
 {
@@ -77,11 +75,6 @@ public class KlassStructureViewElement implements StructureViewTreeElement, Sort
         if (this.element instanceof KlassFile)
         {
             return Arrays.stream(PsiTreeUtil.getChildrenOfType(this.element, KlassTopLevelItem.class))
-                    .flatMap(klassTopLevelItem -> Stream.of(
-                            klassTopLevelItem.getKlass(),
-                            klassTopLevelItem.getAssociation(),
-                            klassTopLevelItem.getEnumeration()))
-                    .filter(Objects::nonNull)
                     .map(KlassStructureViewElement::new)
                     .toArray(TreeElement[]::new);
         }
@@ -90,8 +83,6 @@ public class KlassStructureViewElement implements StructureViewTreeElement, Sort
         {
             return ((KlassKlass) this.element).getPropertyList()
                     .stream()
-                    .flatMap(klassProperty -> Stream.of(klassProperty.getDataTypeProperty(), klassProperty.getEnumerationProperty()))
-                    .filter(Objects::nonNull)
                     .map(KlassStructureViewElement::new)
                     .toArray(TreeElement[]::new);
         }

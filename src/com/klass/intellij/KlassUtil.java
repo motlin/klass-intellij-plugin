@@ -11,7 +11,6 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.klass.intellij.psi.*;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class KlassUtil
 {
@@ -51,8 +50,7 @@ public class KlassUtil
                 .map(psiManager::findFile)
                 .map(KlassFile.class::cast)
                 .filter(Objects::nonNull)
-                .flatMap(klassFile -> Stream.of(PsiTreeUtil.getChildrenOfType(klassFile, KlassTopLevelItem.class)))
-                .map(klassTopLevelItem -> PsiTreeUtil.getChildrenOfType(klassTopLevelItem, klass))
+                .map(klassFile -> PsiTreeUtil.getChildrenOfType(klassFile, klass))
                 .filter(Objects::nonNull)
                 .forEach(classes -> Collections.addAll(result, classes));
         return result;
