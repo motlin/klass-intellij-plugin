@@ -4,9 +4,15 @@ import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.klass.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class KlassAnnotator implements Annotator
 {
@@ -51,15 +57,23 @@ public class KlassAnnotator implements Annotator
         }
 
         @Override
-        public void visitAssociationEndType(@NotNull KlassAssociationEndType klassAssociationEndType)
+        public void visitKlass(@NotNull KlassKlass klassKlass)
         {
-            PsiReference reference = klassAssociationEndType.getReference();
-            if (reference != null && reference.resolve() == null)
+            List<KlassProperty> propertyList = klassKlass.getPropertyList();
+            Map<String, Long> propertyCountByName = propertyList.stream()
+                    .map(PsiNamedElement::getName)
+                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+            for (KlassProperty klassProperty : propertyList)
             {
-                String message = String.format("Cannot resolve symbol '%s'", klassAssociationEndType.getText());
-                this.annotationHolder.createErrorAnnotation(klassAssociationEndType.getNode(), message);
+                String propertyName = klassProperty.getName();
+                Long occurrences = propertyCountByName.get(propertyName);
+                if (occurrences > 1)
+                {
+                    String message = String.format("Duplicate property '%s'", propertyName);
+                    this.annotationHolder.createErrorAnnotation(klassProperty.getNombre(), message);
+                }
             }
-            this.applyClassName(klassAssociationEndType);
         }
 
         @Override
@@ -83,6 +97,28 @@ public class KlassAnnotator implements Annotator
         }
 
         @Override
+        public void visitAssociation(@NotNull KlassAssociation klassAssociation)
+        {
+            List<KlassAssociationEnd> associationEndList = klassAssociation.getAssociationEndList();
+            int size = associationEndList.size();
+            if (size == 0)
+            {
+                String message = "Expected association ends.";
+                this.annotationHolder.createErrorAnnotation(klassAssociation, message);
+            }
+            else if (size == 1)
+            {
+                String message = "Expected two association ends.";
+                this.annotationHolder.createErrorAnnotation(associationEndList.get(0), message);
+            }
+            else if (size > 2)
+            {
+                String message = "Expected two association ends.";
+                this.annotationHolder.createErrorAnnotation(associationEndList.get(2), message);
+            }
+        }
+
+        @Override
         public void visitAssociationEnd(@NotNull KlassAssociationEnd klassAssociationEnd)
         {
             if (klassAssociationEnd.getMultiplicity() == null)
@@ -94,25 +130,36 @@ public class KlassAnnotator implements Annotator
         }
 
         @Override
-        public void visitAssociation(@NotNull KlassAssociation klassAssociation)
+        public void visitAssociationEndType(@NotNull KlassAssociationEndType klassAssociationEndType)
         {
-            int size = klassAssociation.getAssociationEndList().size();
-            if (size == 0)
+            PsiReference reference = klassAssociationEndType.getReference();
+            if (reference != null && reference.resolve() == null)
             {
-                String message = "Expected association ends.";
-                this.annotationHolder.createErrorAnnotation(klassAssociation, message);
+                String message = String.format("Cannot resolve symbol '%s'", klassAssociationEndType.getText());
+                this.annotationHolder.createErrorAnnotation(klassAssociationEndType.getNode(), message);
             }
+            this.applyClassName(klassAssociationEndType);
+        }
 
-            if (size == 1)
+        @Override
+        public void visitLowerBound(@NotNull KlassLowerBound klassLowerBound)
+        {
+            String text = klassLowerBound.getText();
+            if (!text.equals("0") && !text.equals("1"))
             {
-                String message = "Expected two association ends.";
-                this.annotationHolder.createErrorAnnotation(klassAssociation.getAssociationEndList().get(0), message);
+                String message = "Expected 0 or 1 for the lower bound.";
+                this.annotationHolder.createErrorAnnotation(klassLowerBound, message);
             }
+        }
 
-            if (size > 2)
+        @Override
+        public void visitUpperBound(@NotNull KlassUpperBound klassUpperBound)
+        {
+            String text = klassUpperBound.getText();
+            if (!text.equals("1") && !text.equals("*"))
             {
-                String message = "Expected two association ends.";
-                this.annotationHolder.createErrorAnnotation(klassAssociation.getAssociationEndList().get(2), message);
+                String message = "Expected 1 or * for the upper bound.";
+                this.annotationHolder.createErrorAnnotation(klassUpperBound, message);
             }
         }
     }
