@@ -22,18 +22,21 @@ public class KlassBlock extends AbstractBlock
     private final SpacingBuilder spacingBuilder;
     private final CodeStyleSettings settings;
     private final CommonCodeStyleSettings commonSettings;
+    private final Indent childIndent;
 
     protected KlassBlock(
             @NotNull ASTNode node,
             @Nullable Wrap wrap,
             @Nullable Alignment alignment,
             SpacingBuilder spacingBuilder,
-            CodeStyleSettings settings)
+            CodeStyleSettings settings,
+            Indent childIndent)
     {
         super(node, wrap, alignment);
         this.spacingBuilder = spacingBuilder;
         this.settings = settings;
         this.commonSettings = settings.getCommonSettings(KlassLanguage.INSTANCE);
+        this.childIndent = childIndent;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class KlassBlock extends AbstractBlock
             {
                 Wrap wrap = Wrap.createWrap(WrapType.NONE, false);
                 Block block =
-                        new KlassBlock(child, wrap, this.getAlignment(elementType), this.spacingBuilder, this.settings);
+                        new KlassBlock(child, wrap, this.getAlignment(elementType), this.spacingBuilder, this.settings, this.getIndentForChildren(child));
                 blocks.add(block);
             }
             child = child.getTreeNext();
@@ -69,10 +72,6 @@ public class KlassBlock extends AbstractBlock
     public Indent getIndent()
     {
         IElementType elementType = this.getNode().getElementType();
-        if (elementType == KlassTypes.KLASS)
-        {
-            return Indent.getNoneIndent();
-        }
         if (elementType == KlassTypes.DATA_TYPE_PROPERTY
                 || elementType == KlassTypes.ENUMERATION_PROPERTY
                 || elementType == KlassTypes.ASSOCIATION_END
@@ -81,6 +80,32 @@ public class KlassBlock extends AbstractBlock
             return Indent.getNormalIndent();
         }
         return Indent.getNoneIndent();
+    }
+
+    private Indent getIndentForChildren(ASTNode astNode)
+    {
+        IElementType elementType = astNode.getElementType();
+        if (elementType == KlassTypes.KLASS
+                || elementType == KlassTypes.ASSOCIATION
+                || elementType == KlassTypes.ENUMERATION)
+        {
+            return Indent.getNormalIndent();
+        }
+        return Indent.getNoneIndent();
+    }
+
+    @Nullable
+    @Override
+    public Indent getChildIndent()
+    {
+        return this.childIndent;
+    }
+
+    @NotNull
+    @Override
+    public ChildAttributes getChildAttributes(int newChildIndex)
+    {
+        return new ChildAttributes(this.childIndent, null);
     }
 
     @Nullable

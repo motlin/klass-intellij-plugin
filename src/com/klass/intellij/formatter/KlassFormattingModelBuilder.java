@@ -9,6 +9,9 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.tree.TokenSet;
 import com.klass.intellij.KlassLanguage;
+import com.klass.intellij.psi.KlassAssociation;
+import com.klass.intellij.psi.KlassEnumeration;
+import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,8 +29,21 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
                         Wrap.createWrap(WrapType.NONE, false),
                         Alignment.createAlignment(),
                         KlassFormattingModelBuilder.createSpaceBuilder(settings),
-                        settings),
+                        settings,
+                        this.getChildIndent(element)),
                 settings);
+    }
+
+    @Nullable
+    private Indent getChildIndent(PsiElement element)
+    {
+        if (element instanceof KlassKlass
+                || element instanceof KlassAssociation
+                || element instanceof KlassEnumeration)
+        {
+            return Indent.getNormalIndent();
+        }
+        return Indent.getNoneIndent();
     }
 
     private static SpacingBuilder createSpaceBuilder(CodeStyleSettings settings)
