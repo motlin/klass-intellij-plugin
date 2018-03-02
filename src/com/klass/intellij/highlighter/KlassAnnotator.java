@@ -39,7 +39,7 @@ public class KlassAnnotator implements Annotator
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_NAME_ATTRIBUTES);
             }
-            else if (klassNombre.getParent().getParent() instanceof KlassProperty
+            else if (klassNombre.getParent() instanceof KlassProperty
                     || klassNombre.getParent() instanceof KlassAssociationEnd)
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES);
