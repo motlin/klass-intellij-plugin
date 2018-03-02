@@ -1,10 +1,19 @@
 package com.klass.intellij.formatter;
 
+import com.intellij.application.options.IndentOptionsEditor;
+import com.intellij.application.options.SmartIndentOptionsEditor;
 import com.intellij.lang.Language;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
+import com.intellij.util.LocalTimeCounter;
+import com.klass.intellij.KlassFileType;
 import com.klass.intellij.KlassLanguage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class KlassLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider
 {
@@ -18,7 +27,7 @@ public class KlassLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
     @Override
     public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType)
     {
-        if (settingsType== SettingsType.SPACING_SETTINGS)
+        if (settingsType == SettingsType.SPACING_SETTINGS)
         {
 
         }
@@ -31,6 +40,21 @@ public class KlassLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
         {
 
         }
+    }
+
+    @Override
+    public CommonCodeStyleSettings getDefaultCommonSettings()
+    {
+        CommonCodeStyleSettings defaultSettings = new CommonCodeStyleSettings(KlassLanguage.INSTANCE);
+        defaultSettings.initIndentOptions();
+        return defaultSettings;
+    }
+
+    @Nullable
+    @Override
+    public IndentOptionsEditor getIndentOptionsEditor()
+    {
+        return new SmartIndentOptionsEditor();
     }
 
     @Override
@@ -50,16 +74,30 @@ public class KlassLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
                 + "    body  : String\n"
                 + "    status: Status\n"
                 + "}\n"
-               + "\n"
-               + "class Answer\n"
-               + "{\n"
-               + "    body    : String?\n"
-               + "}\n"
-               + "\n"
-               + "association QuestionHasAnswer\n"
-               + "{\n"
-               + "    question: Question[1..1]\n"
-               + "    answer  : Answer[0..*]\n"
-               + "}\n";
+                + "\n"
+                + "class Answer\n"
+                + "{\n"
+                + "    body    : String?\n"
+                + "}\n"
+                + "\n"
+                + "association QuestionHasAnswer\n"
+                + "{\n"
+                + "    question: Question[1..1]\n"
+                + "    answer  : Answer[0..*]\n"
+                + "}\n";
+    }
+
+    @Nullable
+    @Override
+    public PsiFile createFileFromText(Project project, String text)
+    {
+        return PsiFileFactory.getInstance(project)
+                .createFileFromText(
+                        "sample.klass",
+                        KlassFileType.INSTANCE,
+                        text,
+                        LocalTimeCounter.currentTime(),
+                        false,
+                        false);
     }
 }
