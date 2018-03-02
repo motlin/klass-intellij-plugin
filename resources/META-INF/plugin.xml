@@ -47,6 +47,7 @@
         <codeStyleSettingsProvider implementation="com.klass.intellij.formatter.KlassCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider implementation="com.klass.intellij.formatter.KlassLanguageCodeStyleSettingsProvider"/>
         <lang.commenter language="Klass" implementationClass="com.klass.intellij.commenter.KlassCommenter"/>
+        <lang.braceMatcher language="Klass" implementationClass="com.klass.intellij.braces.KlassBraceMatcher" />
 
     </extensions>
 
