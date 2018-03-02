@@ -74,7 +74,12 @@ public class KlassStructureViewElement implements StructureViewTreeElement, Sort
     {
         if (this.element instanceof KlassFile)
         {
-            return Arrays.stream(PsiTreeUtil.getChildrenOfType(this.element, KlassTopLevelItem.class))
+            KlassTopLevelItem[] childrenOfType = PsiTreeUtil.getChildrenOfType(this.element, KlassTopLevelItem.class);
+            if (childrenOfType == null)
+            {
+                return EMPTY_ARRAY;
+            }
+            return Arrays.stream(childrenOfType)
                     .map(KlassStructureViewElement::new)
                     .toArray(TreeElement[]::new);
         }
