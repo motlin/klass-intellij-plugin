@@ -65,7 +65,7 @@ public class KlassBlock extends AbstractBlock
         {
             return COLON_ALIGNMENT;
         }
-        return Alignment.createAlignment();
+        return null;
     }
 
     @Override
@@ -113,7 +113,7 @@ public class KlassBlock extends AbstractBlock
     public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2)
     {
         Spacing spacing = this.spacingBuilder.getSpacing(this, child1, child2);
-        // return Spacing.createSpacing(3, 3, 0, false, 0, 0);
+        // return Spacing.createSpacing(3, 3, 3, false, 3, 3);
         return spacing;
     }
 

@@ -1,6 +1,7 @@
 package com.klass.intellij.formatter;
 
 import com.intellij.formatting.*;
+import com.intellij.formatting.SpacingBuilder.RuleBuilder;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -51,18 +52,26 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
         CommonCodeStyleSettings commonSettings = settings.getCommonSettings(KlassLanguage.INSTANCE);
 
         SpacingBuilder spacingBuilder = new SpacingBuilder(settings, KlassLanguage.INSTANCE)
-                .before(KlassTypes.OPTIONAL_MARKER).none()
-                .before(TokenSet.create(KlassTypes.COLON, KlassTypes.COMMA)).none()
+                .before(TokenSet.create(KlassTypes.OPTIONAL_MARKER, KlassTypes.COMMA)).none()
                 .after(KlassTypes.COLON).spaces(1)
-                .after(KlassTypes.COMMA).lineBreakInCode()
                 .around(KlassTypes.DOTDOT).none()
-                .withinPair(KlassTypes.LBRACKET, KlassTypes.RBRACKET).none()
+                .around(KlassTypes.LBRACKET).none()
+                .before(KlassTypes.RBRACKET).none()
+                .before(KlassTypes.MULTIPLICITY).none()
                 .before(KlassTypes.NOMBRE).spaces(1)
-                .around(TokenSet.create(KlassTypes.KLASS, KlassTypes.ASSOCIATION)).spacing(0, 0, 2, true, 1)
-                .between(KlassTypes.ASSOCIATION_END_TYPE, KlassTypes.MULTIPLICITY).none()
-                .withinPair(KlassTypes.LBRACE, KlassTypes.RBRACE).lineBreakInCode()
-                .before(KlassTypes.LBRACE).lineBreakInCodeIf(commonSettings.BRACE_STYLE != CommonCodeStyleSettings.END_OF_LINE)
-                .after(TokenSet.create(KlassTypes.PROPERTY, KlassTypes.ASSOCIATION_END)).lineBreakInCode();
+                .around(TokenSet.create(KlassTypes.LBRACE, KlassTypes.RBRACE, KlassTypes.L_BRACE, KlassTypes.R_BRACE)).lineBreakInCode()
+                .after(TokenSet.create(KlassTypes.COMMA, KlassTypes.DATA_TYPE_PROPERTY, KlassTypes.ENUMERATION_PROPERTY, KlassTypes.ASSOCIATION_END)).lineBreakInCode()
+                .around(TokenSet.create(KlassTypes.KLASS, KlassTypes.ENUMERATION, KlassTypes.ASSOCIATION)).blankLines(1);
+
+        RuleBuilder colonRuleBuilder = spacingBuilder.before(KlassTypes.COLON);
+        if (commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS)
+        {
+            colonRuleBuilder.spacing(0, Integer.MAX_VALUE, 0, false, 0);
+        }
+        else
+        {
+            colonRuleBuilder.none();
+        }
 
         return spacingBuilder;
     }
