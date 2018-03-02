@@ -37,11 +37,11 @@ compilationUnit ::= topLevelItem*
 topLevelItem ::= klass | association | enumeration {recoverWhile="topLevelItem_recover"}
 private topLevelItem_recover ::= !('}' | 'class' | 'association' | 'enumeration')
 
-klass ::= 'class' nombre '{' property* '}' {pin="{" methods=[setName getPresentation]}
+klass ::= 'class' nombre lBrace property* rBrace {pin="{" methods=[setName getPresentation]}
 
 association ::= 'association' nombre '{' associationEnd* '}' {pin="{" methods=[setName getPresentation]}
 
-enumeration ::= 'enumeration' nombre '{' (enumerationLiteral COMMA)* '}' {pin="{" methods=[setName getPresentation]}
+enumeration ::= 'enumeration' nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
 
 property ::= dataTypeProperty | enumerationProperty
 
@@ -51,6 +51,9 @@ enumerationProperty ::= nombre ':' enumerationType optionalMarker? {methods=[set
 
 // TODO: packages, imports, fully qualified class names
 associationEnd ::= nombre ':' associationEndType? multiplicity? {methods=[setName getPresentation]}
+
+lBrace ::= '{'
+rBrace ::= '}'
 
 // Just can't be called name, because the getName method would clash
 nombre ::= IDENTIFIER
