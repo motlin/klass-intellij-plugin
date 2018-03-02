@@ -29,7 +29,7 @@ public class KlassLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
     {
         if (settingsType == SettingsType.SPACING_SETTINGS)
         {
-
+            consumer.showAllStandardOptions();
         }
         if (settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS)
         {
@@ -38,7 +38,14 @@ public class KlassLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
         }
         if (settingsType == SettingsType.BLANK_LINES_SETTINGS)
         {
+            consumer.showStandardOptions(
+                    "KEEP_BLANK_LINES_IN_DECLARATIONS",
+                    "KEEP_BLANK_LINES_IN_CODE",
+                    "KEEP_BLANK_LINES_BEFORE_RBRACE",
+                    "BLANK_LINES_AROUND_CLASS"
+            );
 
+            consumer.renameStandardOption("BLANK_LINES_AROUND_FIELD", "Blank lines around property");
         }
     }
 
