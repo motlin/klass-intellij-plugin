@@ -2,51 +2,65 @@ package com.klass.intellij.completion;
 
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.patterns.PlatformPatterns;
+import com.intellij.patterns.PsiElementPattern.Capture;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import com.klass.intellij.KlassLanguage;
-import com.klass.intellij.psi.KlassTypes;
+import com.klass.intellij.psi.KlassFile;
 import org.jetbrains.annotations.NotNull;
+
+import static com.intellij.patterns.PlatformPatterns.psiElement;
 
 public class KlassCompletionContributor extends CompletionContributor
 {
+    private static final Capture<PsiElement> MULTIPLICITY = psiElement()
+            .withLanguage(KlassLanguage.INSTANCE)
+            .afterLeaf("[");
+
+    private static final Capture<PsiElement> KEYWORD = psiElement()
+            .withLanguage(KlassLanguage.INSTANCE)
+            .withParent(KlassFile.class);
+
     public KlassCompletionContributor()
     {
-        CompletionProvider<CompletionParameters> helloCompletionProvider = new CompletionProvider<CompletionParameters>()
+        CompletionProvider<CompletionParameters> multiplicityCompletionProvider =
+                new CompletionProvider<CompletionParameters>()
         {
             public void addCompletions(
                     @NotNull CompletionParameters parameters,
                     ProcessingContext context,
                     @NotNull CompletionResultSet resultSet)
             {
-                PsiElement originalPosition = parameters.getOriginalPosition();
-                PsiElement position = parameters.getPosition();
-                System.out.println("position = " + position);
-                System.out.println("originalPosition = " + originalPosition);
-                resultSet.addElement(LookupElementBuilder.create("Hello"));
-                resultSet.addElement(LookupElementBuilder.create("Answer2"));
-                resultSet.addElement(LookupElementBuilder.create("Question2"));
+                resultSet.addElement(LookupElementBuilder.create("0..1").withTailText(" One, not required", true));
+                resultSet.addElement(LookupElementBuilder.create("1..1").withTailText(" One, required", true));
+                resultSet.addElement(LookupElementBuilder.create("0..*").withTailText(" Many", true));
+                resultSet.addElement(LookupElementBuilder.create("1..*").withTailText(" Many, non-empty set", true));
             }
         };
 
-        extend(
-                CompletionType.BASIC,
-                PlatformPatterns.psiElement(KlassTypes.ASSOCIATION_END_TYPE)
-                        .withLanguage(KlassLanguage.INSTANCE),
-                helloCompletionProvider
-        );
-        extend(
-                CompletionType.BASIC,
-                PlatformPatterns.psiElement(KlassTypes.ASSOCIATION_END)
-                        .withLanguage(KlassLanguage.INSTANCE),
-                helloCompletionProvider
-        );
-        extend(
-                CompletionType.BASIC,
-                PlatformPatterns.psiElement(KlassTypes.ASSOCIATION)
-                        .withLanguage(KlassLanguage.INSTANCE),
-                helloCompletionProvider
-        );
+        CompletionProvider<CompletionParameters> keywordCompletionProvider =
+                new CompletionProvider<CompletionParameters>()
+                {
+                    @Override
+                    protected void addCompletions(
+                            @NotNull CompletionParameters parameters,
+                            ProcessingContext context,
+                            @NotNull CompletionResultSet result)
+                    {
+                        result.addElement(LookupElementBuilder.create("class"));
+                        result.addElement(LookupElementBuilder.create("enumeration"));
+                        result.addElement(LookupElementBuilder.create("association"));
+            }
+        };
+
+        this.extend(CompletionType.BASIC, MULTIPLICITY, multiplicityCompletionProvider);
+
+        this.extend(CompletionType.BASIC, KEYWORD, keywordCompletionProvider);
+    }
+
+    @Override
+    public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result)
+    {
+        super.fillCompletionVariants(parameters, result);
     }
 }

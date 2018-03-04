@@ -8,6 +8,7 @@ import com.intellij.psi.PsiReference;
 import com.klass.intellij.psi.*;
 import com.klass.intellij.reference.KlassAssociationEndTypeReference;
 import com.klass.intellij.reference.KlassDataTypeReference;
+import com.klass.intellij.reference.KlassDummyMultiplicityReference;
 import com.klass.intellij.reference.KlassEnumerationReference;
 
 public class KlassPsiImplUtil
@@ -119,6 +120,12 @@ public class KlassPsiImplUtil
 
         return new KlassEnumerationReference(klassEnumerationType, enumerationType);
     }
+
+    public static PsiReference getReference(KlassDummyMultiplicity klassDummyMultiplicity)
+    {
+        return new KlassDummyMultiplicityReference(klassDummyMultiplicity);
+    }
+
 
     public static ItemPresentation getPresentation(KlassKlass element)
     {

@@ -33,14 +33,14 @@ public class KlassAnnotator implements Annotator
 
         private void applyClassName(PsiElement psiElement)
         {
-            Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(psiElement.getNode(), null);
+            Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(psiElement, null);
             infoAnnotation.setTextAttributes(KlassHighlightingColors.CLASS_NAME_ATTRIBUTES);
         }
 
         @Override
         public void visitNombre(@NotNull KlassNombre klassNombre)
         {
-            Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(klassNombre.getNode(), null);
+            Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(klassNombre, null);
             if (klassNombre.getParent() instanceof KlassEnumeration)
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_NAME_ATTRIBUTES);
@@ -83,7 +83,7 @@ public class KlassAnnotator implements Annotator
             if (reference != null && reference.resolve() == null)
             {
                 String message = String.format("Cannot resolve symbol '%s'", klassEnumerationType.getText());
-                this.annotationHolder.createErrorAnnotation(klassEnumerationType.getNode(), message);
+                this.annotationHolder.createErrorAnnotation(klassEnumerationType, message);
             }
             this.applyClassName(klassEnumerationType);
         }
@@ -92,7 +92,7 @@ public class KlassAnnotator implements Annotator
         public void visitEnumerationLiteral(@NotNull KlassEnumerationLiteral klassEnumerationLiteral)
         {
             Annotation infoAnnotation =
-                    this.annotationHolder.createInfoAnnotation(klassEnumerationLiteral.getNode(), null);
+                    this.annotationHolder.createInfoAnnotation(klassEnumerationLiteral, null);
             infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES);
         }
 
@@ -123,9 +123,7 @@ public class KlassAnnotator implements Annotator
         {
             if (klassAssociationEnd.getMultiplicity() == null)
             {
-                String message = String.format("Expected multiplicity", klassAssociationEnd.getText());
-
-                this.annotationHolder.createErrorAnnotation(klassAssociationEnd.getNode(), message);
+                this.annotationHolder.createErrorAnnotation(klassAssociationEnd, "Expected multiplicity");
             }
         }
 
@@ -136,9 +134,15 @@ public class KlassAnnotator implements Annotator
             if (reference != null && reference.resolve() == null)
             {
                 String message = String.format("Cannot resolve symbol '%s'", klassAssociationEndType.getText());
-                this.annotationHolder.createErrorAnnotation(klassAssociationEndType.getNode(), message);
+                this.annotationHolder.createErrorAnnotation(klassAssociationEndType, message);
             }
             this.applyClassName(klassAssociationEndType);
+        }
+
+        @Override
+        public void visitDummyMultiplicity(@NotNull KlassDummyMultiplicity klassDummyMultiplicity)
+        {
+            this.annotationHolder.createErrorAnnotation(klassDummyMultiplicity, "Expected multiplicity");
         }
 
         @Override

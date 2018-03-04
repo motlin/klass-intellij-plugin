@@ -64,6 +64,8 @@ dataType ::= BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD |
 enumerationType ::= IDENTIFIER {methods=[getReference]}
 optionalMarker ::= QUESTION_MARK
 
-multiplicity ::= '[' lowerBound '..' upperBound ']'
+multiplicity ::= '[' ((lowerBound '..' upperBound) | dummyMultiplicity) ']'
+dummyMultiplicity ::= {methods=[getReference]}
+
 lowerBound ::= INTEGER_LITERAL
 upperBound ::= INTEGER_LITERAL | ASTERISK
