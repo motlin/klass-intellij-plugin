@@ -3,7 +3,7 @@ package com.klass.intellij.reference;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.*;
 import com.intellij.util.ProcessingContext;
-import com.klass.intellij.psi.KlassAssociationEndType;
+import com.klass.intellij.psi.KlassKlassName;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassReferenceContributor extends PsiReferenceContributor
@@ -11,7 +11,7 @@ public class KlassReferenceContributor extends PsiReferenceContributor
     @Override
     public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar)
     {
-        registrar.registerReferenceProvider(PlatformPatterns.psiElement(KlassAssociationEndType.class),
+        registrar.registerReferenceProvider(PlatformPatterns.psiElement(KlassKlassName.class),
                 new PsiReferenceProvider()
                 {
                     @NotNull
@@ -20,15 +20,15 @@ public class KlassReferenceContributor extends PsiReferenceContributor
                             @NotNull PsiElement element,
                             @NotNull ProcessingContext context)
                     {
-                        KlassAssociationEndType klassAssociationEndType = (KlassAssociationEndType) element;
+                        KlassKlassName KlassKlassName = (KlassKlassName) element;
 
-                        String className = klassAssociationEndType.getText();
+                        String className = KlassKlassName.getText();
                         if (className == null)
                         {
                             return PsiReference.EMPTY_ARRAY;
                         }
 
-                        return new PsiReference[]{new KlassAssociationEndTypeReference(element, className)};
+                        return new PsiReference[]{new KlassKlassReference(element, className)};
                     }
                 });
     }

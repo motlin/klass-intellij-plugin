@@ -46,7 +46,9 @@ public class KlassAnnotator implements Annotator
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_NAME_ATTRIBUTES);
             }
             else if (klassNombre.getParent() instanceof KlassProperty
-                    || klassNombre.getParent() instanceof KlassAssociationEnd)
+                    || klassNombre.getParent() instanceof KlassAssociationEnd
+                    || klassNombre.getParent() instanceof KlassPropertyName
+                    || klassNombre.getParent() instanceof KlassAssociationEndName)
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES);
             }
@@ -128,15 +130,15 @@ public class KlassAnnotator implements Annotator
         }
 
         @Override
-        public void visitAssociationEndType(@NotNull KlassAssociationEndType klassAssociationEndType)
+        public void visitKlassName(@NotNull KlassKlassName klassKlassName)
         {
-            PsiReference reference = klassAssociationEndType.getReference();
+            PsiReference reference = klassKlassName.getReference();
             if (reference != null && reference.resolve() == null)
             {
-                String message = String.format("Cannot resolve symbol '%s'", klassAssociationEndType.getText());
-                this.annotationHolder.createErrorAnnotation(klassAssociationEndType, message);
+                String message = String.format("Cannot resolve symbol '%s'", klassKlassName.getText());
+                this.annotationHolder.createErrorAnnotation(klassKlassName, message);
             }
-            this.applyClassName(klassAssociationEndType);
+            this.applyClassName(klassKlassName);
         }
 
         @Override

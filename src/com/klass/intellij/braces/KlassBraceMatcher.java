@@ -14,6 +14,7 @@ public class KlassBraceMatcher implements PairedBraceMatcher
     private static final BracePair[] PAIRS = {
             new BracePair(KlassTypes.LBRACE, KlassTypes.RBRACE, true),
             new BracePair(KlassTypes.LBRACKET, KlassTypes.RBRACKET, false),
+            new BracePair(KlassTypes.LPAREN, KlassTypes.RPAREN, false),
     };
 
     @NotNull

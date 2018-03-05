@@ -65,6 +65,8 @@ public class KlassHighlightingColors
             createTextAttributesKey("STATIC_FINAL_FIELD_ATTRIBUTES", STATIC_FIELD_ATTRIBUTES);
     public static final TextAttributesKey CLASS_NAME_ATTRIBUTES =
             createTextAttributesKey("CLASS_NAME_ATTRIBUTES", CLASS_NAME);
+    public static final TextAttributesKey PROJECTION_NAME_ATTRIBUTES =
+            createTextAttributesKey("PROJECTION_NAME_ATTRIBUTES", CLASS_NAME);
     public static final TextAttributesKey ANONYMOUS_CLASS_NAME_ATTRIBUTES =
             createTextAttributesKey("ANONYMOUS_CLASS_NAME_ATTRIBUTES", CLASS_NAME_ATTRIBUTES);
     public static final TextAttributesKey IMPLICIT_ANONYMOUS_CLASS_PARAMETER_ATTRIBUTES =

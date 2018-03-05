@@ -27,6 +27,7 @@ public class KlassColorSettingsPage implements ColorSettingsPage, DisplayPriorit
         OUR_TAGS.put("klass", KlassHighlightingColors.CLASS_NAME_ATTRIBUTES);
         OUR_TAGS.put("enumeration", KlassHighlightingColors.ENUM_NAME_ATTRIBUTES);
         OUR_TAGS.put("enumerationLiteral", KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES);
+        OUR_TAGS.put("projection", KlassHighlightingColors.PROJECTION_NAME_ATTRIBUTES);
     }
 
     private static final AttributesDescriptor[] DESCRIPTORS =
@@ -35,6 +36,7 @@ public class KlassColorSettingsPage implements ColorSettingsPage, DisplayPriorit
                     new AttributesDescriptor("Class name", KlassHighlightingColors.CLASS_NAME_ATTRIBUTES),
                     new AttributesDescriptor("Enumeration name", KlassHighlightingColors.ENUM_NAME_ATTRIBUTES),
                     new AttributesDescriptor("Enumeration literal", KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES),
+                    new AttributesDescriptor("Projection name", KlassHighlightingColors.PROJECTION_NAME_ATTRIBUTES),
                     new AttributesDescriptor("Number", KlassHighlightingColors.NUMBER),
                     new AttributesDescriptor("Dot", KlassHighlightingColors.DOT),
                     new AttributesDescriptor("Comma", KlassHighlightingColors.COMMA),
@@ -88,6 +90,15 @@ public class KlassColorSettingsPage implements ColorSettingsPage, DisplayPriorit
                 + "{\n"
                 + "    <property>question</property>: <klass>Question</klass>[1..1]\n"
                 + "    <property>answer</property>  : <klass>Answer</klass>[0..*]\n"
+                + "}\n"
+                + "\n"
+                + "projection QuestionReadProjection (Question)\n"
+                + "{\n"
+                + "    title: \"Question title\"\n"
+                + "    body: \"Question body\" \n"
+                + "    answers: {\n"
+                + "        body: \"Answer body\"\n"
+                + "    }\n"
                 + "}\n";
     }
 

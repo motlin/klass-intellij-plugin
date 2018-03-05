@@ -15,12 +15,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class KlassAssociationEndTypeReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
+public class KlassKlassReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
 {
     private final String className;
 
-    public KlassAssociationEndTypeReference(@NotNull PsiElement element, String className)
+    private KlassKlass klass;
+
+    public KlassKlassReference(@NotNull PsiElement element, String className)
     {
         super(element, new TextRange(0, className.length()));
         this.className = className;
@@ -30,12 +33,26 @@ public class KlassAssociationEndTypeReference extends PsiReferenceBase<PsiElemen
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode)
     {
+        if (this.klass != null)
+        {
+            return new PsiElementResolveResult[]{new PsiElementResolveResult(this.klass)};
+        }
+
         Project project = this.myElement.getProject();
-        return KlassUtil.findClasses(project)
+        List<KlassKlass> klasses = KlassUtil.findClasses(project)
                 .stream()
                 .filter(klassKlass -> klassKlass.getName().equals(this.className))
-                .map(PsiElementResolveResult::new)
-                .toArray(ResolveResult[]::new);
+                .collect(Collectors.toList());
+        if (klasses.size() == 2)
+        {
+            throw new AssertionError();
+        }
+        if (klasses.size() == 1)
+        {
+            this.klass = klasses.get(0);
+            return new PsiElementResolveResult[]{new PsiElementResolveResult(this.klass)};
+        }
+        return null;
     }
 
     @Nullable
@@ -51,16 +68,16 @@ public class KlassAssociationEndTypeReference extends PsiReferenceBase<PsiElemen
     public Object[] getVariants()
     {
         Project project = this.myElement.getProject();
-        List<KlassKlass> KlassKlasses = KlassUtil.findClasses(project);
+        List<KlassKlass> klassKlasses = KlassUtil.findClasses(project);
         List<LookupElement> variants = new ArrayList<>();
         BracketsInsertHandler insertHandler = new BracketsInsertHandler();
-        for (KlassKlass KlassKlass : KlassKlasses)
+        for (KlassKlass klassKlass : klassKlasses)
         {
-            if (KlassKlass.getName() != null && !KlassKlass.getName().isEmpty())
+            if (klassKlass.getName() != null && !klassKlass.getName().isEmpty())
             {
-                LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(KlassKlass.getName())
+                LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(klassKlass.getName())
                         .withIcon(AllIcons.Nodes.Class)
-                        .withTypeText(KlassKlass.getContainingFile().getName())
+                        .withTypeText(klassKlass.getContainingFile().getName())
                         .withInsertHandler(insertHandler);
                 variants.add(lookupElementBuilder);
             }

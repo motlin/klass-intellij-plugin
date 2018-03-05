@@ -5,11 +5,11 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.ElementManipulator;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import com.klass.intellij.psi.KlassAssociationEndType;
 import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassKlassName;
 import org.jetbrains.annotations.NotNull;
 
-public class KlassAssociationEndTypeManipulator implements ElementManipulator
+public class KlassKlassNameManipulator implements ElementManipulator
 {
     @Override
     public PsiElement handleContentChange(
@@ -20,7 +20,7 @@ public class KlassAssociationEndTypeManipulator implements ElementManipulator
         ASTNode associationEndTypeNode = element.getNode();
         if (associationEndTypeNode != null)
         {
-            KlassAssociationEndType associationEndType =
+            KlassKlassName associationEndType =
                     KlassElementFactory.createAssociationEndType(element.getProject(), newContent);
             ASTNode newAssociationEndTypeNode = associationEndType.getNode();
             element.getParent().getNode().replaceChild(associationEndTypeNode, newAssociationEndTypeNode);

@@ -69,15 +69,16 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  {FLOAT_LITERAL} { return KlassTypes.FLOAT_LITERAL; }
 //  {DOUBLE_LITERAL} { return KlassTypes.DOUBLE_LITERAL; }
 //  {CHARACTER_LITERAL} { return KlassTypes.CHARACTER_LITERAL; }
-//  {STRING_LITERAL} { return KlassTypes.STRING_LITERAL; }
-//
+  {STRING_LITERAL} { return KlassTypes.STRING_LITERAL; }
+
 //  "true" { return KlassTypes.TRUE_KEYWORD; }
 //  "false" { return KlassTypes.FALSE_KEYWORD; }
 //  "null" { return KlassTypes.NULL_KEYWORD; }
 
+  "class" { return KlassTypes.CLASS_KEYWORD; }
   "association" { return KlassTypes.ASSOCIATION_KEYWORD; }
-//  "projection" { return KlassTypes.PROJECTION_KEYWORD; }
   "enumeration" { return KlassTypes.ENUMERATION_KEYWORD; }
+  "projection" { return KlassTypes.PROJECTION_KEYWORD; }
 
   "Boolean" { return KlassTypes.BOOLEAN_KEYWORD; }
   "Integer" { return KlassTypes.INTEGER_KEYWORD; }
@@ -94,7 +95,6 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  "case" { return KlassTypes.CASE_KEYWORD; }
 //  "catch" { return KlassTypes.CATCH_KEYWORD; }
 //  "char" { return KlassTypes.CHAR_KEYWORD; }
-  "class" { return KlassTypes.CLASS_KEYWORD; }
 //  "const" { return KlassTypes.CONST_KEYWORD; }
 //  "continue" { return KlassTypes.CONTINUE_KEYWORD; }
 //  "default" { return KlassTypes.DEFAULT_KEYWORD; }
@@ -157,8 +157,8 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  "^=" { return KlassTypes.XOREQ; }
 //  "%=" { return KlassTypes.PERCEQ; }
 //
-//  "("   { return KlassTypes.LPARENTH; }
-//  ")"   { return KlassTypes.RPARENTH; }
+  "("   { return KlassTypes.LPAREN; }
+  ")"   { return KlassTypes.RPAREN£; }
   "{"   { return KlassTypes.LBRACE; }
   "}"   { return KlassTypes.RBRACE; }
   "["   { return KlassTypes.LBRACKET; }

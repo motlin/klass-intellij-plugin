@@ -53,15 +53,15 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
 
         SpacingBuilder spacingBuilder = new SpacingBuilder(settings, KlassLanguage.INSTANCE)
                 .before(TokenSet.create(KlassTypes.OPTIONAL_MARKER, KlassTypes.COMMA)).none()
-                .after(KlassTypes.COLON).spaces(1)
                 .around(KlassTypes.DOTDOT).none()
-                .around(KlassTypes.LBRACKET).none()
-                .before(KlassTypes.RBRACKET).none()
+                .around(TokenSet.create(KlassTypes.LBRACKET, KlassTypes.LPAREN)).none()
+                .before(TokenSet.create(KlassTypes.RBRACKET, KlassTypes.RPAREN)).none()
                 .before(KlassTypes.MULTIPLICITY).none()
                 .before(KlassTypes.NOMBRE).spaces(1)
                 .around(TokenSet.create(KlassTypes.LBRACE, KlassTypes.RBRACE, KlassTypes.L_BRACE, KlassTypes.R_BRACE)).lineBreakInCode()
-                .after(TokenSet.create(KlassTypes.COMMA, KlassTypes.DATA_TYPE_PROPERTY, KlassTypes.ENUMERATION_PROPERTY, KlassTypes.ASSOCIATION_END)).lineBreakInCode()
-                .around(TokenSet.create(KlassTypes.KLASS, KlassTypes.ENUMERATION, KlassTypes.ASSOCIATION)).blankLines(1);
+                .after(KlassTypes.COLON).spaces(1)
+                .after(TokenSet.create(KlassTypes.COMMA, KlassTypes.DATA_TYPE_PROPERTY, KlassTypes.ENUMERATION_PROPERTY, KlassTypes.ASSOCIATION_END, KlassTypes.PROJECTION_INNER_NODE, KlassTypes.PROJECTION_LEAF_NODE)).lineBreakInCode()
+                .around(TokenSet.create(KlassTypes.KLASS, KlassTypes.ENUMERATION, KlassTypes.ASSOCIATION, KlassTypes.PROJECTION)).blankLines(1);
 
         RuleBuilder colonRuleBuilder = spacingBuilder.before(KlassTypes.COLON);
         if (commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS)

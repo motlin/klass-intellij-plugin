@@ -27,11 +27,11 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         ourMap1 = new HashMap<>();
         ourMap2 = new HashMap<>();
 
-        fillMap(ourMap1, TokenSets.KEYWORD_BIT_SET, KlassHighlightingColors.KEYWORD);
+        SyntaxHighlighterBase.fillMap(ourMap1, TokenSets.KEYWORD_BIT_SET, KlassHighlightingColors.KEYWORD);
         // TODO: Separate color for primitive types?
-        fillMap(ourMap1, TokenSets.PRIMITIVE_TYPE_BIT_SET, KlassHighlightingColors.KEYWORD);
+        SyntaxHighlighterBase.fillMap(ourMap1, TokenSets.PRIMITIVE_TYPE_BIT_SET, KlassHighlightingColors.KEYWORD);
         //        fillMap(ourMap1, TokenSets.LITERAL_BIT_SET, KlassHighlightingColors.KEYWORD);
-        fillMap(ourMap1, TokenSets.OPERATION_BIT_SET, KlassHighlightingColors.OPERATION_SIGN);
+        SyntaxHighlighterBase.fillMap(ourMap1, TokenSets.OPERATION_BIT_SET, KlassHighlightingColors.OPERATION_SIGN);
 
         ourMap1.put(XmlTokenType.XML_DATA_CHARACTERS, KlassHighlightingColors.DOC_COMMENT);
         ourMap1.put(XmlTokenType.XML_REAL_WHITE_SPACE, KlassHighlightingColors.DOC_COMMENT);
@@ -43,14 +43,14 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         //        ourMap1.put(KlassTypes.LONG_LITERAL, KlassHighlightingColors.NUMBER);
         //        ourMap1.put(KlassTypes.FLOAT_LITERAL, KlassHighlightingColors.NUMBER);
         //        ourMap1.put(KlassTypes.DOUBLE_LITERAL, KlassHighlightingColors.NUMBER);
-        //        ourMap1.put(KlassTypes.STRING_LITERAL, KlassHighlightingColors.STRING);
+        ourMap1.put(KlassTypes.STRING_LITERAL, KlassHighlightingColors.STRING);
         ourMap1.put(StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN, KlassHighlightingColors.VALID_STRING_ESCAPE);
         ourMap1.put(StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN, KlassHighlightingColors.INVALID_STRING_ESCAPE);
         ourMap1.put(StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN, KlassHighlightingColors.INVALID_STRING_ESCAPE);
         //        ourMap1.put(KlassTypes.CHARACTER_LITERAL, KlassHighlightingColors.STRING);
 
-        //        ourMap1.put(KlassTypes.LPARENTH, KlassHighlightingColors.PARENTHESES);
-        //        ourMap1.put(KlassTypes.RPARENTH, KlassHighlightingColors.PARENTHESES);
+        ourMap1.put(KlassTypes.LPAREN, KlassHighlightingColors.PARENTHESES);
+        ourMap1.put(KlassTypes.RPAREN, KlassHighlightingColors.PARENTHESES);
 
         ourMap1.put(KlassTypes.LBRACE, KlassHighlightingColors.BRACES);
         ourMap1.put(KlassTypes.RBRACE, KlassHighlightingColors.BRACES);
@@ -91,6 +91,6 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
     @Override
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType)
     {
-        return pack(ourMap1.get(tokenType), ourMap2.get(tokenType));
+        return SyntaxHighlighterBase.pack(ourMap1.get(tokenType), ourMap2.get(tokenType));
     }
 }

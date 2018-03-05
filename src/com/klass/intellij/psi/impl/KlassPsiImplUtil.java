@@ -6,10 +6,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.klass.intellij.psi.*;
-import com.klass.intellij.reference.KlassAssociationEndTypeReference;
-import com.klass.intellij.reference.KlassDataTypeReference;
-import com.klass.intellij.reference.KlassDummyMultiplicityReference;
-import com.klass.intellij.reference.KlassEnumerationReference;
+import com.klass.intellij.reference.*;
 
 public class KlassPsiImplUtil
 {
@@ -45,6 +42,18 @@ public class KlassPsiImplUtil
             KlassAssociation association = KlassElementFactory.createAssociation(element.getProject(), newName);
             ASTNode newAssociationNameNode = association.getNombre().getNode();
             element.getNode().replaceChild(associationNameNode, newAssociationNameNode);
+        }
+        return element;
+    }
+
+    public static PsiElement setName(KlassProjection element, String newName)
+    {
+        ASTNode classNameNode = element.getNombre().getNode();
+        if (classNameNode != null)
+        {
+            KlassProjection klass = KlassElementFactory.createProjection(element.getProject(), newName);
+            ASTNode newProjectionNameNode = klass.getNombre().getNode();
+            element.getNode().replaceChild(classNameNode, newProjectionNameNode);
         }
         return element;
     }
@@ -88,15 +97,37 @@ public class KlassPsiImplUtil
         return element;
     }
 
-    public static PsiReference getReference(KlassAssociationEndType klassAssociationEndType)
+    public static PsiReference getReference(KlassKlassName klassKlassName)
     {
-        String associationEndType = klassAssociationEndType.getText();
+        String className = klassKlassName.getText();
+        if (className == null)
+        {
+            return null;
+        }
+
+        return new KlassKlassReference(klassKlassName, className);
+    }
+
+    public static PsiReference getReference(KlassPropertyName klassPropertyName)
+    {
+        String associationEndType = klassPropertyName.getText();
         if (associationEndType == null)
         {
             return null;
         }
 
-        return new KlassAssociationEndTypeReference(klassAssociationEndType, associationEndType);
+        return new KlassPropertyReference(klassPropertyName, associationEndType);
+    }
+
+    public static PsiReference getReference(KlassAssociationEndName klassAssociationEndName)
+    {
+        String associationEndType = klassAssociationEndName.getText();
+        if (associationEndType == null)
+        {
+            return null;
+        }
+
+        return new KlassAssociationEndReference(klassAssociationEndName, associationEndType);
     }
 
     public static PsiReference getReference(KlassDataType klassDataType)
@@ -126,7 +157,6 @@ public class KlassPsiImplUtil
         return new KlassDummyMultiplicityReference(klassDummyMultiplicity);
     }
 
-
     public static ItemPresentation getPresentation(KlassKlass element)
     {
         return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Nodes.Class);
@@ -142,9 +172,14 @@ public class KlassPsiImplUtil
         return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Javaee.PersistenceRelationship);
     }
 
+    public static ItemPresentation getPresentation(KlassProjection element)
+    {
+        return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Hierarchy.Subtypes);
+    }
+
     public static ItemPresentation getPresentation(KlassAssociationEnd element)
     {
-        String locationString = element.getAssociationEndType().getText()
+        String locationString = element.getKlassName().getText()
                 + element.getMultiplicity().getText();
         return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Property);
     }

@@ -18,6 +18,12 @@ public class KlassElementFactory
         return (KlassEnumeration) file.getFirstChild();
     }
 
+    public static KlassProjection createProjection(Project project, String name)
+    {
+        KlassFile file = KlassElementFactory.createFile(project, String.format("projection %s(Dummy) {}", name));
+        return (KlassProjection) file.getFirstChild();
+    }
+
     public static KlassAssociation createAssociation(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(project, String.format("association %s {}", name));
@@ -29,9 +35,9 @@ public class KlassElementFactory
         KlassFile file = KlassElementFactory.createFile(
                 project,
                 "class DummyClass\n"
-                + "{\n"
-                + "  " + name + ": String\n"
-                + "}\n");
+                        + "{\n"
+                        + "  " + name + ": String\n"
+                        + "}\n");
         return (KlassDataTypeProperty) ((KlassKlass) file.getFirstChild()).getPropertyList().get(0);
     }
 
@@ -62,23 +68,23 @@ public class KlassElementFactory
         KlassFile file = KlassElementFactory.createFile(
                 project,
                 "association DummyAssociation\n"
-                + "{\n"
-                + "  " + name + ": DummyType[0..1]\n"
-                + "  target: DummyType[0..*]\n"
-                + "}\n");
+                        + "{\n"
+                        + "  " + name + ": DummyType[0..1]\n"
+                        + "  target: DummyType[0..*]\n"
+                        + "}\n");
         return ((KlassAssociation) file.getFirstChild()).getAssociationEndList().get(0);
     }
 
-    public static KlassAssociationEndType createAssociationEndType(Project project, String name)
+    public static KlassKlassName createAssociationEndType(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(
                 project,
                 "association DummyAssociation\n"
-                + "{\n"
-                + "  source: " + name + "[0..1]\n"
-                + "  target: " + name + "[0..*]\n"
-                + "}\n");
-        return ((KlassAssociation) file.getFirstChild()).getAssociationEndList().get(0).getAssociationEndType();
+                        + "{\n"
+                        + "  source: " + name + "[0..1]\n"
+                        + "  target: " + name + "[0..*]\n"
+                        + "}\n");
+        return ((KlassAssociation) file.getFirstChild()).getAssociationEndList().get(0).getKlassName();
     }
 
     public static KlassFile createFile(Project project, String text)

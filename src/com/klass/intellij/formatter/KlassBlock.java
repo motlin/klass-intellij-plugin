@@ -75,7 +75,9 @@ public class KlassBlock extends AbstractBlock
         if (elementType == KlassTypes.DATA_TYPE_PROPERTY
                 || elementType == KlassTypes.ENUMERATION_PROPERTY
                 || elementType == KlassTypes.ASSOCIATION_END
-                || elementType == KlassTypes.ENUMERATION_LITERAL)
+                || elementType == KlassTypes.ENUMERATION_LITERAL
+                || elementType == KlassTypes.PROJECTION_INNER_NODE
+                || elementType == KlassTypes.PROJECTION_LEAF_NODE)
         {
             return Indent.getNormalIndent();
         }
@@ -87,7 +89,9 @@ public class KlassBlock extends AbstractBlock
         IElementType elementType = astNode.getElementType();
         if (elementType == KlassTypes.KLASS
                 || elementType == KlassTypes.ASSOCIATION
-                || elementType == KlassTypes.ENUMERATION)
+                || elementType == KlassTypes.ENUMERATION
+                || elementType==KlassTypes.PROJECTION
+                || elementType==KlassTypes.PROJECTION_INNER_NODE)
         {
             return Indent.getNormalIndent();
         }

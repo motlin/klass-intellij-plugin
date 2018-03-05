@@ -14,34 +14,47 @@
   tokenTypeClass="com.klass.intellij.psi.KlassTokenType"
 
   mixin("klass|association|enumeration|dataTypeProperty|enumerationProperty|associationEnd") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
-  implements("klass|association|enumeration|property|dataTypeProperty|enumerationProperty|associationEnd") = "com.klass.intellij.psi.KlassNamedElement"
+  mixin("projection")="com.klass.intellij.psi.impl.AbstractKlassProjectionNode"
+  mixin("projectionInnerNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
+  implements("klass|association|enumeration|projection|property|dataTypeProperty|enumerationProperty|associationEnd") = "com.klass.intellij.psi.KlassNamedElement"
+  implements("projection|projectionInnerNode")="com.klass.intellij.psi.KlassTypedElement"
 
   tokens = [
     LBRACE='{'
     RBRACE='}'
     LBRACKET='['
     RBRACKET=']'
+    LPAREN='('
+    RPAREN=')'
     COLON=':'
     DOTDOT='..'
     CLASS_KEYWORD='class'
     ASSOCIATION_KEYWORD='association'
     ENUMERATION_KEYWORD='enumeration'
+    PROJECTION_KEYWORD='projection'
   ]
 
-  extends("klass|association|enumeration")=topLevelItem
+  extends("klass|association|enumeration|projection")=topLevelItem
   extends("dataTypeProperty|enumerationProperty")=property
+  extends("projectionInnerNode|projectionLeafNode")=projectionNode
 }
 
 compilationUnit ::= topLevelItem*
 
-topLevelItem ::= klass | association | enumeration {recoverWhile="topLevelItem_recover"}
-private topLevelItem_recover ::= !('}' | 'class' | 'association' | 'enumeration')
+topLevelItem ::= klass | association | enumeration | projection {recoverWhile="topLevelItem_recover"}
+private topLevelItem_recover ::= !('}' | 'class' | 'association' | 'enumeration' | 'projection')
 
 klass ::= 'class' nombre lBrace property* rBrace {pin="{" methods=[setName getPresentation]}
 
 association ::= 'association' nombre '{' associationEnd* '}' {pin="{" methods=[setName getPresentation]}
 
 enumeration ::= 'enumeration' nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
+
+projection ::= 'projection' nombre '(' klassName ')' lBrace projectionNode* rBrace {pin="{" methods=[setName getPresentation]}
+projectionNode ::= projectionInnerNode | projectionLeafNode
+projectionInnerNode ::= associationEndName ':' '{' projectionNode '}'
+projectionLeafNode ::= propertyName ':' header
+header ::= STRING_LITERAL
 
 property ::= dataTypeProperty | enumerationProperty
 
@@ -50,22 +63,24 @@ dataTypeProperty ::= nombre ':' dataType optionalMarker? {methods=[setName getPr
 enumerationProperty ::= nombre ':' enumerationType optionalMarker? {methods=[setName getPresentation]}
 
 // TODO: packages, imports, fully qualified class names
-associationEnd ::= nombre ':' associationEndType? multiplicity? {methods=[setName getPresentation]}
+associationEnd ::= nombre ':' klassName? multiplicity? {methods=[setName getPresentation]}
 
 lBrace ::= '{'
 rBrace ::= '}'
 
 // Just can't be called name, because the getName method would clash
 nombre ::= IDENTIFIER
-associationEndType ::= IDENTIFIER {methods=[getReference]}
 enumerationLiteral ::= IDENTIFIER
 
 dataType ::= BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD {methods=[getReference]}
 enumerationType ::= IDENTIFIER {methods=[getReference]}
+klassName ::= IDENTIFIER {methods=[getReference]}
+propertyName ::= nombre {methods=[getReference]}
+associationEndName ::= nombre {methods=[getReference]}
 optionalMarker ::= QUESTION_MARK
 
 multiplicity ::= '[' ((lowerBound '..' upperBound) | dummyMultiplicity) ']'
-dummyMultiplicity ::= {methods=[getReference]}
+dummyMultiplicity ::= lowerBound | lowerBound '..' {methods=[getReference]}
 
 lowerBound ::= INTEGER_LITERAL
 upperBound ::= INTEGER_LITERAL | ASTERISK
