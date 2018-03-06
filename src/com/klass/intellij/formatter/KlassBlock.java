@@ -8,6 +8,7 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
 import com.klass.intellij.KlassLanguage;
+import com.klass.intellij.psi.KlassTokenType;
 import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -81,6 +82,11 @@ public class KlassBlock extends AbstractBlock
         {
             return Indent.getNormalIndent();
         }
+        if (elementType == KlassTokenType.END_OF_LINE_COMMENT
+                || elementType == KlassTokenType.C_STYLE_COMMENT)
+        {
+            return this.getIndentForChildren(this.getNode().getTreeParent());
+        }
         return Indent.getNoneIndent();
     }
 
@@ -90,8 +96,8 @@ public class KlassBlock extends AbstractBlock
         if (elementType == KlassTypes.KLASS
                 || elementType == KlassTypes.ASSOCIATION
                 || elementType == KlassTypes.ENUMERATION
-                || elementType==KlassTypes.PROJECTION
-                || elementType==KlassTypes.PROJECTION_INNER_NODE)
+                || elementType == KlassTypes.PROJECTION
+                || elementType == KlassTypes.PROJECTION_INNER_NODE)
         {
             return Indent.getNormalIndent();
         }
