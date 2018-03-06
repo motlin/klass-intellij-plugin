@@ -54,8 +54,15 @@ public class KlassAssociationEndReference extends PsiReferenceBase<PsiElement> i
             String sourceType = sourceKlass.getName();
             String targetType = targetKlass.getName();
 
-            System.out.println("sourceName = " + sourceName);
-            System.out.println("targetName = " + targetName);
+            if (sourceKlass == klassKlass && targetName.equals(this.associationEndName))
+            {
+                return new ResolveResult[]{new PsiElementResolveResult(targetEnd)};
+            }
+
+            if (targetKlass == klassKlass && sourceName.equals(this.associationEndName))
+            {
+                return new ResolveResult[]{new PsiElementResolveResult(sourceEnd)};
+            }
         }
 
         return new ResolveResult[]{};

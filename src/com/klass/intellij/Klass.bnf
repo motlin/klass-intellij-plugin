@@ -50,10 +50,10 @@ association ::= 'association' nombre '{' associationEnd* '}' {pin="{" methods=[s
 
 enumeration ::= 'enumeration' nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
 
-projection ::= 'projection' nombre '(' klassName ')' lBrace projectionNode* rBrace {pin="{" methods=[setName getPresentation]}
+projection ::= 'projection' nombre '(' klassName ')' lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
 projectionNode ::= projectionInnerNode | projectionLeafNode
-projectionInnerNode ::= associationEndName ':' '{' projectionNode '}'
-projectionLeafNode ::= propertyName ':' header
+projectionInnerNode ::= associationEndName ':' '{' (projectionNode ',')* '}'
+projectionLeafNode ::= propertyName ':'? header?
 header ::= STRING_LITERAL
 
 property ::= dataTypeProperty | enumerationProperty

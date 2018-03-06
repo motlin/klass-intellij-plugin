@@ -1,20 +1,21 @@
 package com.klass.intellij.reference;
 
+import com.intellij.codeInsight.AutoPopupController;
+import com.intellij.codeInsight.completion.InsertHandler;
+import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import com.klass.intellij.KlassUtil;
-import com.klass.intellij.psi.KlassKlass;
-import com.klass.intellij.psi.KlassKlassName;
-import com.klass.intellij.psi.KlassProjection;
-import com.klass.intellij.psi.KlassProjectionInnerNode;
+import com.intellij.util.text.CharArrayUtil;
+import com.klass.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class KlassPropertyReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
@@ -31,29 +32,52 @@ public class KlassPropertyReference extends PsiReferenceBase<PsiElement> impleme
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode)
     {
-        PsiElement parent = this.myElement.getParent();
-        PsiElement grandparent = parent.getParent();
-        String parentText = parent.getText();
-        String grandparentText = grandparent.getText();
-        if (grandparent instanceof KlassProjectionInnerNode)
+        PsiElement containingElement = this.myElement.getParent().getParent();
+        if (containingElement instanceof KlassProjectionInnerNode)
         {
-            PsiReference associationEndReference = grandparent.getReference();
+            KlassAssociationEndName associationEndName =
+                    ((KlassProjectionInnerNode) containingElement).getAssociationEndName();
+            PsiReference reference = associationEndName.getReference();
+            if (reference != null)
+            {
+                KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) reference.resolve();
+                if (klassAssociationEnd != null)
+                {
+                    PsiElement associationEndParent = klassAssociationEnd.getParent();
+                    KlassKlassName klassName = klassAssociationEnd.getKlassName();
+                    PsiReference klassNameReference = klassName.getReference();
+                    KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
+                    if (klassKlass != null)
+                    {
+                        List<KlassProperty> propertyList = klassKlass.getPropertyList();
+                        for (KlassProperty klassProperty : propertyList)
+                        {
+                            String klassPropertyName = klassProperty.getName();
+                            if (klassPropertyName.equals(this.propertyName))
+                            {
+                                return new ResolveResult[]{new PsiElementResolveResult(klassProperty)};
+                            }
+                        }
+                    }
 
-            PsiElement psiElement = ((KlassProjectionInnerNode) grandparent).getAssociationEndName();
-            // PsiReference klassReference = (PsiReference) psiElement;
-
+                    // If parent is valid but child is invalid, jump to parent?
+                    // So in answers.bodytypo, jump to answers instead of body
+                    return new ResolveResult[]{new PsiElementResolveResult(klassAssociationEnd)};
+                }
+            }
         }
-        else if (grandparent instanceof KlassProjection)
+        else if (containingElement instanceof KlassProjection)
         {
-            KlassKlassName klassName = ((KlassProjection) grandparent).getKlassName();
+            KlassKlassName klassName = ((KlassProjection) containingElement).getKlassName();
             PsiReference klassReference = klassName.getReference();
 
             KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
-            return klassKlass.getPropertyList()
+            ResolveResult[] resolveResults = klassKlass.getPropertyList()
                     .stream()
                     .filter(klassProperty -> klassProperty.getName().equals(this.propertyName))
                     .map(PsiElementResolveResult::new)
                     .toArray(ResolveResult[]::new);
+            return resolveResults;
         }
 
         return new ResolveResult[]{};
@@ -71,19 +95,100 @@ public class KlassPropertyReference extends PsiReferenceBase<PsiElement> impleme
     @Override
     public Object[] getVariants()
     {
-        Project project = this.myElement.getProject();
-        List<KlassKlass> klassKlasses = KlassUtil.findClasses(project);
-        List<LookupElement> variants = new ArrayList<>();
-        for (KlassKlass klassKlass : klassKlasses)
+        PsiElement containingElement = this.myElement.getParent().getParent();
+        if (containingElement instanceof KlassProjectionInnerNode)
         {
-            if (klassKlass.getName() != null && !klassKlass.getName().isEmpty())
+            KlassAssociationEndName associationEndName =
+                    ((KlassProjectionInnerNode) containingElement).getAssociationEndName();
+            PsiReference reference = associationEndName.getReference();
+            if (reference != null)
             {
-                LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(klassKlass.getName())
-                        .withIcon(AllIcons.Nodes.Class)
-                        .withTypeText(klassKlass.getContainingFile().getName());
-                variants.add(lookupElementBuilder);
+                KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) reference.resolve();
+                if (klassAssociationEnd != null)
+                {
+                    KlassKlassName klassName = klassAssociationEnd.getKlassName();
+                    PsiReference klassNameReference = klassName.getReference();
+                    KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
+                    if (klassKlass != null)
+                    {
+                        List<KlassProperty> propertyList = klassKlass.getPropertyList();
+                        Object[] result = propertyList.stream()
+                                .map(klassProperty -> LookupElementBuilder.create(klassProperty.getName())
+                                        .withIcon(AllIcons.Nodes.Property)
+                                        .withTypeText(klassProperty.getContainingFile().getName())
+                                        .withInsertHandler(ProjectionLeafInsertHandler.INSTANCE))
+                                .toArray();
+                        return result;
+                    }
+                }
             }
         }
-        return variants.toArray();
+        else if (containingElement instanceof KlassProjection)
+        {
+            KlassKlassName klassName = ((KlassProjection) containingElement).getKlassName();
+            PsiReference klassReference = klassName.getReference();
+
+            KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
+            ResolveResult[] resolveResults = klassKlass.getPropertyList()
+                    .stream()
+                    .filter(klassProperty -> klassProperty.getName().equals(this.propertyName))
+                    .map(PsiElementResolveResult::new)
+                    .toArray(ResolveResult[]::new);
+            return resolveResults;
+        }
+
+        return new Object[]{};
+    }
+
+    // Based heavily on the insert handler for xml attributes, where it inserts =""
+    public static class ProjectionLeafInsertHandler implements InsertHandler<LookupElement>
+    {
+        public static final ProjectionLeafInsertHandler INSTANCE = new ProjectionLeafInsertHandler();
+
+        @Override
+        public void handleInsert(InsertionContext context, LookupElement item)
+        {
+            Editor editor = context.getEditor();
+
+            Document document = editor.getDocument();
+            int caretOffset = editor.getCaretModel().getOffset();
+            PsiFile file = context.getFile();
+
+            CharSequence chars = document.getCharsSequence();
+            boolean hasQuotes = CharArrayUtil.regionMatches(chars, caretOffset, ":\"");
+            if (!hasQuotes)
+            {
+                PsiElement fileContext = file.getContext();
+                String toInsert = null;
+
+                if (fileContext != null)
+                {
+                    if (fileContext.getText().startsWith("\""))
+                    {
+                        toInsert = ":''";
+                    }
+                    if (fileContext.getText().startsWith("\'"))
+                    {
+                        toInsert = ":\"\"";
+                    }
+                }
+                if (toInsert == null)
+                {
+                    toInsert = ":\"\"";
+                }
+
+                document.insertString(caretOffset, caretOffset >= document.getTextLength() ? toInsert + " " : toInsert);
+
+                if (':' == context.getCompletionChar())
+                {
+                    context.setAddCompletionChar(false); // IDEA-19449
+                }
+            }
+
+            editor.getCaretModel().moveToOffset(caretOffset + 2);
+            editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+            editor.getSelectionModel().removeSelection();
+            AutoPopupController.getInstance(editor.getProject()).scheduleAutoPopup(editor);
+        }
     }
 }
