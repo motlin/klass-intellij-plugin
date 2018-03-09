@@ -4,9 +4,9 @@ import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.patterns.PsiElementPattern.Capture;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiErrorElement;
 import com.intellij.util.ProcessingContext;
 import com.klass.intellij.KlassLanguage;
-import com.klass.intellij.psi.KlassFile;
 import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
@@ -19,7 +19,7 @@ public class KlassCompletionContributor extends CompletionContributor
 
     private static final Capture<PsiElement> KEYWORD = psiElement()
             .withLanguage(KlassLanguage.INSTANCE)
-            .withParent(KlassFile.class);
+            .withParent(PsiErrorElement.class);
 
     public KlassCompletionContributor()
     {
@@ -50,6 +50,7 @@ public class KlassCompletionContributor extends CompletionContributor
                         result.addElement(LookupElementBuilder.create("class"));
                         result.addElement(LookupElementBuilder.create("enumeration"));
                         result.addElement(LookupElementBuilder.create("association"));
+                        result.addElement(LookupElementBuilder.create("projection"));
             }
         };
 
