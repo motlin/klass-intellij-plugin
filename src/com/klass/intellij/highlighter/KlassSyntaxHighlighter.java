@@ -40,9 +40,9 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         // TODO: ASTERISK is used for multiplicities, but maybe multiplicities should be different than other numbers
         ourMap1.put(KlassTypes.ASTERISK, KlassHighlightingColors.NUMBER);
         ourMap1.put(KlassTypes.INTEGER_LITERAL, KlassHighlightingColors.NUMBER);
-        //        ourMap1.put(KlassTypes.LONG_LITERAL, KlassHighlightingColors.NUMBER);
-        //        ourMap1.put(KlassTypes.FLOAT_LITERAL, KlassHighlightingColors.NUMBER);
-        //        ourMap1.put(KlassTypes.DOUBLE_LITERAL, KlassHighlightingColors.NUMBER);
+        ourMap1.put(KlassTypes.LONG_LITERAL, KlassHighlightingColors.NUMBER);
+        ourMap1.put(KlassTypes.FLOAT_LITERAL, KlassHighlightingColors.NUMBER);
+        ourMap1.put(KlassTypes.DOUBLE_LITERAL, KlassHighlightingColors.NUMBER);
         ourMap1.put(KlassTypes.STRING_LITERAL, KlassHighlightingColors.STRING);
         ourMap1.put(StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN, KlassHighlightingColors.VALID_STRING_ESCAPE);
         ourMap1.put(StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN, KlassHighlightingColors.INVALID_STRING_ESCAPE);
@@ -59,19 +59,29 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         ourMap1.put(KlassTypes.RBRACKET, KlassHighlightingColors.BRACKETS);
 
         //        ourMap1.put(KlassTypes.COMMA, KlassHighlightingColors.COMMA);
-        //        ourMap1.put(KlassTypes.DOT, KlassHighlightingColors.DOT);
+        ourMap1.put(KlassTypes.DOT, KlassHighlightingColors.DOT);
         ourMap1.put(KlassTypes.DOTDOT, KlassHighlightingColors.DOT);
         //        ourMap1.put(KlassTypes.SEMICOLON, KlassHighlightingColors.KLASS_SEMICOLON);
+        ourMap1.put(KlassTypes.SLASH, KlassHighlightingColors.DOT);
 
         ourMap1.put(KlassTokenType.C_STYLE_COMMENT, KlassHighlightingColors.KLASS_BLOCK_COMMENT);
         ourMap1.put(KlassTokenType.END_OF_LINE_COMMENT, KlassHighlightingColors.LINE_COMMENT);
         ourMap1.put(TokenType.BAD_CHARACTER, HighlighterColors.BAD_CHARACTER);
 
         IElementType[] klassDocMarkup = {
-                XmlTokenType.XML_START_TAG_START, XmlTokenType.XML_END_TAG_START, XmlTokenType.XML_TAG_END, XmlTokenType.XML_EMPTY_ELEMENT_END,
-                XmlTokenType.TAG_WHITE_SPACE, XmlTokenType.XML_TAG_NAME, XmlTokenType.XML_NAME, XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN,
-                XmlTokenType.XML_ATTRIBUTE_VALUE_START_DELIMITER, XmlTokenType.XML_ATTRIBUTE_VALUE_END_DELIMITER, XmlTokenType.XML_CHAR_ENTITY_REF,
-                XmlTokenType.XML_ENTITY_REF_TOKEN, XmlTokenType.XML_EQ
+                XmlTokenType.XML_START_TAG_START,
+                XmlTokenType.XML_END_TAG_START,
+                XmlTokenType.XML_TAG_END,
+                XmlTokenType.XML_EMPTY_ELEMENT_END,
+                XmlTokenType.TAG_WHITE_SPACE,
+                XmlTokenType.XML_TAG_NAME,
+                XmlTokenType.XML_NAME,
+                XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN,
+                XmlTokenType.XML_ATTRIBUTE_VALUE_START_DELIMITER,
+                XmlTokenType.XML_ATTRIBUTE_VALUE_END_DELIMITER,
+                XmlTokenType.XML_CHAR_ENTITY_REF,
+                XmlTokenType.XML_ENTITY_REF_TOKEN,
+                XmlTokenType.XML_EQ
         };
         for (IElementType idx : klassDocMarkup)
         {

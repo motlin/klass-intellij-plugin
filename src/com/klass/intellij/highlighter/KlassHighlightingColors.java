@@ -49,6 +49,9 @@ public class KlassHighlightingColors
             createTextAttributesKey("LOCAL_VARIABLE_ATTRIBUTES", LOCAL_VARIABLE);
     public static final TextAttributesKey PARAMETER_ATTRIBUTES =
             createTextAttributesKey("PARAMETER_ATTRIBUTES", PARAMETER);
+    public static final TextAttributesKey PATH_PARAMETER =
+            createTextAttributesKey("PATH_PARAMETER", PARAMETER_ATTRIBUTES);
+
     public static final TextAttributesKey LAMBDA_PARAMETER_ATTRIBUTES =
             createTextAttributesKey("LAMBDA_PARAMETER_ATTRIBUTES", PARAMETER_ATTRIBUTES);
     public static final TextAttributesKey REASSIGNED_LOCAL_VARIABLE_ATTRIBUTES =
@@ -101,4 +104,9 @@ public class KlassHighlightingColors
             createTextAttributesKey("ANNOTATION_ATTRIBUTE_NAME_ATTRIBUTES", METADATA);
     public static final TextAttributesKey ANNOTATION_ATTRIBUTE_VALUE_ATTRIBUTES =
             createTextAttributesKey("ANNOTATION_ATTRIBUTE_VALUE_ATTRIBUTES", METADATA);
+
+    public static final TextAttributesKey VERB =
+            createTextAttributesKey("VERB", KEYWORD);
+    public static final TextAttributesKey URL_CONSTANT =
+            createTextAttributesKey("URL_CONSTANT", NUMBER);
 }

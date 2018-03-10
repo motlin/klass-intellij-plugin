@@ -87,6 +87,14 @@ public class KlassElementFactory
         return ((KlassAssociation) file.getFirstChild()).getAssociationEndList().get(0).getKlassName();
     }
 
+    public static KlassPathParameter createPathParameter(Project project, String name)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "");
+        return (KlassPathParameter) file.getFirstChild();
+    }
+
     public static KlassFile createFile(Project project, String text)
     {
         String name = "dummy.klass";

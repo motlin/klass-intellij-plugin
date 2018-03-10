@@ -25,18 +25,18 @@ public class KlassCompletionContributor extends CompletionContributor
     {
         CompletionProvider<CompletionParameters> multiplicityCompletionProvider =
                 new CompletionProvider<CompletionParameters>()
-        {
-            public void addCompletions(
-                    @NotNull CompletionParameters parameters,
-                    ProcessingContext context,
-                    @NotNull CompletionResultSet resultSet)
-            {
-                resultSet.addElement(LookupElementBuilder.create("0..1").withTailText(" One, not required", true));
-                resultSet.addElement(LookupElementBuilder.create("1..1").withTailText(" One, required", true));
-                resultSet.addElement(LookupElementBuilder.create("0..*").withTailText(" Many", true));
-                resultSet.addElement(LookupElementBuilder.create("1..*").withTailText(" Many, non-empty set", true));
-            }
-        };
+                {
+                    public void addCompletions(
+                            @NotNull CompletionParameters parameters,
+                            ProcessingContext context,
+                            @NotNull CompletionResultSet resultSet)
+                    {
+                        resultSet.addElement(LookupElementBuilder.create("0..1").withTailText(" One, not required", true));
+                        resultSet.addElement(LookupElementBuilder.create("1..1").withTailText(" One, required", true));
+                        resultSet.addElement(LookupElementBuilder.create("0..*").withTailText(" Many", true));
+                        resultSet.addElement(LookupElementBuilder.create("1..*").withTailText(" Many, non-empty set", true));
+                    }
+                };
 
         CompletionProvider<CompletionParameters> keywordCompletionProvider =
                 new CompletionProvider<CompletionParameters>()
@@ -51,8 +51,8 @@ public class KlassCompletionContributor extends CompletionContributor
                         result.addElement(LookupElementBuilder.create("enumeration"));
                         result.addElement(LookupElementBuilder.create("association"));
                         result.addElement(LookupElementBuilder.create("projection"));
-            }
-        };
+                    }
+                };
 
         this.extend(CompletionType.BASIC, MULTIPLICITY, multiplicityCompletionProvider);
 

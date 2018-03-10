@@ -38,19 +38,47 @@ public class KlassAnnotator implements Annotator
         }
 
         @Override
-        public void visitNombre(@NotNull KlassNombre klassNombre)
+        public void visitVerb(@NotNull KlassVerb klassVerb)
         {
-            Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(klassNombre, null);
-            if (klassNombre.getParent() instanceof KlassEnumeration)
+            Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(klassVerb, null);
+            infoAnnotation.setTextAttributes(KlassHighlightingColors.VERB);
+        }
+
+        @Override
+        public void visitNombreText(@NotNull KlassNombreText klassNombreText)
+        {
+            Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(klassNombreText, null);
+            PsiElement parent = klassNombreText.getParent().getParent();
+            if (parent instanceof KlassEnumeration)
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_NAME_ATTRIBUTES);
             }
-            else if (klassNombre.getParent() instanceof KlassProperty
-                    || klassNombre.getParent() instanceof KlassAssociationEnd
-                    || klassNombre.getParent() instanceof KlassPropertyName
-                    || klassNombre.getParent() instanceof KlassAssociationEndName)
+            else if (parent instanceof KlassProperty
+                    || parent instanceof KlassAssociationEnd
+                    || parent instanceof KlassPropertyName
+                    || parent instanceof KlassAssociationEndName)
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES);
+            }
+            else if (parent instanceof KlassEnumerationLiteral)
+            {
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES);
+            }
+            else if (parent instanceof KlassMethodName)
+            {
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.METHOD_CALL_ATTRIBUTES);
+            }
+            else if (parent instanceof KlassPathParameter)
+            {
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.PATH_PARAMETER);
+            }
+            else if (parent instanceof KlassUrlConstant)
+            {
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.URL_CONSTANT);
+            }
+            else if (parent instanceof KlassExpressionVariableName)
+            {
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.LOCAL_VARIABLE_ATTRIBUTES);
             }
             else
             {

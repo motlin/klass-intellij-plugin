@@ -46,6 +46,9 @@ public class KlassColorSettingsPage implements ColorSettingsPage, DisplayPriorit
                     new AttributesDescriptor("Block Comment", KlassHighlightingColors.KLASS_BLOCK_COMMENT),
                     new AttributesDescriptor("End of line Comment", KlassHighlightingColors.LINE_COMMENT),
                     new AttributesDescriptor("Property name", KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES),
+                    new AttributesDescriptor("Service path parameter", KlassHighlightingColors.PARAMETER_ATTRIBUTES),
+                    new AttributesDescriptor("Service url constant", KlassHighlightingColors.URL_CONSTANT),
+                    new AttributesDescriptor("Service verb", KlassHighlightingColors.VERB),
             };
 
     @Nullable

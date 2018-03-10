@@ -52,7 +52,7 @@ public class KlassKlassReference extends PsiReferenceBase<PsiElement> implements
             this.klass = klasses.get(0);
             return new PsiElementResolveResult[]{new PsiElementResolveResult(this.klass)};
         }
-        return null;
+        return new ResolveResult[]{};
     }
 
     @Nullable

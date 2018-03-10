@@ -97,6 +97,18 @@ public class KlassPsiImplUtil
         return element;
     }
 
+    public static PsiElement setName(KlassPathParameter element, String newName)
+    {
+        ASTNode classNameNode = element.getNombre().getNode();
+        if (classNameNode != null)
+        {
+            KlassPathParameter klass = KlassElementFactory.createPathParameter(element.getProject(), newName);
+            ASTNode newPathParameterNameNode = klass.getNombre().getNode();
+            element.getNode().replaceChild(classNameNode, newPathParameterNameNode);
+        }
+        return element;
+    }
+
     public static PsiReference getReference(KlassKlassName klassKlassName)
     {
         String className = klassKlassName.getText();
