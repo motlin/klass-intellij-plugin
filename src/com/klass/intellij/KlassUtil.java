@@ -34,6 +34,11 @@ public class KlassUtil
         return KlassUtil.findElementsOfType(project, KlassEnumeration.class);
     }
 
+    public static List<KlassProjection> findProjections(Project project)
+    {
+        return KlassUtil.findElementsOfType(project, KlassProjection.class);
+    }
+
     public static <T extends PsiElement> List<T> findElementsOfType(Project project, Class<T> klass)
     {
         PsiManager psiManager = PsiManager.getInstance(project);

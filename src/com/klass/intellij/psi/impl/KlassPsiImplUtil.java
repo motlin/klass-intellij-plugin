@@ -169,6 +169,28 @@ public class KlassPsiImplUtil
         return new KlassDummyMultiplicityReference(klassDummyMultiplicity);
     }
 
+    public static PsiReference getReference(KlassProjectionName klassProjectionName)
+    {
+        String projectionName = klassProjectionName.getText();
+        if (projectionName == null)
+        {
+            return null;
+        }
+
+        return new KlassProjectionReference(klassProjectionName, projectionName);
+    }
+
+    public static PsiReference getReference(KlassExpressionVariableName klassExpressionVariableName)
+    {
+        String expressionVariableName = klassExpressionVariableName.getText();
+        if (expressionVariableName == null)
+        {
+            return null;
+        }
+
+        return new KlassExpressionVariableNameReference(klassExpressionVariableName, expressionVariableName);
+    }
+
     public static ItemPresentation getPresentation(KlassKlass element)
     {
         return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Nodes.Class);

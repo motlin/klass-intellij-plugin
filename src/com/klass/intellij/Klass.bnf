@@ -91,12 +91,9 @@ pathParameter ::= nombre {methods=[setName getPresentation]}
 service ::= verb lBrace serviceMultiplicityClause serviceCriteriaClause? serviceProjectionClause rBrace {pin=1 methods=[getPresentation]}
 
 serviceMultiplicityClause ::= 'multiplicity' ':' serviceMultiplicity
-serviceCriteriaClause ::= 'criteria' ':' serviceCriteria
-serviceProjectionClause ::= 'projection' ':' serviceProjection
-
+serviceCriteriaClause ::= 'criteria' ':' criteriaExpression
+serviceProjectionClause ::= 'projection' ':' projectionName
 serviceMultiplicity ::= 'one' | 'many'
-serviceCriteria ::= criteriaExpression
-serviceProjection::= projectionName
 verb ::= 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
 criteriaExpression ::= criteriaAnd | criteriaOr | criteriaMethod | criteriaOperator
