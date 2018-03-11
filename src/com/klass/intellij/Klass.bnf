@@ -87,7 +87,7 @@ urlGroup ::= url service+ {methods=[getPresentation]}
 url ::= urlPart+ '/'?
 urlPart ::= ('/' urlConstant) | ('/' '{' pathParameter '}') {pin='/'}
 urlConstant ::= nombre
-pathParameter ::= nombre {methods=[setName getPresentation]}
+pathParameter ::= nombre {methods=[setName]}
 service ::= verb lBrace serviceMultiplicityClause serviceCriteriaClause? serviceProjectionClause rBrace {pin=1 methods=[getPresentation]}
 
 serviceMultiplicityClause ::= 'multiplicity' ':' serviceMultiplicity

@@ -11,6 +11,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.klass.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
@@ -79,7 +80,39 @@ public class KlassPropertyReference extends PsiReferenceBase<PsiElement> impleme
                     .toArray(ResolveResult[]::new);
             return resolveResults;
         }
+        else if (containingElement instanceof KlassServiceCriteriaClause)
+        {
+            KlassServiceGroup klassServiceGroup =
+                    PsiTreeUtil.getParentOfType(containingElement, KlassServiceGroup.class);
+            KlassKlassName klassName = klassServiceGroup.getKlassName();
+            PsiReference klassNameReference = klassName.getReference();
+            KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
 
+            KlassCriteriaExpression criteriaExpression =
+                    ((KlassServiceCriteriaClause) containingElement).getCriteriaExpression();
+            if (criteriaExpression instanceof KlassCriteriaMethod)
+            {
+                KlassPropertyName propertyName = ((KlassCriteriaMethod) criteriaExpression).getPropertyName();
+
+                ResolveResult[] resolveResults = klassKlass.getPropertyList()
+                        .stream()
+                        .filter(klassProperty -> klassProperty.getName().equals(propertyName.getText()))
+                        .map(PsiElementResolveResult::new)
+                        .toArray(ResolveResult[]::new);
+                return resolveResults;
+            }
+            if (criteriaExpression instanceof KlassCriteriaOperator)
+            {
+                KlassPropertyName propertyName = ((KlassCriteriaOperator) criteriaExpression).getPropertyName();
+
+                ResolveResult[] resolveResults = klassKlass.getPropertyList()
+                        .stream()
+                        .filter(klassProperty -> klassProperty.getName().equals(propertyName.getText()))
+                        .map(PsiElementResolveResult::new)
+                        .toArray(ResolveResult[]::new);
+                return resolveResults;
+            }
+        }
         return new ResolveResult[]{};
     }
 
