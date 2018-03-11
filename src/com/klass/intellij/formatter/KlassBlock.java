@@ -78,7 +78,12 @@ public class KlassBlock extends AbstractBlock
                 || elementType == KlassTypes.ASSOCIATION_END
                 || elementType == KlassTypes.ENUMERATION_LITERAL
                 || elementType == KlassTypes.PROJECTION_INNER_NODE
-                || elementType == KlassTypes.PROJECTION_LEAF_NODE)
+                || elementType == KlassTypes.PROJECTION_LEAF_NODE
+                || elementType == KlassTypes.URL_GROUP
+                || elementType == KlassTypes.SERVICE
+                || elementType == KlassTypes.SERVICE_MULTIPLICITY_CLAUSE
+                || elementType == KlassTypes.SERVICE_CRITERIA_CLAUSE
+                || elementType == KlassTypes.SERVICE_PROJECTION_CLAUSE)
         {
             return Indent.getNormalIndent();
         }
@@ -97,7 +102,10 @@ public class KlassBlock extends AbstractBlock
                 || elementType == KlassTypes.ASSOCIATION
                 || elementType == KlassTypes.ENUMERATION
                 || elementType == KlassTypes.PROJECTION
-                || elementType == KlassTypes.PROJECTION_INNER_NODE)
+                || elementType == KlassTypes.PROJECTION_INNER_NODE
+                || elementType == KlassTypes.SERVICE_GROUP
+                || elementType == KlassTypes.URL_GROUP
+                || elementType == KlassTypes.SERVICE)
         {
             return Indent.getNormalIndent();
         }
