@@ -7,6 +7,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.klass.intellij.psi.*;
 import com.klass.intellij.reference.*;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 public class KlassPsiImplUtil
 {
@@ -193,22 +196,76 @@ public class KlassPsiImplUtil
 
     public static ItemPresentation getPresentation(KlassKlass element)
     {
-        return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Nodes.Class);
+        return new KlassNamedElementItemPresentation(element, null, AllIcons.Nodes.Class);
     }
 
     public static ItemPresentation getPresentation(KlassEnumeration element)
     {
-        return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Nodes.Enum);
+        return new KlassNamedElementItemPresentation(element, null, AllIcons.Nodes.Enum);
     }
 
     public static ItemPresentation getPresentation(KlassAssociation element)
     {
-        return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Javaee.PersistenceRelationship);
+        return new KlassNamedElementItemPresentation(element, null, AllIcons.Javaee.PersistenceRelationship);
     }
 
     public static ItemPresentation getPresentation(KlassProjection element)
     {
-        return new KlassNamedElementItemPresentation(element, element.getContainingFile().getName(), AllIcons.Hierarchy.Subtypes);
+        return new KlassNamedElementItemPresentation(element, null, AllIcons.Hierarchy.Subtypes);
+    }
+
+    public static ItemPresentation getPresentation(KlassServiceGroup element)
+    {
+        return new ItemPresentation()
+        {
+            @Nullable
+            @Override
+            public String getPresentableText()
+            {
+                return element.getKlassName().getText();
+            }
+
+            @Nullable
+            @Override
+            public String getLocationString()
+            {
+                return null;
+            }
+
+            @Nullable
+            @Override
+            public Icon getIcon(boolean unused)
+            {
+                return AllIcons.Gutter.Java9Service;
+            }
+        };
+    }
+
+    public static ItemPresentation getPresentation(KlassUrlGroup element)
+    {
+        return new ItemPresentation()
+        {
+            @Nullable
+            @Override
+            public String getPresentableText()
+            {
+                return element.getUrl().getText();
+            }
+
+            @Nullable
+            @Override
+            public String getLocationString()
+            {
+                return null;
+            }
+
+            @Nullable
+            @Override
+            public Icon getIcon(boolean unused)
+            {
+                return AllIcons.Gutter.Java9Service;
+            }
+        };
     }
 
     public static ItemPresentation getPresentation(KlassAssociationEnd element)
@@ -232,5 +289,38 @@ public class KlassPsiImplUtil
         String optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
         String locationString = element.getEnumerationType().getText() + optionalMarkerText;
         return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
+    }
+
+    public static ItemPresentation getPresentation(KlassService element)
+    {
+        String locationString = element.getVerb().getText();
+        return new ItemPresentation()
+        {
+            @Nullable
+            @Override
+            public String getPresentableText()
+            {
+                return element.getVerb().getText();
+            }
+
+            @Nullable
+            @Override
+            public String getLocationString()
+            {
+                KlassServiceCriteriaClause serviceCriteriaClause = element.getServiceCriteriaClause();
+                if (serviceCriteriaClause == null)
+                {
+                    return null;
+                }
+                return serviceCriteriaClause.getCriteriaExpression().getText();
+            }
+
+            @Nullable
+            @Override
+            public Icon getIcon(boolean unused)
+            {
+                return AllIcons.Gutter.Java9Service;
+            }
+        };
     }
 }

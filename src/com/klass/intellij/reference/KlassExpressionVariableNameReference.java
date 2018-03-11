@@ -1,7 +1,8 @@
 package com.klass.intellij.reference;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.project.Project;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -66,21 +67,20 @@ public class KlassExpressionVariableNameReference extends PsiReferenceBase<PsiEl
     @Override
     public Object[] getVariants()
     {
-        Project project = this.myElement.getProject();
-        // List<KlassPathParameter> pathParameters = KlassUtil.findPathParameters(project);
         List<LookupElement> variants = new ArrayList<>();
-        /*
+        KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
+        KlassUrl url = klassUrlGroup.getUrl();
+        List<KlassPathParameter> pathParameters = url.getUrlPartList()
+                .stream()
+                .map(KlassUrlPart::getPathParameter)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
         for (KlassPathParameter pathParameter : pathParameters)
         {
-            if (pathParameter.getName() != null && !pathParameter.getName().isEmpty())
-            {
-                LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(pathParameter.getName())
-                        .withIcon(AllIcons.Hierarchy.Subtypes)
-                        .withTypeText(pathParameter.getContainingFile().getName());
-                variants.add(lookupElementBuilder);
-            }
+            LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(pathParameter.getName())
+                    .withIcon(AllIcons.Nodes.Variable);
+            variants.add(lookupElementBuilder);
         }
-        */
         return variants.toArray();
     }
 }

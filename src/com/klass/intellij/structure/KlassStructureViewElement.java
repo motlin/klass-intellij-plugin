@@ -8,10 +8,7 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.klass.intellij.psi.KlassAssociation;
-import com.klass.intellij.psi.KlassFile;
-import com.klass.intellij.psi.KlassKlass;
-import com.klass.intellij.psi.KlassTopLevelItem;
+import com.klass.intellij.psi.*;
 
 import java.util.Arrays;
 
@@ -94,7 +91,23 @@ public class KlassStructureViewElement implements StructureViewTreeElement, Sort
 
         if (this.element instanceof KlassAssociation)
         {
-            ((KlassAssociation) this.element).getAssociationEndList()
+            return ((KlassAssociation) this.element).getAssociationEndList()
+                    .stream()
+                    .map(KlassStructureViewElement::new)
+                    .toArray(TreeElement[]::new);
+        }
+
+        if (this.element instanceof KlassServiceGroup)
+        {
+            return ((KlassServiceGroup) this.element).getUrlGroupList()
+                    .stream()
+                    .map(KlassStructureViewElement::new)
+                    .toArray(TreeElement[]::new);
+        }
+
+        if (this.element instanceof KlassUrlGroup)
+        {
+            return ((KlassUrlGroup) this.element).getServiceList()
                     .stream()
                     .map(KlassStructureViewElement::new)
                     .toArray(TreeElement[]::new);

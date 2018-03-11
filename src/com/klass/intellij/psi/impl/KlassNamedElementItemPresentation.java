@@ -2,7 +2,6 @@ package com.klass.intellij.psi.impl;
 
 import com.intellij.navigation.ItemPresentation;
 import com.klass.intellij.psi.KlassNamedElement;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -30,7 +29,7 @@ public class KlassNamedElementItemPresentation implements ItemPresentation
         return this.element.getNombre().getText();
     }
 
-    @NotNull
+    @Nullable
     @Override
     public String getLocationString()
     {
