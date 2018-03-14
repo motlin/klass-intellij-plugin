@@ -119,14 +119,6 @@ public class KlassAnnotator implements Annotator
         }
 
         @Override
-        public void visitEnumerationLiteral(@NotNull KlassEnumerationLiteral klassEnumerationLiteral)
-        {
-            Annotation infoAnnotation =
-                    this.annotationHolder.createInfoAnnotation(klassEnumerationLiteral, null);
-            infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES);
-        }
-
-        @Override
         public void visitAssociation(@NotNull KlassAssociation klassAssociation)
         {
             List<KlassAssociationEnd> associationEndList = klassAssociation.getAssociationEndList();

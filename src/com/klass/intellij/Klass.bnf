@@ -121,10 +121,11 @@ rBrace ::= '}'
 // Just can't be called name, because the getName method would clash
 nombre ::= nombreText | '`' nombreText '`'
 nombreText ::= IDENTIFIER | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'key' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD
-enumerationLiteral ::= nombre
+enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')?
 
 dataType ::= ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD {methods=[getReference]}
 enumerationType ::= nombre {methods=[getReference]}
+enumerationPrettyName ::= STRING_LITERAL
 klassName ::= nombre {methods=[getReference]}
 propertyName ::= nombre {methods=[getReference]}
 associationEndName ::= nombre {methods=[getReference]}
