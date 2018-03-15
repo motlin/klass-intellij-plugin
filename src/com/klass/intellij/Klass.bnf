@@ -13,10 +13,10 @@
   psiImplUtilClass="com.klass.intellij.psi.impl.KlassPsiImplUtil"
   tokenTypeClass="com.klass.intellij.psi.KlassTokenType"
 
-  mixin("klass|association|enumeration|dataTypeProperty|enumerationProperty|associationEnd|pathParameter") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
+  mixin("klass|association|enumeration|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|pathParameter") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
   mixin("projection")="com.klass.intellij.psi.impl.AbstractKlassProjectionNode"
   mixin("projectionInnerNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
-  implements("klass|association|enumeration|projection|property|dataTypeProperty|enumerationProperty|associationEnd|pathParameter") = "com.klass.intellij.psi.KlassNamedElement"
+  implements("klass|association|enumeration|projection|member|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|pathParameter") = "com.klass.intellij.psi.KlassNamedElement"
   implements("projection|projectionInnerNode")="com.klass.intellij.psi.KlassTypedElement"
 
   tokens = [
@@ -31,6 +31,7 @@
     DOTDOT='..'
     SLASH='/'
     TICK='`'
+    COMMA=','
     ANDAND='&&'
     OROR='||'
     EQEQ='=='
@@ -62,7 +63,7 @@
   ]
 
   extends("klass|association|enumeration|projection|serviceGroup")=topLevelItem
-  extends("dataTypeProperty|enumerationProperty")=property
+  extends("dataTypeProperty|enumerationProperty|parameterizedProperty")=member
   extends("projectionInnerNode|projectionLeafNode")=projectionNode
   extends("criteriaAnd|criteriaOr|criteriaMethod|criteriaOperator")=criteriaExpression
 }
@@ -72,7 +73,7 @@ compilationUnit ::= topLevelItem*
 topLevelItem ::= klass | association | enumeration | projection | serviceGroup {recoverWhile="topLevelItem_recover"}
 private topLevelItem_recover ::= !('}' | 'class' | 'association' | 'enumeration' | 'projection' | 'service')
 
-klass ::= 'class' klassKeyword* nombre lBrace property* rBrace {pin="{" methods=[setName getPresentation]}
+klass ::= 'class' klassKeyword* versioned? nombre lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
 association ::= 'association' nombre '{' associationEnd* '}' {pin="{" methods=[setName getPresentation]}
 enumeration ::= 'enumeration' nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
 projection ::= 'projection' nombre '(' klassName ')' lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
@@ -96,20 +97,26 @@ serviceProjectionClause ::= 'projection' ':' projectionName
 serviceMultiplicity ::= 'one' | 'many'
 verb ::= 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
-criteriaExpression ::= criteriaAnd | criteriaOr | criteriaMethod | criteriaOperator
+criteriaExpression ::= criteriaAnd | criteriaOr | criteriaOperator
 criteriaAnd ::= criteriaExpression '&&' criteriaExpression
 criteriaOr ::= criteriaExpression '||' criteriaExpression
-criteriaMethod ::= 'this' '.' propertyName '.' methodName '(' (expressionValue (',' expressionValue)*)? ')'
-criteriaOperator ::= 'this' '.' propertyName operator expressionValue
-expressionValue ::= expressionLiteral | expressionVariableName
+// Overly generic, since clauses like 1 == 2 and 2 == $id don't make sense
+criteriaOperator ::= sourceExpressionValue operator targetExpressionValue
+sourceExpressionValue ::= expressionValue
+targetExpressionValue ::= expressionValue
+expressionValue ::= expressionLiteral | expressionProperty | expressionVariableName
 expressionLiteral ::= INTEGER_LITERAL | LONG_LITERAL | DOUBLE_LITERAL | FLOAT_LITERAL | STRING_LITERAL
-operator ::= EQEQ | NE | LT | GT | LE | GE
+expressionProperty ::= criteriaType '.' propertyName
+criteriaType ::= 'this' | klassName
+operator ::= EQEQ | NE | LT | GT | LE | GE | 'contains' | 'startsWith' | 'endsWith'
 
-property ::= dataTypeProperty | enumerationProperty
+member ::= dataTypeProperty | enumerationProperty | parameterizedProperty
 dataTypeProperty ::= propertyKeyword* nombre ':' dataType optionalMarker? {methods=[setName getPresentation]}
 enumerationProperty ::= propertyKeyword* nombre ':' enumerationType optionalMarker? {methods=[setName getPresentation]}
+parameterizedProperty ::= nombre '(' parameter (',' parameter)* ')' ':' klassName multiplicity lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
 
-klassKeyword ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD
+klassKeyword ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD
+versioned ::= VERSIONED_KEYWORD ('(' projectionName ')')?
 propertyKeyword ::= 'key'
 
 // TODO: packages, imports, fully qualified class names
@@ -123,6 +130,7 @@ nombre ::= nombreText | '`' nombreText '`'
 nombreText ::= IDENTIFIER | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'key' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')?
 
+parameter ::= nombre ':' (dataType | enumerationType)
 dataType ::= ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD {methods=[getReference]}
 enumerationType ::= nombre {methods=[getReference]}
 enumerationPrettyName ::= STRING_LITERAL
@@ -130,7 +138,6 @@ klassName ::= nombre {methods=[getReference]}
 propertyName ::= nombre {methods=[getReference]}
 associationEndName ::= nombre {methods=[getReference]}
 projectionName ::= nombre {methods=[getReference]}
-methodName ::= nombre
 expressionVariableName ::= nombre {methods=[getReference]}
 optionalMarker ::= QUESTION_MARK
 

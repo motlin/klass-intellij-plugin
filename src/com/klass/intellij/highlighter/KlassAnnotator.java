@@ -53,7 +53,7 @@ public class KlassAnnotator implements Annotator
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_NAME_ATTRIBUTES);
             }
-            else if (parent instanceof KlassProperty
+            else if (parent instanceof KlassMember
                     || parent instanceof KlassAssociationEnd
                     || parent instanceof KlassPropertyName
                     || parent instanceof KlassAssociationEndName)
@@ -64,13 +64,13 @@ public class KlassAnnotator implements Annotator
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES);
             }
-            else if (parent instanceof KlassMethodName)
-            {
-                infoAnnotation.setTextAttributes(KlassHighlightingColors.METHOD_CALL_ATTRIBUTES);
-            }
             else if (parent instanceof KlassPathParameter)
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.PATH_PARAMETER);
+            }
+            else if (parent instanceof KlassParameter)
+            {
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.PARAMETER_ATTRIBUTES);
             }
             else if (parent instanceof KlassUrlConstant)
             {
@@ -89,19 +89,19 @@ public class KlassAnnotator implements Annotator
         @Override
         public void visitKlass(@NotNull KlassKlass klassKlass)
         {
-            List<KlassProperty> propertyList = klassKlass.getPropertyList();
+            List<KlassMember> propertyList = klassKlass.getMemberList();
             Map<String, Long> propertyCountByName = propertyList.stream()
                     .map(PsiNamedElement::getName)
                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-            for (KlassProperty klassProperty : propertyList)
+            for (KlassMember klassMember : propertyList)
             {
-                String propertyName = klassProperty.getName();
+                String propertyName = klassMember.getName();
                 Long occurrences = propertyCountByName.get(propertyName);
                 if (occurrences > 1)
                 {
                     String message = String.format("Duplicate property '%s'", propertyName);
-                    this.annotationHolder.createErrorAnnotation(klassProperty.getNombre(), message);
+                    this.annotationHolder.createErrorAnnotation(klassMember.getNombre(), message);
                 }
             }
         }

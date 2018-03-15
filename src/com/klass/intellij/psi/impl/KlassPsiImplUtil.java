@@ -87,6 +87,19 @@ public class KlassPsiImplUtil
         return element;
     }
 
+    public static PsiElement setName(KlassParameterizedProperty element, String newName)
+    {
+        ASTNode primitivePropertyNameNode = element.getNombre().getNode();
+        if (primitivePropertyNameNode != null)
+        {
+            KlassParameterizedProperty parameterizedProperty =
+                    KlassElementFactory.createParameterizedProperty(element.getProject(), newName);
+            ASTNode newPrimitivePropertyNameNode = parameterizedProperty.getNombre().getNode();
+            element.getNode().replaceChild(primitivePropertyNameNode, newPrimitivePropertyNameNode);
+        }
+        return element;
+    }
+
     public static PsiElement setName(KlassAssociationEnd element, String newName)
     {
         ASTNode associationEndNameNode = element.getNombre().getNode();
@@ -131,7 +144,7 @@ public class KlassPsiImplUtil
             return null;
         }
 
-        return new KlassPropertyReference(klassPropertyName, associationEndType);
+        return new KlassMemberReference(klassPropertyName, associationEndType);
     }
 
     public static PsiReference getReference(KlassAssociationEndName klassAssociationEndName)
@@ -288,6 +301,13 @@ public class KlassPsiImplUtil
         KlassOptionalMarker optionalMarker = element.getOptionalMarker();
         String optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
         String locationString = element.getEnumerationType().getText() + optionalMarkerText;
+        return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
+    }
+
+    public static ItemPresentation getPresentation(KlassParameterizedProperty element)
+    {
+        String locationString = element.getKlassName().getText()
+                + element.getMultiplicity().getText();
         return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
     }
 

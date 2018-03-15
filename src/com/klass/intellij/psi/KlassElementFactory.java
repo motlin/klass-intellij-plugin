@@ -38,7 +38,7 @@ public class KlassElementFactory
                         + "{\n"
                         + "  " + name + ": String\n"
                         + "}\n");
-        return (KlassDataTypeProperty) ((KlassKlass) file.getFirstChild()).getPropertyList().get(0);
+        return (KlassDataTypeProperty) ((KlassKlass) file.getFirstChild()).getMemberList().get(0);
     }
 
     public static KlassEnumerationProperty createEnumerationProperty(Project project, String name)
@@ -49,7 +49,21 @@ public class KlassElementFactory
                         + "{\n"
                         + "  " + name + ": Status\n"
                         + "}\n");
-        return (KlassEnumerationProperty) ((KlassKlass) file.getFirstChild()).getPropertyList().get(0);
+        return (KlassEnumerationProperty) ((KlassKlass) file.getFirstChild()).getMemberList().get(0);
+    }
+
+    public static KlassParameterizedProperty createParameterizedProperty(Project project, String name)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "class DummyClass\n"
+                        + "{\n"
+                        + "  " + name + "(): DummyClass[1..1]\n"
+                        + "    {\n"
+                        + "        this.id == DummyClass.id\n"
+                        + "    }\n"
+                        + "}\n");
+        return (KlassParameterizedProperty) ((KlassKlass) file.getFirstChild()).getMemberList().get(0);
     }
 
     public static KlassEnumerationType createEnumerationType(Project project, String name)
@@ -60,7 +74,7 @@ public class KlassElementFactory
                         + "{\n"
                         + "  dummyProperty: " + name + "\n"
                         + "}\n");
-        return (KlassEnumerationType) ((KlassKlass) file.getFirstChild()).getPropertyList().get(0);
+        return (KlassEnumerationType) ((KlassKlass) file.getFirstChild()).getMemberList().get(0);
     }
 
     public static KlassAssociationEnd createAssociationEnd(Project project, String name)
@@ -89,6 +103,7 @@ public class KlassElementFactory
 
     public static KlassPathParameter createPathParameter(Project project, String name)
     {
+        // TODO: Real path parameter
         KlassFile file = KlassElementFactory.createFile(
                 project,
                 "");
