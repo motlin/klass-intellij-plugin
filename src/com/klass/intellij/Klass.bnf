@@ -76,11 +76,11 @@ private topLevelItem_recover ::= !('}' | 'class' | 'association' | 'enumeration'
 klass ::= 'class' klassKeyword* versioned? nombre lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
 association ::= 'association' nombre '{' associationEnd* '}' {pin="{" methods=[setName getPresentation]}
 enumeration ::= 'enumeration' nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
-projection ::= 'projection' nombre '(' klassName ')' lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
+projection ::= 'projection' nombre ('(' parameterDeclaration (',' parameterDeclaration)* ')')? 'on' klassName lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
 serviceGroup ::= 'service' klassName lBrace urlGroup* rBrace {pin="{" methods=[getPresentation]}
 
 projectionNode ::= projectionInnerNode | projectionLeafNode
-projectionInnerNode ::= associationEndName ':' '{' (projectionNode ',')* '}'
+projectionInnerNode ::= associationEndName ('(' parameterName (',' parameterName)* ')')? ':' '{' (projectionNode ',')* '}'
 projectionLeafNode ::= propertyName ':'? header?
 header ::= STRING_LITERAL
 
@@ -93,7 +93,7 @@ service ::= verb lBrace serviceMultiplicityClause serviceCriteriaClause? service
 
 serviceMultiplicityClause ::= 'multiplicity' ':' serviceMultiplicity
 serviceCriteriaClause ::= 'criteria' ':' criteriaExpression
-serviceProjectionClause ::= 'projection' ':' projectionName
+serviceProjectionClause ::= 'projection' ':' projectionName ('(' parameterName (',' parameterName)* ')')?
 serviceMultiplicity ::= 'one' | 'many'
 verb ::= 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
@@ -113,7 +113,7 @@ operator ::= EQEQ | NE | LT | GT | LE | GE | 'contains' | 'startsWith' | 'endsWi
 member ::= dataTypeProperty | enumerationProperty | parameterizedProperty
 dataTypeProperty ::= propertyKeyword* nombre ':' dataType optionalMarker? {methods=[setName getPresentation]}
 enumerationProperty ::= propertyKeyword* nombre ':' enumerationType optionalMarker? {methods=[setName getPresentation]}
-parameterizedProperty ::= nombre '(' parameter (',' parameter)* ')' ':' klassName multiplicity lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
+parameterizedProperty ::= nombre '(' parameterDeclaration (',' parameterDeclaration)* ')' ':' klassName multiplicity lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
 
 klassKeyword ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD
 versioned ::= VERSIONED_KEYWORD ('(' projectionName ')')?
@@ -130,7 +130,7 @@ nombre ::= nombreText | '`' nombreText '`'
 nombreText ::= IDENTIFIER | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'key' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')?
 
-parameter ::= nombre ':' (dataType | enumerationType)
+parameterDeclaration ::= nombre ':' (dataType | enumerationType)
 dataType ::= ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD {methods=[getReference]}
 enumerationType ::= nombre {methods=[getReference]}
 enumerationPrettyName ::= STRING_LITERAL
@@ -139,6 +139,7 @@ propertyName ::= nombre {methods=[getReference]}
 associationEndName ::= nombre {methods=[getReference]}
 projectionName ::= nombre {methods=[getReference]}
 expressionVariableName ::= nombre {methods=[getReference]}
+parameterName ::= nombre {methods=[getReference]}
 optionalMarker ::= QUESTION_MARK
 
 multiplicity ::= '[' ((lowerBound '..' upperBound) | dummyMultiplicity) ']'

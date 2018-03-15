@@ -68,9 +68,13 @@ public class KlassAnnotator implements Annotator
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.PATH_PARAMETER);
             }
-            else if (parent instanceof KlassParameter)
+            else if (parent instanceof KlassParameterDeclaration)
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.PARAMETER_ATTRIBUTES);
+            }
+            else if (parent instanceof KlassParameterName)
+            {
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.LOCAL_VARIABLE_ATTRIBUTES);
             }
             else if (parent instanceof KlassUrlConstant)
             {
