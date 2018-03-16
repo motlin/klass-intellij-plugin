@@ -33,58 +33,24 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode)
     {
-        PsiElement containingElement = this.myElement.getParent().getParent();
-        if (containingElement instanceof KlassProjectionInnerNode)
+        if (this.myElement instanceof KlassPropertyName)
         {
-            KlassAssociationEndName associationEndName =
-                    ((KlassProjectionInnerNode) containingElement).getAssociationEndName();
-            PsiReference reference = associationEndName.getReference();
-            if (reference != null)
+            KlassExpressionProperty expressionProperty = (KlassExpressionProperty) this.myElement.getParent();
+            KlassCriteriaType criteriaType = expressionProperty.getCriteriaType();
+            KlassKlassName klassName = criteriaType.getKlassName();
+
+            if (klassName == null)
             {
-                KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) reference.resolve();
-                if (klassAssociationEnd != null)
-                {
-                    PsiElement associationEndParent = klassAssociationEnd.getParent();
-                    KlassKlassName klassName = klassAssociationEnd.getKlassName();
-                    PsiReference klassNameReference = klassName.getReference();
-                    KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
-                    if (klassKlass != null)
-                    {
-                        List<KlassMember> propertyList = klassKlass.getMemberList();
-                        for (KlassMember klassMember : propertyList)
-                        {
-                            String klassMemberName = klassMember.getName();
-                            if (klassMemberName.equals(this.propertyName))
-                            {
-                                return new ResolveResult[]{new PsiElementResolveResult(klassMember)};
-                            }
-                        }
-                    }
+                KlassKlass klassKlass =
+                        PsiTreeUtil.getParentOfType(this.myElement, KlassKlass.class);
 
-                    // If parent is valid but child is invalid, jump to parent?
-                    // So in answers.bodytypo, jump to answers instead of body
-                    return new ResolveResult[]{new PsiElementResolveResult(klassAssociationEnd)};
-                }
+                ResolveResult[] resolveResults = klassKlass.getMemberList()
+                        .stream()
+                        .filter(klassMember -> klassMember.getName().equals(this.propertyName))
+                        .map(PsiElementResolveResult::new)
+                        .toArray(ResolveResult[]::new);
+                return resolveResults;
             }
-        }
-        else if (containingElement instanceof KlassProjection)
-        {
-            KlassKlassName klassName = ((KlassProjection) containingElement).getKlassName();
-            PsiReference klassReference = klassName.getReference();
-
-            KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
-            ResolveResult[] resolveResults = klassKlass.getMemberList()
-                    .stream()
-                    .filter(klassMember -> klassMember.getName().equals(this.propertyName))
-                    .map(PsiElementResolveResult::new)
-                    .toArray(ResolveResult[]::new);
-            return resolveResults;
-        }
-        else if (containingElement instanceof KlassServiceCriteriaClause)
-        {
-            KlassServiceGroup klassServiceGroup =
-                    PsiTreeUtil.getParentOfType(containingElement, KlassServiceGroup.class);
-            KlassKlassName klassName = klassServiceGroup.getKlassName();
             PsiReference klassNameReference = klassName.getReference();
             KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
 

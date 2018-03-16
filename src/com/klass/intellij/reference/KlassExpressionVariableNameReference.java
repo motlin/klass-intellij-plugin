@@ -6,10 +6,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.klass.intellij.psi.KlassPathParameter;
-import com.klass.intellij.psi.KlassUrl;
-import com.klass.intellij.psi.KlassUrlGroup;
-import com.klass.intellij.psi.KlassUrlPart;
+import com.klass.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +20,7 @@ public class KlassExpressionVariableNameReference extends PsiReferenceBase<PsiEl
     private final String expressionVariableName;
 
     private KlassPathParameter pathParameter;
+    private KlassParameterDeclaration parameterDeclaration;
 
     public KlassExpressionVariableNameReference(@NotNull PsiElement element, String expressionVariableName)
     {
@@ -39,18 +37,42 @@ public class KlassExpressionVariableNameReference extends PsiReferenceBase<PsiEl
             return new PsiElementResolveResult[]{new PsiElementResolveResult(this.pathParameter)};
         }
 
-        KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
-        KlassUrl url = klassUrlGroup.getUrl();
-        List<KlassPathParameter> pathParameters = url.getUrlPartList()
-                .stream()
-                .map(KlassUrlPart::getPathParameter)
-                .filter(Objects::nonNull)
-                .filter(pathParameter -> pathParameter.getName().equals(this.expressionVariableName))
-                .collect(Collectors.toList());
-        if (pathParameters.size() == 1)
+        if (this.parameterDeclaration != null)
         {
-            this.pathParameter = pathParameters.get(0);
-            return new PsiElementResolveResult[]{new PsiElementResolveResult(this.pathParameter)};
+            return new PsiElementResolveResult[]{new PsiElementResolveResult(this.parameterDeclaration)};
+        }
+
+        KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
+        KlassParameterizedProperty parameterizedProperty =
+                PsiTreeUtil.getParentOfType(this.myElement, KlassParameterizedProperty.class);
+
+        if (klassUrlGroup != null)
+        {
+            KlassUrl url = klassUrlGroup.getUrl();
+            List<KlassPathParameter> pathParameters = url.getUrlPartList()
+                    .stream()
+                    .map(KlassUrlPart::getPathParameter)
+                    .filter(Objects::nonNull)
+                    .filter(pathParameter -> pathParameter.getName().equals(this.expressionVariableName))
+                    .collect(Collectors.toList());
+            if (pathParameters.size() == 1)
+            {
+                this.pathParameter = pathParameters.get(0);
+                return new PsiElementResolveResult[]{new PsiElementResolveResult(this.pathParameter)};
+            }
+        }
+        else if (parameterizedProperty != null)
+        {
+            List<KlassParameterDeclaration> parameterDeclarationList =
+                    parameterizedProperty.getParameterDeclarationList();
+            List<KlassParameterDeclaration> parameterDeclarations = parameterDeclarationList.stream()
+                    .filter(parameterDeclaration -> parameterDeclaration.getName().equals(this.expressionVariableName))
+                    .collect(Collectors.toList());
+            if (parameterDeclarations.size() == 1)
+            {
+                this.parameterDeclaration = parameterDeclarations.get(0);
+                return new PsiElementResolveResult[]{new PsiElementResolveResult(this.parameterDeclaration)};
+            }
         }
         return new ResolveResult[]{};
     }

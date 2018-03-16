@@ -13,10 +13,10 @@
   psiImplUtilClass="com.klass.intellij.psi.impl.KlassPsiImplUtil"
   tokenTypeClass="com.klass.intellij.psi.KlassTokenType"
 
-  mixin("klass|association|enumeration|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|pathParameter") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
+  mixin("klass|association|enumeration|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|pathParameter|parameterDeclaration") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
   mixin("projection")="com.klass.intellij.psi.impl.AbstractKlassProjectionNode"
   mixin("projectionInnerNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
-  implements("klass|association|enumeration|projection|member|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|pathParameter") = "com.klass.intellij.psi.KlassNamedElement"
+  implements("klass|association|enumeration|projection|member|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|pathParameter|parameterDeclaration") = "com.klass.intellij.psi.KlassNamedElement"
   implements("projection|projectionInnerNode")="com.klass.intellij.psi.KlassTypedElement"
 
   tokens = [
@@ -49,7 +49,9 @@
     ENUMERATION_KEYWORD='enumeration'
     PROJECTION_KEYWORD='projection'
     SERVICE_KEYWORD='service'
+    USER_KEYWORD='user'
     KEY_KEYWORD='key'
+    ON_KEYWORD='on'
     GET_VERB='GET'
     POST_VERB='POST'
     PUT_VERB='PUT'
@@ -71,9 +73,9 @@
 compilationUnit ::= topLevelItem*
 
 topLevelItem ::= klass | association | enumeration | projection | serviceGroup {recoverWhile="topLevelItem_recover"}
-private topLevelItem_recover ::= !('}' | 'class' | 'association' | 'enumeration' | 'projection' | 'service')
+private topLevelItem_recover ::= !('}' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user')
 
-klass ::= 'class' klassKeyword* versioned? nombre lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
+klass ::= ('class' | 'user') klassKeyword* versioned? nombre lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
 association ::= 'association' nombre '{' associationEnd* '}' {pin="{" methods=[setName getPresentation]}
 enumeration ::= 'enumeration' nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
 projection ::= 'projection' nombre ('(' parameterDeclaration (',' parameterDeclaration)* ')')? 'on' klassName lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
@@ -113,9 +115,9 @@ operator ::= EQEQ | NE | LT | GT | LE | GE | 'contains' | 'startsWith' | 'endsWi
 member ::= dataTypeProperty | enumerationProperty | parameterizedProperty
 dataTypeProperty ::= propertyKeyword* nombre ':' dataType optionalMarker? {methods=[setName getPresentation]}
 enumerationProperty ::= propertyKeyword* nombre ':' enumerationType optionalMarker? {methods=[setName getPresentation]}
-parameterizedProperty ::= nombre '(' parameterDeclaration (',' parameterDeclaration)* ')' ':' klassName multiplicity lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
+parameterizedProperty ::= nombre '(' (parameterDeclaration (',' parameterDeclaration)*)? ')' ':' klassName multiplicity lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
 
-klassKeyword ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD
+klassKeyword ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | AUDITED_KEYWORD
 versioned ::= VERSIONED_KEYWORD ('(' projectionName ')')?
 propertyKeyword ::= 'key'
 
@@ -127,10 +129,10 @@ rBrace ::= '}'
 
 // Just can't be called name, because the getName method would clash
 nombre ::= nombreText | '`' nombreText '`'
-nombreText ::= IDENTIFIER | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'key' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD
+nombreText ::= IDENTIFIER | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')?
 
-parameterDeclaration ::= nombre ':' (dataType | enumerationType)
+parameterDeclaration ::= nombre ':' (dataType | enumerationType) {methods=[setName]}
 dataType ::= ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD {methods=[getReference]}
 enumerationType ::= nombre {methods=[getReference]}
 enumerationPrettyName ::= STRING_LITERAL

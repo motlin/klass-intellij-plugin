@@ -80,13 +80,16 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "enumeration" { return KlassTypes.ENUMERATION_KEYWORD; }
   "projection" { return KlassTypes.PROJECTION_KEYWORD; }
   "service" { return KlassTypes.SERVICE_KEYWORD; }
+  "user" { return KlassTypes.USER_KEYWORD; }
 
   "systemTemporal" { return KlassTypes.SYSTEM_TEMPORAL_KEYWORD; }
   "validTemporal" { return KlassTypes.VALID_TEMPORAL_KEYWORD; }
   "bitemporal" { return KlassTypes.BITEMPORAL_KEYWORD; }
   "versioned" { return KlassTypes.VERSIONED_KEYWORD; }
+  "audited" { return KlassTypes.AUDITED_KEYWORD; }
 
   "key" { return KlassTypes.KEY_KEYWORD; }
+  "on" { return KlassTypes.ON_KEYWORD; }
 
   "multiplicity" { return KlassTypes.MULTIPLICITY_KEYWORD; }
   "criteria" { return KlassTypes.CRITERIA_KEYWORD; }

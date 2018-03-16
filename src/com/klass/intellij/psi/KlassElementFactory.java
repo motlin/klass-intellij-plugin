@@ -110,6 +110,20 @@ public class KlassElementFactory
         return (KlassPathParameter) file.getFirstChild();
     }
 
+    public static KlassParameterDeclaration createParameterDeclaration(Project project, String name)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "class Dummy\n"
+                        + "{\n"
+                        + "    " + name + "(): Dummy[0..*]\n"
+                        + "    {\n"
+                        + "        this.id == Dummy.id\n"
+                        + "    }\n"
+                        + "}\n");
+        return (KlassParameterDeclaration) file.getFirstChild().getFirstChild();
+    }
+
     public static KlassFile createFile(Project project, String text)
     {
         String name = "dummy.klass";
