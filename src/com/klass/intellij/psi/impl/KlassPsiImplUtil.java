@@ -259,7 +259,8 @@ public class KlassPsiImplUtil
 
     public static ItemPresentation getPresentation(KlassProjection element)
     {
-        return new KlassNamedElementItemPresentation(element, null, AllIcons.Hierarchy.Subtypes);
+        return new KlassNamedElementItemPresentation(element, "on "
+                + element.getKlassName().getNombre().getNombreText().getText(), AllIcons.Hierarchy.Subtypes);
     }
 
     public static ItemPresentation getPresentation(KlassServiceGroup element)

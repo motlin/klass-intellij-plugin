@@ -26,7 +26,7 @@ public class KlassNamedElementItemPresentation implements ItemPresentation
     @Override
     public String getPresentableText()
     {
-        return this.element.getNombre().getText();
+        return this.element.getNombre().getNombreText().getText();
     }
 
     @Nullable
