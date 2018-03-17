@@ -56,7 +56,8 @@ public class KlassAnnotator implements Annotator
             else if (parent instanceof KlassMember
                     || parent instanceof KlassAssociationEnd
                     || parent instanceof KlassPropertyName
-                    || parent instanceof KlassAssociationEndName)
+                    || parent instanceof KlassAssociationEndName
+                    || parent instanceof KlassParameterizedPropertyName)
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES);
             }

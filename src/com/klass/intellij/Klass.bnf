@@ -82,7 +82,7 @@ projection ::= 'projection' nombre ('(' parameterDeclaration (',' parameterDecla
 serviceGroup ::= 'service' klassName lBrace urlGroup* rBrace {pin="{" methods=[getPresentation]}
 
 projectionNode ::= projectionInnerNode | projectionLeafNode
-projectionInnerNode ::= associationEndName ('(' parameterName (',' parameterName)* ')')? ':' '{' (projectionNode ',')* '}'
+projectionInnerNode ::= ((parameterizedPropertyName '(' parameterName (',' parameterName)* ')') | associationEndName) ':' '{' (projectionNode ',')* '}'
 projectionLeafNode ::= propertyName ':'? header?
 header ::= STRING_LITERAL
 
@@ -139,6 +139,7 @@ enumerationPrettyName ::= STRING_LITERAL
 klassName ::= nombre {methods=[getReference]}
 propertyName ::= nombre {methods=[getReference]}
 associationEndName ::= nombre {methods=[getReference]}
+parameterizedPropertyName ::= nombre {methods=[getReference]}
 projectionName ::= nombre {methods=[getReference]}
 expressionVariableName ::= nombre {methods=[getReference]}
 parameterName ::= nombre {methods=[getReference]}

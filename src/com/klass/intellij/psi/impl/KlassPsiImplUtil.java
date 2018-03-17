@@ -171,6 +171,17 @@ public class KlassPsiImplUtil
         return new KlassAssociationEndReference(klassAssociationEndName, associationEndType);
     }
 
+    public static PsiReference getReference(KlassParameterizedPropertyName klassParameterizedPropertyName)
+    {
+        String ParameterizedPropertyType = klassParameterizedPropertyName.getText();
+        if (ParameterizedPropertyType == null)
+        {
+            return null;
+        }
+
+        return new KlassParameterizedPropertyReference(klassParameterizedPropertyName, ParameterizedPropertyType);
+    }
+
     public static PsiReference getReference(KlassDataType klassDataType)
     {
         String dataType = klassDataType.getText();

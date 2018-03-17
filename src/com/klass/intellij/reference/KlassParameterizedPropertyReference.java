@@ -1,0 +1,76 @@
+package com.klass.intellij.reference;
+
+import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.*;
+import com.klass.intellij.KlassUtil;
+import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassParameterizedProperty;
+import com.klass.intellij.psi.KlassTypedElement;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class KlassParameterizedPropertyReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
+{
+    private final String parameterizedPropertyName;
+
+    public KlassParameterizedPropertyReference(@NotNull PsiElement element, String parameterizedPropertyName)
+    {
+        super(element, new TextRange(0, parameterizedPropertyName.length()));
+        this.parameterizedPropertyName = parameterizedPropertyName;
+    }
+
+    @NotNull
+    @Override
+    public ResolveResult[] multiResolve(boolean incompleteCode)
+    {
+        PsiElement innerNode = this.myElement.getParent();
+        KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent();
+        PsiElement type = klassTypedElement.getType();
+        PsiReference reference = type.getReference();
+        KlassKlass klassKlass = (KlassKlass) reference.resolve();
+
+        ResolveResult[] resolveResults = klassKlass.getMemberList()
+                .stream()
+                .filter(KlassParameterizedProperty.class::isInstance)
+                .map(KlassParameterizedProperty.class::cast)
+                .filter(klassParameterizedProperty -> klassParameterizedProperty.getName().equals(this.parameterizedPropertyName))
+                .map(PsiElementResolveResult::new)
+                .toArray(ResolveResult[]::new);
+        return resolveResults;
+    }
+
+    @Nullable
+    @Override
+    public PsiElement resolve()
+    {
+        ResolveResult[] resolveResults = this.multiResolve(false);
+        return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+    }
+
+    @NotNull
+    @Override
+    public Object[] getVariants()
+    {
+        Project project = this.myElement.getProject();
+        List<KlassKlass> klassKlasses = KlassUtil.findClasses(project);
+        List<LookupElement> variants = new ArrayList<>();
+        for (KlassKlass klassKlass : klassKlasses)
+        {
+            if (klassKlass.getName() != null && !klassKlass.getName().isEmpty())
+            {
+                LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(klassKlass.getName())
+                        .withIcon(AllIcons.Nodes.Class)
+                        .withTypeText(klassKlass.getContainingFile().getName());
+                variants.add(lookupElementBuilder);
+            }
+        }
+        return variants.toArray();
+    }
+}
