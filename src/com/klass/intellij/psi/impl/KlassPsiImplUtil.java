@@ -325,9 +325,15 @@ public class KlassPsiImplUtil
 
     public static ItemPresentation getPresentation(KlassDataTypeProperty element)
     {
+        boolean hasKeyProperty = element.getPropertyKeywordList()
+                .stream()
+                .anyMatch(propertyKeyword -> propertyKeyword.getText().equals("key"));
+        String keyKeyword = hasKeyProperty ? "key " : "";
+
         KlassOptionalMarker optionalMarker = element.getOptionalMarker();
         String optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
-        String locationString = element.getDataType().getText() + optionalMarkerText;
+
+        String locationString = keyKeyword + element.getDataType().getText() + optionalMarkerText;
         return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
     }
 
