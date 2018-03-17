@@ -49,30 +49,25 @@ public class KlassExpressionVariableNameReference extends PsiReferenceBase<PsiEl
         if (klassUrlGroup != null)
         {
             KlassUrl url = klassUrlGroup.getUrl();
-            List<KlassPathParameter> pathParameters = url.getUrlPartList()
+            ResolveResult[] resolveResults = url.getUrlPartList()
                     .stream()
                     .map(KlassUrlPart::getPathParameter)
                     .filter(Objects::nonNull)
                     .filter(pathParameter -> pathParameter.getName().equals(this.expressionVariableName))
-                    .collect(Collectors.toList());
-            if (pathParameters.size() == 1)
-            {
-                this.pathParameter = pathParameters.get(0);
-                return new PsiElementResolveResult[]{new PsiElementResolveResult(this.pathParameter)};
-            }
+                    .map(PsiElementResolveResult::new)
+                    .toArray(ResolveResult[]::new);
+            return resolveResults;
         }
-        else if (parameterizedProperty != null)
+
+        if (parameterizedProperty != null)
         {
             List<KlassParameterDeclaration> parameterDeclarationList =
                     parameterizedProperty.getParameterDeclarationList();
-            List<KlassParameterDeclaration> parameterDeclarations = parameterDeclarationList.stream()
+            ResolveResult[] resolveResults = parameterDeclarationList.stream()
                     .filter(parameterDeclaration -> parameterDeclaration.getName().equals(this.expressionVariableName))
-                    .collect(Collectors.toList());
-            if (parameterDeclarations.size() == 1)
-            {
-                this.parameterDeclaration = parameterDeclarations.get(0);
-                return new PsiElementResolveResult[]{new PsiElementResolveResult(this.parameterDeclaration)};
-            }
+                    .map(PsiElementResolveResult::new)
+                    .toArray(ResolveResult[]::new);
+            return resolveResults;
         }
         return new ResolveResult[]{};
     }

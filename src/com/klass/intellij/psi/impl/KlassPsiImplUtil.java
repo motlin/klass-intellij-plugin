@@ -173,13 +173,24 @@ public class KlassPsiImplUtil
 
     public static PsiReference getReference(KlassParameterizedPropertyName klassParameterizedPropertyName)
     {
-        String ParameterizedPropertyType = klassParameterizedPropertyName.getText();
-        if (ParameterizedPropertyType == null)
+        String parameterizedPropertyType = klassParameterizedPropertyName.getText();
+        if (parameterizedPropertyType == null)
         {
             return null;
         }
 
-        return new KlassParameterizedPropertyReference(klassParameterizedPropertyName, ParameterizedPropertyType);
+        return new KlassParameterizedPropertyReference(klassParameterizedPropertyName, parameterizedPropertyType);
+    }
+
+    public static PsiReference getReference(KlassParameterName klassParameterName)
+    {
+        String parameterNameText = klassParameterName.getText();
+        if (parameterNameText == null)
+        {
+            return null;
+        }
+
+        return new KlassParameterReference(klassParameterName, parameterNameText);
     }
 
     public static PsiReference getReference(KlassDataType klassDataType)
