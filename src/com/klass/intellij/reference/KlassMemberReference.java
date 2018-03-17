@@ -33,9 +33,15 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode)
     {
-        if (this.myElement instanceof KlassPropertyName)
+        PsiElement parent = this.myElement.getParent();
+        if (!(this.myElement instanceof KlassPropertyName))
         {
-            KlassExpressionProperty expressionProperty = (KlassExpressionProperty) this.myElement.getParent();
+            return new ResolveResult[]{};
+        }
+
+        if (parent instanceof KlassExpressionProperty)
+        {
+            KlassExpressionProperty expressionProperty = (KlassExpressionProperty) parent;
             KlassCriteriaType criteriaType = expressionProperty.getCriteriaType();
             KlassKlassName klassName = criteriaType.getKlassName();
 
@@ -44,24 +50,75 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
                 KlassKlass klassKlass =
                         PsiTreeUtil.getParentOfType(this.myElement, KlassKlass.class);
 
-                ResolveResult[] resolveResults = klassKlass.getMemberList()
-                        .stream()
-                        .filter(klassMember -> klassMember.getName().equals(this.propertyName))
-                        .map(PsiElementResolveResult::new)
-                        .toArray(ResolveResult[]::new);
-                return resolveResults;
-            }
-            PsiReference klassNameReference = klassName.getReference();
-            KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
+                if (klassKlass != null)
+                {
+                    return this.getKlassResolveResults(klassKlass);
+                }
 
-            ResolveResult[] resolveResults = klassKlass.getMemberList()
-                    .stream()
-                    .filter(klassMember -> klassMember.getName().equals(this.propertyName))
-                    .map(PsiElementResolveResult::new)
-                    .toArray(ResolveResult[]::new);
-            return resolveResults;
+                KlassServiceGroup klassServiceGroup =
+                        PsiTreeUtil.getParentOfType(this.myElement, KlassServiceGroup.class);
+                if (klassServiceGroup != null)
+                {
+                    PsiReference reference = klassServiceGroup.getKlassName().getReference();
+                    KlassKlass serviceKlass = (KlassKlass) reference.resolve();
+                    return this.getKlassResolveResults(serviceKlass);
+                }
+            }
+            else
+            {
+                PsiReference klassNameReference = klassName.getReference();
+                KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
+
+                return this.getKlassResolveResults(klassKlass);
+            }
         }
+        else if (parent instanceof KlassProjectionLeafNode)
+        {
+            KlassProjectionLeafNode projectionLeafNode = (KlassProjectionLeafNode) parent;
+            PsiElement projectionNodeParent = projectionLeafNode.getParent();
+            if (projectionNodeParent instanceof KlassProjection)
+            {
+                KlassProjection projection = (KlassProjection) projectionNodeParent;
+                PsiReference klassReference = projection.getKlassName().getReference();
+                KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
+
+                if (klassKlass != null)
+                {
+                    return this.getKlassResolveResults(klassKlass);
+                }
+            }
+            else if (projectionNodeParent instanceof KlassProjectionInnerNode)
+            {
+                KlassProjectionInnerNode projectionInnerNode = (KlassProjectionInnerNode) projectionNodeParent;
+                KlassAssociationEndName associationEndName =
+                        projectionInnerNode.getAssociationEndName();
+                PsiReference associationEndReference = associationEndName.getReference();
+                KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) associationEndReference.resolve();
+
+                if (klassAssociationEnd != null)
+                {
+                    KlassKlassName klassName = klassAssociationEnd.getKlassName();
+                    PsiReference klassNameReference = klassName.getReference();
+                    KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
+
+                    if (klassKlass != null)
+                    {
+                        return this.getKlassResolveResults(klassKlass);
+                    }
+                }
+            }
+        }
+
         return new ResolveResult[]{};
+    }
+
+    private ResolveResult[] getKlassResolveResults(KlassKlass klassKlass)
+    {
+        return klassKlass.getMemberList()
+                .stream()
+                .filter(klassMember -> klassMember.getName().equals(this.propertyName))
+                .map(PsiElementResolveResult::new)
+                .toArray(ResolveResult[]::new);
     }
 
     @Nullable
@@ -93,13 +150,12 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
                     if (klassKlass != null)
                     {
                         List<KlassMember> propertyList = klassKlass.getMemberList();
-                        Object[] result = propertyList.stream()
+                        return propertyList.stream()
                                 .map(klassMember -> LookupElementBuilder.create(klassMember.getName())
                                         .withIcon(AllIcons.Nodes.Property)
                                         .withTypeText(klassMember.getContainingFile().getName())
                                         .withInsertHandler(ProjectionLeafInsertHandler.INSTANCE))
                                 .toArray();
-                        return result;
                     }
                 }
             }
@@ -110,12 +166,7 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
             PsiReference klassReference = klassName.getReference();
 
             KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
-            ResolveResult[] resolveResults = klassKlass.getMemberList()
-                    .stream()
-                    .filter(klassMember -> klassMember.getName().equals(this.propertyName))
-                    .map(PsiElementResolveResult::new)
-                    .toArray(ResolveResult[]::new);
-            return resolveResults;
+            return this.getKlassResolveResults(klassKlass);
         }
 
         return new Object[]{};
