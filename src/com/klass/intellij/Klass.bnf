@@ -44,6 +44,9 @@
     MINUS='-'
     PERCENT='%'
     EXCL='!'
+    CONTAINS_OPERATOR='contains'
+    STARTS_WITH_OPERATOR='startsWith'
+    ENDS_WITH_OPERATOR='endsWith'
     CLASS_KEYWORD='class'
     ASSOCIATION_KEYWORD='association'
     ENUMERATION_KEYWORD='enumeration'
@@ -67,7 +70,7 @@
   extends("klass|association|enumeration|projection|serviceGroup")=topLevelItem
   extends("dataTypeProperty|enumerationProperty|parameterizedProperty")=member
   extends("projectionInnerNode|projectionLeafNode")=projectionNode
-  extends("criteriaAnd|criteriaOr|criteriaMethod|criteriaOperator")=criteriaExpression
+  extends("criteriaAnd|criteriaOr|criteriaOperator")=criteriaExpression
 }
 
 compilationUnit ::= topLevelItem*
@@ -75,7 +78,7 @@ compilationUnit ::= topLevelItem*
 topLevelItem ::= klass | association | enumeration | projection | serviceGroup {recoverWhile="topLevelItem_recover"}
 private topLevelItem_recover ::= !('}' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user')
 
-klass ::= ('class' | 'user') klassKeyword* versioned? nombre lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
+klass ::= ('class' | 'user') keywordOnClass* versioned? nombre lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
 association ::= 'association' nombre '{' associationEnd* '}' {pin="{" methods=[setName getPresentation]}
 enumeration ::= 'enumeration' nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
 projection ::= 'projection' nombre ('(' parameterDeclaration (',' parameterDeclaration)* ')')? 'on' klassName lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
@@ -117,7 +120,7 @@ dataTypeProperty ::= propertyKeyword* nombre ':' dataType optionalMarker? {metho
 enumerationProperty ::= propertyKeyword* nombre ':' enumerationType optionalMarker? {methods=[setName getPresentation]}
 parameterizedProperty ::= nombre '(' (parameterDeclaration (',' parameterDeclaration)*)? ')' ':' klassName multiplicity lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
 
-klassKeyword ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | AUDITED_KEYWORD
+keywordOnClass ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | AUDITED_KEYWORD
 versioned ::= VERSIONED_KEYWORD ('(' projectionName ')')?
 propertyKeyword ::= 'key'
 

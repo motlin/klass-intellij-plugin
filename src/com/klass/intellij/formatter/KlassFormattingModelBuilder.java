@@ -43,7 +43,8 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
                 || element instanceof KlassProjectionInnerNode
                 || element instanceof KlassService
                 || element instanceof KlassServiceGroup
-                || element instanceof KlassUrlGroup)
+                || element instanceof KlassUrlGroup
+                || element instanceof KlassParameterizedProperty)
         {
             return Indent.getNormalIndent();
         }
@@ -54,7 +55,9 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
     {
         CommonCodeStyleSettings commonSettings = settings.getCommonSettings(KlassLanguage.INSTANCE);
 
-        TokenSet keywords = TokenSet.orSet(TokenSets.KEYWORD_BIT_SET, TokenSet.create(KlassTypes.KLASS_KEYWORD));
+        // TODO: KLASS_KEYWORD and KLASS_KLASS_KEYWORD conflict
+        TokenSet keywords =
+                TokenSet.orSet(TokenSets.KEYWORD_BIT_SET, TokenSet.create(KlassTypes.KEYWORD_ON_CLASS, KlassTypes.VERSIONED_KEYWORD, KlassTypes.VERSIONED, KlassTypes.ON_KEYWORD));
         SpacingBuilder spacingBuilder = new SpacingBuilder(settings, KlassLanguage.INSTANCE)
                 .before(TokenSet.create(KlassTypes.OPTIONAL_MARKER, KlassTypes.COMMA)).none()
                 .around(TokenSet.create(KlassTypes.DOT, KlassTypes.DOTDOT)).none()
@@ -68,11 +71,13 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
                 .aroundInside(TokenSet.create(KlassTypes.SLASH, KlassTypes.URL_CONSTANT, KlassTypes.PATH_PARAMETER, KlassTypes.NOMBRE), KlassTypes.URL).none()
                 .around(TokenSet.create(KlassTypes.LBRACE, KlassTypes.RBRACE, KlassTypes.L_BRACE, KlassTypes.R_BRACE)).lineBreakInCode()
                 .after(KlassTypes.COLON).spaces(1)
-                .around(KlassTypes.OPERATOR).spaces(1)
+                .around(TokenSet.create(KlassTypes.OPERATOR, KlassTypes.ANDAND, KlassTypes.OROR)).spaces(1)
+                .before(KlassTypes.PARAMETERIZED_PROPERTY).blankLines(1)
                 .after(TokenSet.create(KlassTypes.COMMA, KlassTypes.DATA_TYPE_PROPERTY, KlassTypes.ENUMERATION_PROPERTY, KlassTypes.ASSOCIATION_END, KlassTypes.PROJECTION_INNER_NODE, KlassTypes.PROJECTION_LEAF_NODE, KlassTypes.SERVICE_MULTIPLICITY_CLAUSE, KlassTypes.SERVICE_CRITERIA_CLAUSE, KlassTypes.SERVICE_PROJECTION_CLAUSE, KlassTypes.SERVICE, KlassTypes.URL, KlassTypes.URL_GROUP, KlassTokenType.END_OF_LINE_COMMENT)).lineBreakInCode()
-                .around(TokenSet.create(KlassTypes.KLASS, KlassTypes.ENUMERATION, KlassTypes.ASSOCIATION, KlassTypes.PROJECTION, KlassTypes.SERVICE_GROUP)).blankLines(1)
+                .around(TokenSet.create(KlassTypes.KLASS, KlassTypes.ENUMERATION, KlassTypes.ASSOCIATION, KlassTypes.PROJECTION, KlassTypes.SERVICE_GROUP, KlassTypes.PARAMETERIZED_PROPERTY)).blankLines(1)
                 .between(keywords, keywords).spaces(1)
-                .between(keywords, TokenSet.create(KlassTypes.NOMBRE, KlassTypes.KLASS_NAME)).spaces(1);
+                .between(keywords, TokenSet.create(KlassTypes.NOMBRE, KlassTypes.KLASS_NAME)).spaces(1)
+                .between(KlassTypes.SYSTEM_TEMPORAL_KEYWORD, KlassTypes.VERSIONED_KEYWORD).spaces(1);
 
         RuleBuilder colonRuleBuilder = spacingBuilder.before(KlassTypes.COLON);
         if (commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS)

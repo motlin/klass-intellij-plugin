@@ -75,6 +75,7 @@ public class KlassBlock extends AbstractBlock
         IElementType elementType = this.getNode().getElementType();
         if (elementType == KlassTypes.DATA_TYPE_PROPERTY
                 || elementType == KlassTypes.ENUMERATION_PROPERTY
+                || elementType == KlassTypes.PARAMETERIZED_PROPERTY
                 || elementType == KlassTypes.ASSOCIATION_END
                 || elementType == KlassTypes.ENUMERATION_LITERAL
                 || elementType == KlassTypes.PROJECTION_INNER_NODE
@@ -83,7 +84,8 @@ public class KlassBlock extends AbstractBlock
                 || elementType == KlassTypes.SERVICE
                 || elementType == KlassTypes.SERVICE_MULTIPLICITY_CLAUSE
                 || elementType == KlassTypes.SERVICE_CRITERIA_CLAUSE
-                || elementType == KlassTypes.SERVICE_PROJECTION_CLAUSE)
+                || elementType == KlassTypes.SERVICE_PROJECTION_CLAUSE
+                || elementType == KlassTypes.CRITERIA_OPERATOR)
         {
             return Indent.getNormalIndent();
         }
@@ -105,7 +107,8 @@ public class KlassBlock extends AbstractBlock
                 || elementType == KlassTypes.PROJECTION_INNER_NODE
                 || elementType == KlassTypes.SERVICE_GROUP
                 || elementType == KlassTypes.URL_GROUP
-                || elementType == KlassTypes.SERVICE)
+                || elementType == KlassTypes.SERVICE
+                || elementType == KlassTypes.PARAMETERIZED_PROPERTY)
         {
             return Indent.getNormalIndent();
         }
