@@ -144,7 +144,7 @@ rBrace ::= '}'
 
 // Just can't be called name, because the getName method would clash
 nombre ::= nombreText | '`' nombreText '`'
-nombreText ::= IDENTIFIER | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD
+nombreText ::= IDENTIFIER | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')?
 
 parameterDeclaration ::= nombre ':' (dataType | enumerationType) {methods=[setName]}
