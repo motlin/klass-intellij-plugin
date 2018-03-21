@@ -90,6 +90,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 
   "key" { return KlassTypes.KEY_KEYWORD; }
   "on" { return KlassTypes.ON_KEYWORD; }
+  "relationship" { return KlassTypes.RELATIONSHIP_KEYWORD; }
 
   "multiplicity" { return KlassTypes.MULTIPLICITY_KEYWORD; }
   "criteria" { return KlassTypes.CRITERIA_KEYWORD; }

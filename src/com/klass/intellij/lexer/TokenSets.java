@@ -44,7 +44,8 @@ public interface TokenSets
             ONE_KEYWORD,
             MANY_KEYWORD,
             THIS_KEYWORD,
-            ON_KEYWORD);
+            ON_KEYWORD,
+            RELATIONSHIP_KEYWORD);
 
     TokenSet LITERAL_BIT_SET = TokenSet.create(TRUE_KEYWORD, FALSE_KEYWORD, NULL_KEYWORD);
 

@@ -56,6 +56,7 @@
     KEY_KEYWORD='key'
     PRIVATE_KEYWORD='private'
     ON_KEYWORD='on'
+    RELATIONSHIP_KEYWORD='relationship'
     GET_VERB='GET'
     POST_VERB='POST'
     PUT_VERB='PUT'
@@ -87,7 +88,7 @@ topLevelItem ::= klass | association | enumeration | projection | serviceGroup {
 private topLevelItem_recover ::= !('}' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user')
 
 klass ::= ('class' | 'user') nombre serviceProjection* keywordOnClass* lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
-association ::= 'association' nombre '{' associationEnd* '}' {pin="{" methods=[setName getPresentation]}
+association ::= 'association' nombre '{' associationEnd* relationship? '}' {pin="{" methods=[setName getPresentation]}
 enumeration ::= 'enumeration' nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
 projection ::= 'projection' nombre ('(' parameterDeclaration (',' parameterDeclaration)* ')')? 'on' klassName lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
 serviceGroup ::= 'service' klassName lBrace urlGroup* rBrace {pin="{" methods=[getPresentation]}
@@ -125,6 +126,8 @@ expressionLiteral ::= INTEGER_LITERAL | FLOAT_LITERAL | STRING_LITERAL | boolean
 expressionProperty ::= criteriaType '.' propertyName
 criteriaType ::= 'this' | klassName
 operator ::= EQEQ | NE | LT | GT | LE | GE | 'contains' | 'startsWith' | 'endsWith'
+
+relationship ::= 'relationship' criteriaExpression
 
 member ::= dataTypeProperty | enumerationProperty | parameterizedProperty
 dataTypeProperty ::= propertyKeyword* nombre ':' dataType optionalMarker? {methods=[setName getPresentation]}
