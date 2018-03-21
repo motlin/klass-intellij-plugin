@@ -57,7 +57,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
 
         // TODO: KLASS_KEYWORD and KLASS_KLASS_KEYWORD conflict
         TokenSet keywords =
-                TokenSet.orSet(TokenSets.KEYWORD_BIT_SET, TokenSet.create(KlassTypes.KEYWORD_ON_CLASS, KlassTypes.VERSIONED_KEYWORD, KlassTypes.VERSIONED, KlassTypes.ON_KEYWORD));
+                TokenSet.orSet(TokenSets.KEYWORD_BIT_SET, TokenSet.create(KlassTypes.KEYWORD_ON_CLASS));
         SpacingBuilder spacingBuilder = new SpacingBuilder(settings, KlassLanguage.INSTANCE)
                 .before(TokenSet.create(KlassTypes.OPTIONAL_MARKER, KlassTypes.COMMA)).none()
                 .around(TokenSet.create(KlassTypes.DOT, KlassTypes.DOTDOT)).none()

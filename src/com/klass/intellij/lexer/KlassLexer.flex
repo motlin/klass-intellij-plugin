@@ -87,6 +87,9 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "bitemporal" { return KlassTypes.BITEMPORAL_KEYWORD; }
   "versioned" { return KlassTypes.VERSIONED_KEYWORD; }
   "audited" { return KlassTypes.AUDITED_KEYWORD; }
+  "optimisticallyLocked" { return KlassTypes.OPTIMISTICALLY_LOCKED_KEYWORD; }
+  "read" { return KlassTypes.READ_KEYWORD; }
+  "write" { return KlassTypes.WRITE_KEYWORD; }
 
   "contains" { return KlassTypes.CONTAINS_OPERATOR; }
   "startsWith" { return KlassTypes.STARTS_WITH_OPERATOR; }
