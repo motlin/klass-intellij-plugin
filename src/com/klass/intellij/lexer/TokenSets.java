@@ -32,6 +32,7 @@ public interface TokenSets
             READ_KEYWORD,
             WRITE_KEYWORD,
             KEY_KEYWORD,
+            PRIVATE_KEYWORD,
             CRITERIA_KEYWORD,
             MULTIPLICITY_KEYWORD,
             ORDER_BY_KEYWORD,

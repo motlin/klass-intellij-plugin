@@ -137,7 +137,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  "native" { return KlassTypes.NATIVE_KEYWORD; }
 //  "new" { return KlassTypes.NEW_KEYWORD; }
 //  "package" { return KlassTypes.PACKAGE_KEYWORD; }
-//  "private" { return KlassTypes.PRIVATE_KEYWORD; }
+  "private" { return KlassTypes.PRIVATE_KEYWORD; }
 //  "public" { return KlassTypes.PUBLIC_KEYWORD; }
 //  "short" { return KlassTypes.SHORT_KEYWORD; }
 //  "super" { return KlassTypes.SUPER_KEYWORD; }

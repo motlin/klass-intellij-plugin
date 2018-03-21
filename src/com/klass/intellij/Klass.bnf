@@ -54,6 +54,7 @@
     SERVICE_KEYWORD='service'
     USER_KEYWORD='user'
     KEY_KEYWORD='key'
+    PRIVATE_KEYWORD='private'
     ON_KEYWORD='on'
     GET_VERB='GET'
     POST_VERB='POST'
@@ -133,7 +134,7 @@ parameterizedProperty ::= nombre '(' (parameterDeclaration (',' parameterDeclara
 keywordOnClass ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD  | VERSIONED_KEYWORD | AUDITED_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD
 readProjection ::= READ_KEYWORD ('(' projectionName ')')?
 writeProjection ::= WRITE_KEYWORD ('(' projectionName ')')?
-propertyKeyword ::= 'key'
+propertyKeyword ::= 'key' | 'private'
 
 // TODO: packages, imports, fully qualified class names
 associationEnd ::= nombre ':' klassName? multiplicity? orderByClause? {methods=[setName getPresentation]}
@@ -143,7 +144,7 @@ rBrace ::= '}'
 
 // Just can't be called name, because the getName method would clash
 nombre ::= nombreText | '`' nombreText '`'
-nombreText ::= IDENTIFIER | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD
+nombreText ::= IDENTIFIER | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')?
 
 parameterDeclaration ::= nombre ':' (dataType | enumerationType) {methods=[setName]}
