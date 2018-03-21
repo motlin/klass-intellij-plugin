@@ -30,7 +30,7 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         SyntaxHighlighterBase.fillMap(ourMap1, TokenSets.KEYWORD_BIT_SET, KlassHighlightingColors.KEYWORD);
         // TODO: Separate color for primitive types?
         SyntaxHighlighterBase.fillMap(ourMap1, TokenSets.PRIMITIVE_TYPE_BIT_SET, KlassHighlightingColors.KEYWORD);
-        //        fillMap(ourMap1, TokenSets.LITERAL_BIT_SET, KlassHighlightingColors.KEYWORD);
+        SyntaxHighlighterBase.fillMap(ourMap1, TokenSets.LITERAL_BIT_SET, KlassHighlightingColors.KEYWORD);
         SyntaxHighlighterBase.fillMap(ourMap1, TokenSets.OPERATION_BIT_SET, KlassHighlightingColors.OPERATION_SIGN);
 
         ourMap1.put(XmlTokenType.XML_DATA_CHARACTERS, KlassHighlightingColors.DOC_COMMENT);
@@ -40,9 +40,7 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         // TODO: ASTERISK is used for multiplicities, but maybe multiplicities should be different than other numbers
         ourMap1.put(KlassTypes.ASTERISK, KlassHighlightingColors.NUMBER);
         ourMap1.put(KlassTypes.INTEGER_LITERAL, KlassHighlightingColors.NUMBER);
-        ourMap1.put(KlassTypes.LONG_LITERAL, KlassHighlightingColors.NUMBER);
         ourMap1.put(KlassTypes.FLOAT_LITERAL, KlassHighlightingColors.NUMBER);
-        ourMap1.put(KlassTypes.DOUBLE_LITERAL, KlassHighlightingColors.NUMBER);
         ourMap1.put(KlassTypes.STRING_LITERAL, KlassHighlightingColors.STRING);
         ourMap1.put(StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN, KlassHighlightingColors.VALID_STRING_ESCAPE);
         ourMap1.put(StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN, KlassHighlightingColors.INVALID_STRING_ESCAPE);

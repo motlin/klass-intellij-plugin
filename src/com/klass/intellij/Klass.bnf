@@ -68,6 +68,10 @@
     ONE_KEYWORD='one'
     MANY_KEYWORD='many'
     THIS_KEYWORD='this'
+
+    TRUE_KEYWORD='true'
+    FALSE_KEYWORD='false'
+    NULL_KEYWORD='null'
   ]
 
   extends("klass|association|enumeration|projection|serviceGroup")=topLevelItem
@@ -116,7 +120,7 @@ criteriaOperator ::= sourceExpressionValue operator targetExpressionValue
 sourceExpressionValue ::= expressionValue
 targetExpressionValue ::= expressionValue
 expressionValue ::= expressionLiteral | expressionProperty | expressionVariableName
-expressionLiteral ::= INTEGER_LITERAL | LONG_LITERAL | DOUBLE_LITERAL | FLOAT_LITERAL | STRING_LITERAL
+expressionLiteral ::= INTEGER_LITERAL | FLOAT_LITERAL | STRING_LITERAL | booleanLiteral
 expressionProperty ::= criteriaType '.' propertyName
 criteriaType ::= 'this' | klassName
 operator ::= EQEQ | NE | LT | GT | LE | GE | 'contains' | 'startsWith' | 'endsWith'
@@ -160,3 +164,4 @@ dummyMultiplicity ::= lowerBound | lowerBound '..' {methods=[getReference]}
 
 lowerBound ::= INTEGER_LITERAL
 upperBound ::= INTEGER_LITERAL | ASTERISK
+booleanLiteral ::= 'true' | 'false' | 'null'

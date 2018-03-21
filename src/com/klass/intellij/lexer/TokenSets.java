@@ -42,8 +42,8 @@ public interface TokenSets
             THIS_KEYWORD,
             ON_KEYWORD);
 
-    //    TokenSet LITERAL_BIT_SET = TokenSet.create(TRUE_KEYWORD, FALSE_KEYWORD, NULL_KEYWORD);
-    //
+    TokenSet LITERAL_BIT_SET = TokenSet.create(TRUE_KEYWORD, FALSE_KEYWORD, NULL_KEYWORD);
+
     TokenSet OPERATION_BIT_SET = TokenSet.create(
             EQEQ, GT, GE, LT, LE, NE, ANDAND, OROR, PERCENT,
             /*EQ, GT, LT, EXCL, TILDE,*/ QUESTION_MARK, COLON/*, PLUS, MINUS, ASTERISK, DIV, AND, OR, XOR,

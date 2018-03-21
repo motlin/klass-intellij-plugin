@@ -31,27 +31,19 @@ DOC_COMMENT="/*""*"+("/"|([^"/""*"]{COMMENT_TAIL}))?
 COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 END_OF_LINE_COMMENT="/""/"[^\r\n]*
 
+DOTDOT = ".."
+
 DIGIT = [0-9]
 DIGIT_OR_UNDERSCORE = [_0-9]
-DIGITS = {DIGIT} | {DIGIT} {DIGIT_OR_UNDERSCORE}*
-HEX_DIGIT_OR_UNDERSCORE = [_0-9A-Fa-f]
+DIGITS = {DIGIT} | ({DIGIT} {DIGIT_OR_UNDERSCORE}*)
 
-INTEGER_LITERAL = {DIGITS} | {HEX_INTEGER_LITERAL} | {BIN_INTEGER_LITERAL}
-LONG_LITERAL = {INTEGER_LITERAL} [Ll]
-HEX_INTEGER_LITERAL = 0 [Xx] {HEX_DIGIT_OR_UNDERSCORE}*
-BIN_INTEGER_LITERAL = 0 [Bb] {DIGIT_OR_UNDERSCORE}*
-
-FLOAT_LITERAL = ({DEC_FP_LITERAL} | {HEX_FP_LITERAL}) [Ff] | {DIGITS} [Ff]
-DOUBLE_LITERAL = ({DEC_FP_LITERAL} | {HEX_FP_LITERAL}) [Dd]? | {DIGITS} [Dd]
-DEC_FP_LITERAL = {DIGITS} {DEC_EXPONENT} | {DEC_SIGNIFICAND} {DEC_EXPONENT}?
-DEC_SIGNIFICAND = "." {DIGITS} | {DIGITS} "." {DIGIT_OR_UNDERSCORE}*
+INTEGER_LITERAL = {DIGITS}
+FLOAT_LITERAL = ({DIGITS} {DEC_EXPONENT}) | ({DEC_SIGNIFICAND} {DEC_EXPONENT}?)
+DEC_SIGNIFICAND = ("." {DIGITS}) | ({DIGITS} "." {DIGIT_OR_UNDERSCORE}+)
 DEC_EXPONENT = [Ee] [+-]? {DIGIT_OR_UNDERSCORE}*
-HEX_FP_LITERAL = {HEX_SIGNIFICAND} {HEX_EXPONENT}
-HEX_SIGNIFICAND = 0 [Xx] ({HEX_DIGIT_OR_UNDERSCORE}+ "."? | {HEX_DIGIT_OR_UNDERSCORE}* "." {HEX_DIGIT_OR_UNDERSCORE}+)
-HEX_EXPONENT = [Pp] [+-]? {DIGIT_OR_UNDERSCORE}*
 
 ESCAPE_SEQUENCE = \\[^\r\n]
-CHARACTER_LITERAL = "'" ([^\\\'\r\n] | {ESCAPE_SEQUENCE})* ("'"|\\)?
+//CHARACTER_LITERAL = "'" ([^\\\'\r\n] | {ESCAPE_SEQUENCE})* ("'"|\\)?
 STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 
 %%
@@ -63,17 +55,15 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   {C_STYLE_COMMENT} { return KlassTokenType.C_STYLE_COMMENT; }
   {END_OF_LINE_COMMENT} { return KlassTokenType.END_OF_LINE_COMMENT; }
 //  {DOC_COMMENT} { return JavaDocElementType.DOC_COMMENT; }
-//
-//  {LONG_LITERAL} { return KlassTypes.LONG_LITERAL; }
+
   {INTEGER_LITERAL} { return KlassTypes.INTEGER_LITERAL; }
-//  {FLOAT_LITERAL} { return KlassTypes.FLOAT_LITERAL; }
-//  {DOUBLE_LITERAL} { return KlassTypes.DOUBLE_LITERAL; }
+  {FLOAT_LITERAL} { return KlassTypes.FLOAT_LITERAL; }
 //  {CHARACTER_LITERAL} { return KlassTypes.CHARACTER_LITERAL; }
   {STRING_LITERAL} { return KlassTypes.STRING_LITERAL; }
 
-//  "true" { return KlassTypes.TRUE_KEYWORD; }
-//  "false" { return KlassTypes.FALSE_KEYWORD; }
-//  "null" { return KlassTypes.NULL_KEYWORD; }
+  "true" { return KlassTypes.TRUE_KEYWORD; }
+  "false" { return KlassTypes.FALSE_KEYWORD; }
+  "null" { return KlassTypes.NULL_KEYWORD; }
 
   "class" { return KlassTypes.CLASS_KEYWORD; }
   "association" { return KlassTypes.ASSOCIATION_KEYWORD; }
