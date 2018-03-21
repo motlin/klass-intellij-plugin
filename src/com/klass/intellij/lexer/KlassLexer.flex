@@ -80,6 +80,9 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "optimisticallyLocked" { return KlassTypes.OPTIMISTICALLY_LOCKED_KEYWORD; }
   "read" { return KlassTypes.READ_KEYWORD; }
   "write" { return KlassTypes.WRITE_KEYWORD; }
+  "create" { return KlassTypes.CREATE_KEYWORD; }
+  "update" { return KlassTypes.UPDATE_KEYWORD; }
+  "delete" { return KlassTypes.DELETE_KEYWORD; }
 
   "contains" { return KlassTypes.CONTAINS_OPERATOR; }
   "startsWith" { return KlassTypes.STARTS_WITH_OPERATOR; }
