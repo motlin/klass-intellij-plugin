@@ -72,6 +72,45 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
                 return this.getKlassResolveResults(klassKlass);
             }
         }
+        else if (parent instanceof KlassOrderByProperty)
+        {
+            KlassServiceGroup klassServiceGroup =
+                    PsiTreeUtil.getParentOfType(this.myElement, KlassServiceGroup.class);
+            if (klassServiceGroup != null)
+            {
+                PsiReference reference = klassServiceGroup.getKlassName().getReference();
+                KlassKlass serviceKlass = (KlassKlass) reference.resolve();
+                return this.getKlassResolveResults(serviceKlass);
+            }
+
+            KlassAssociationEnd associationEnd =
+                    PsiTreeUtil.getParentOfType(this.myElement, KlassAssociationEnd.class);
+            KlassParameterizedProperty parameterizedProperty =
+                    PsiTreeUtil.getParentOfType(this.myElement, KlassParameterizedProperty.class);
+
+            if (associationEnd != null)
+            {
+                KlassKlassName klassName = associationEnd.getKlassName();
+                PsiReference klassNameReference = klassName.getReference();
+                KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
+
+                if (klassKlass != null)
+                {
+                    return this.getKlassResolveResults(klassKlass);
+                }
+            }
+            else if (parameterizedProperty != null)
+            {
+                KlassKlassName klassName = parameterizedProperty.getKlassName();
+                PsiReference klassNameReference = klassName.getReference();
+                KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
+
+                if (klassKlass != null)
+                {
+                    return this.getKlassResolveResults(klassKlass);
+                }
+            }
+        }
         else if (parent instanceof KlassProjectionLeafNode)
         {
             KlassProjectionLeafNode projectionLeafNode = (KlassProjectionLeafNode) parent;

@@ -100,6 +100,9 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 
   "multiplicity" { return KlassTypes.MULTIPLICITY_KEYWORD; }
   "criteria" { return KlassTypes.CRITERIA_KEYWORD; }
+  "orderBy" { return KlassTypes.ORDER_BY_KEYWORD; }
+  "ascending" { return KlassTypes.ASCENDING_KEYWORD; }
+  "descending" { return KlassTypes.DESCENDING_KEYWORD; }
 
   "one" { return KlassTypes.ONE_KEYWORD; }
   "many" { return KlassTypes.MANY_KEYWORD; }

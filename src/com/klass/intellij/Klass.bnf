@@ -62,6 +62,9 @@
     DELETE_VERB='DELETE'
     CRITERIA_KEYWORD='criteria'
     MULTIPLICITY_KEYWORD='multiplicity'
+    ORDER_BY_KEYWORD='orderBy'
+    ASCENDING_KEYWORD='ascending'
+    DESCENDING_KEYWORD='descending'
     ONE_KEYWORD='one'
     MANY_KEYWORD='many'
     THIS_KEYWORD='this'
@@ -94,11 +97,14 @@ url ::= urlPart+ '/'?
 urlPart ::= ('/' urlConstant) | ('/' '{' pathParameter '}') {pin='/'}
 urlConstant ::= nombre
 pathParameter ::= nombre {methods=[setName]}
-service ::= verb lBrace serviceMultiplicityClause serviceCriteriaClause? serviceProjectionClause rBrace {pin=1 methods=[getPresentation]}
+service ::= verb lBrace serviceMultiplicityClause serviceCriteriaClause? serviceProjectionClause orderByClause? rBrace {pin=1 methods=[getPresentation]}
 
 serviceMultiplicityClause ::= 'multiplicity' ':' serviceMultiplicity
 serviceCriteriaClause ::= 'criteria' ':' criteriaExpression
 serviceProjectionClause ::= 'projection' ':' projectionName ('(' parameterName (',' parameterName)* ')')?
+orderByClause ::= 'orderBy' ':' (orderByProperty) (',' orderByProperty)*
+orderByProperty ::= 'this' '.' propertyName orderByDirection?
+orderByDirection ::= 'ascending' | 'descending'
 serviceMultiplicity ::= 'one' | 'many'
 verb ::= 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
@@ -118,7 +124,7 @@ operator ::= EQEQ | NE | LT | GT | LE | GE | 'contains' | 'startsWith' | 'endsWi
 member ::= dataTypeProperty | enumerationProperty | parameterizedProperty
 dataTypeProperty ::= propertyKeyword* nombre ':' dataType optionalMarker? {methods=[setName getPresentation]}
 enumerationProperty ::= propertyKeyword* nombre ':' enumerationType optionalMarker? {methods=[setName getPresentation]}
-parameterizedProperty ::= nombre '(' (parameterDeclaration (',' parameterDeclaration)*)? ')' ':' klassName multiplicity lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
+parameterizedProperty ::= nombre '(' (parameterDeclaration (',' parameterDeclaration)*)? ')' ':' klassName multiplicity orderByClause? lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
 
 keywordOnClass ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD  | VERSIONED_KEYWORD | AUDITED_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD
 readProjection ::= READ_KEYWORD ('(' projectionName ')')?
@@ -126,7 +132,7 @@ writeProjection ::= WRITE_KEYWORD ('(' projectionName ')')?
 propertyKeyword ::= 'key'
 
 // TODO: packages, imports, fully qualified class names
-associationEnd ::= nombre ':' klassName? multiplicity? {methods=[setName getPresentation]}
+associationEnd ::= nombre ':' klassName? multiplicity? orderByClause? {methods=[setName getPresentation]}
 
 lBrace ::= '{'
 rBrace ::= '}'
