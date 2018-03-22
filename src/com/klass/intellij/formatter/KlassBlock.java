@@ -7,6 +7,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 import com.klass.intellij.KlassLanguage;
 import com.klass.intellij.psi.KlassTokenType;
 import com.klass.intellij.psi.KlassTypes;
@@ -19,6 +20,38 @@ import java.util.List;
 public class KlassBlock extends AbstractBlock
 {
     private static final Alignment COLON_ALIGNMENT = Alignment.createAlignment(true);
+
+    private static final TokenSet NORMAL_INDENT = TokenSet.create(
+            KlassTypes.DATA_TYPE_PROPERTY,
+            KlassTypes.ENUMERATION_PROPERTY,
+            KlassTypes.PARAMETERIZED_PROPERTY,
+            KlassTypes.ASSOCIATION_END,
+            KlassTypes.ENUMERATION_LITERAL,
+            KlassTypes.PROJECTION_INNER_NODE,
+            KlassTypes.PROJECTION_LEAF_NODE,
+            KlassTypes.URL_GROUP,
+            KlassTypes.SERVICE,
+            KlassTypes.SERVICE_MULTIPLICITY_CLAUSE,
+            KlassTypes.SERVICE_CRITERIA_CLAUSE,
+            KlassTypes.SERVICE_PROJECTION_CLAUSE,
+            KlassTypes.CRITERIA_OPERATOR,
+            KlassTypes.SERVICE_PROJECTION,
+            KlassTypes.ORDER_BY_CLAUSE,
+            KlassTypes.KEYWORD_ON_CLASS,
+            KlassTypes.RELATIONSHIP);
+
+    public static final TokenSet NORMAL_INDENT_CHILDREN = TokenSet.create(
+            KlassTypes.KLASS,
+            KlassTypes.ASSOCIATION,
+            KlassTypes.ENUMERATION,
+            KlassTypes.PROJECTION,
+            KlassTypes.PROJECTION_INNER_NODE,
+            KlassTypes.SERVICE_GROUP,
+            KlassTypes.URL_GROUP,
+            KlassTypes.SERVICE,
+            KlassTypes.PARAMETERIZED_PROPERTY,
+            KlassTypes.CRITERIA_AND,
+            KlassTypes.CRITERIA_OR);
 
     private final SpacingBuilder spacingBuilder;
     private final CodeStyleSettings settings;
@@ -52,7 +85,13 @@ public class KlassBlock extends AbstractBlock
             {
                 Wrap wrap = Wrap.createWrap(WrapType.NONE, false);
                 Block block =
-                        new KlassBlock(child, wrap, this.getAlignment(elementType), this.spacingBuilder, this.settings, this.getIndentForChildren(child));
+                        new KlassBlock(
+                                child,
+                                wrap,
+                                this.getAlignment(elementType),
+                                this.spacingBuilder,
+                                this.settings,
+                                this.getIndentForChildren(child));
                 blocks.add(block);
             }
             child = child.getTreeNext();
@@ -73,21 +112,14 @@ public class KlassBlock extends AbstractBlock
     public Indent getIndent()
     {
         IElementType elementType = this.getNode().getElementType();
-        if (elementType == KlassTypes.DATA_TYPE_PROPERTY
-                || elementType == KlassTypes.ENUMERATION_PROPERTY
-                || elementType == KlassTypes.PARAMETERIZED_PROPERTY
-                || elementType == KlassTypes.ASSOCIATION_END
-                || elementType == KlassTypes.ENUMERATION_LITERAL
-                || elementType == KlassTypes.PROJECTION_INNER_NODE
-                || elementType == KlassTypes.PROJECTION_LEAF_NODE
-                || elementType == KlassTypes.URL_GROUP
-                || elementType == KlassTypes.SERVICE
-                || elementType == KlassTypes.SERVICE_MULTIPLICITY_CLAUSE
-                || elementType == KlassTypes.SERVICE_CRITERIA_CLAUSE
-                || elementType == KlassTypes.SERVICE_PROJECTION_CLAUSE
-                || elementType == KlassTypes.CRITERIA_OPERATOR)
+        if (NORMAL_INDENT.contains(elementType))
         {
             return Indent.getNormalIndent();
+        }
+        if (elementType == KlassTypes.ANDAND
+                || elementType == KlassTypes.OROR)
+        {
+            return Indent.getContinuationIndent();
         }
         if (elementType == KlassTokenType.END_OF_LINE_COMMENT
                 || elementType == KlassTokenType.C_STYLE_COMMENT)
@@ -100,15 +132,7 @@ public class KlassBlock extends AbstractBlock
     private Indent getIndentForChildren(ASTNode astNode)
     {
         IElementType elementType = astNode.getElementType();
-        if (elementType == KlassTypes.KLASS
-                || elementType == KlassTypes.ASSOCIATION
-                || elementType == KlassTypes.ENUMERATION
-                || elementType == KlassTypes.PROJECTION
-                || elementType == KlassTypes.PROJECTION_INNER_NODE
-                || elementType == KlassTypes.SERVICE_GROUP
-                || elementType == KlassTypes.URL_GROUP
-                || elementType == KlassTypes.SERVICE
-                || elementType == KlassTypes.PARAMETERIZED_PROPERTY)
+        if (NORMAL_INDENT_CHILDREN.contains(elementType))
         {
             return Indent.getNormalIndent();
         }
@@ -134,6 +158,16 @@ public class KlassBlock extends AbstractBlock
     public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2)
     {
         Spacing spacing = this.spacingBuilder.getSpacing(this, child1, child2);
+        /*
+        if (child1 instanceof KlassBlock)
+        {
+            if (((KlassBlock) child1).myNode.getElementType() == KlassTokenType.END_OF_LINE_COMMENT)
+            {
+                return Spacing.createSpacing(3, 3, 3, false, 3, 3);
+            }
+        }
+        return Spacing.createSpacing(3, 3, 0, false, 0);
+        */
         // return Spacing.createSpacing(3, 3, 3, false, 3, 3);
         return spacing;
     }

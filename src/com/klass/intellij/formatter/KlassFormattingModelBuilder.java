@@ -8,15 +8,102 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.klass.intellij.KlassLanguage;
-import com.klass.intellij.lexer.TokenSets;
-import com.klass.intellij.psi.*;
+import com.klass.intellij.psi.KlassTokenType;
+import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassFormattingModelBuilder implements FormattingModelBuilder
 {
+    public static final TokenSet NONE_BEFORE = TokenSet.create(
+            KlassTypes.OPTIONAL_MARKER,
+            KlassTypes.COMMA,
+            KlassTypes.RBRACKET,
+            KlassTypes.RPAREN,
+            KlassTypes.MULTIPLICITY);
+    public static final TokenSet NONE_AROUND = TokenSet.create(
+            KlassTypes.URL_CONSTANT,
+            KlassTypes.URL_PART,
+            KlassTypes.PATH_PARAMETER,
+            KlassTypes.DOT,
+            KlassTypes.DOTDOT,
+            KlassTypes.LBRACKET,
+            KlassTypes.LPAREN);
+    public static final TokenSet NONE_INSIDE = TokenSet.create(
+            KlassTypes.URL,
+            KlassTypes.URL_PART,
+            KlassTypes.NOMBRE);
+
+    public static final TokenSet BLANK_LINE_BEFORE = TokenSet.create(
+            KlassTypes.RELATIONSHIP,
+            KlassTokenType.END_OF_LINE_COMMENT);
+    public static final TokenSet BLANK_LINE_AROUND = TokenSet.create(
+            KlassTypes.KLASS,
+            KlassTypes.ENUMERATION,
+            KlassTypes.ASSOCIATION,
+            KlassTypes.PROJECTION,
+            KlassTypes.SERVICE_GROUP);
+
+    public static final TokenSet LINE_BREAK_BEFORE = TokenSet.create(
+            KlassTypes.ANDAND,
+            KlassTypes.OROR);
+    public static final TokenSet LINE_BREAK_AFTER = TokenSet.create(
+            KlassTypes.COMMA,
+            KlassTokenType.END_OF_LINE_COMMENT);
+
+    public static final TokenSet ONE_SPACE_BEFORE = TokenSet.create(
+            KlassTypes.NOMBRE,
+            KlassTypes.ORDER_BY_DIRECTION);
+    public static final TokenSet ONE_SPACE_AFTER = TokenSet.create(
+            KlassTypes.COLON,
+            KlassTypes.ANDAND,
+            KlassTypes.OROR,
+            KlassTypes.RELATIONSHIP_KEYWORD,
+            KlassTypes.SERVICE_KEYWORD,
+            KlassTypes.PROPERTY_KEYWORD);
+    public static final TokenSet ONE_SPACE_AROUND = TokenSet.create(
+            KlassTypes.OPERATOR,
+            KlassTypes.ON_KEYWORD);
+    public static final TokenSet BRACES = TokenSet.create(
+            KlassTypes.LBRACE,
+            KlassTypes.RBRACE,
+            KlassTypes.L_BRACE,
+            KlassTypes.R_BRACE);
+    public static final TokenSet LINE_BREAK_AROUND_HIGH_PRIORITY = TokenSet.create(
+            KlassTypes.KEYWORD_ON_CLASS,
+            KlassTypes.SERVICE_PROJECTION,
+            KlassTypes.SERVICE_CATEGORY,
+            KlassTypes.VERB);
+    public static final TokenSet LINE_BREAK_AROUND = TokenSet.create(
+            KlassTypes.RELATIONSHIP,
+            KlassTypes.ORDER_BY_CLAUSE,
+            KlassTypes.KEYWORD_ON_CLASS,
+            KlassTypes.DATA_TYPE_PROPERTY,
+            KlassTypes.ENUMERATION_PROPERTY,
+            KlassTypes.ASSOCIATION_END,
+            KlassTypes.PROJECTION_INNER_NODE,
+            KlassTypes.PROJECTION_LEAF_NODE,
+            KlassTypes.SERVICE_MULTIPLICITY_CLAUSE,
+            KlassTypes.SERVICE_CRITERIA_CLAUSE,
+            KlassTypes.SERVICE_PROJECTION_CLAUSE,
+            KlassTypes.SERVICE,
+            KlassTypes.URL,
+            KlassTypes.URL_GROUP);
+
+    public static final TokenSet INDENT_CHILDREN = TokenSet.create(
+            KlassTypes.KLASS,
+            KlassTypes.ASSOCIATION,
+            KlassTypes.ENUMERATION,
+            KlassTypes.PROJECTION,
+            KlassTypes.PROJECTION_INNER_NODE,
+            KlassTypes.SERVICE,
+            KlassTypes.SERVICE_GROUP,
+            KlassTypes.URL_GROUP,
+            KlassTypes.PARAMETERIZED_PROPERTY);
+
     @NotNull
     @Override
     public FormattingModel createModel(PsiElement element, CodeStyleSettings settings)
@@ -36,15 +123,9 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
     @Nullable
     private Indent getChildIndent(PsiElement element)
     {
-        if (element instanceof KlassKlass
-                || element instanceof KlassAssociation
-                || element instanceof KlassEnumeration
-                || element instanceof KlassProjection
-                || element instanceof KlassProjectionInnerNode
-                || element instanceof KlassService
-                || element instanceof KlassServiceGroup
-                || element instanceof KlassUrlGroup
-                || element instanceof KlassParameterizedProperty)
+        IElementType elementType = element.getNode().getElementType();
+
+        if (INDENT_CHILDREN.contains(elementType))
         {
             return Indent.getNormalIndent();
         }
@@ -56,28 +137,33 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
         CommonCodeStyleSettings commonSettings = settings.getCommonSettings(KlassLanguage.INSTANCE);
 
         // TODO: KLASS_KEYWORD and KLASS_KLASS_KEYWORD conflict
-        TokenSet keywords =
-                TokenSet.orSet(TokenSets.KEYWORD_BIT_SET, TokenSet.create(KlassTypes.KEYWORD_ON_CLASS));
         SpacingBuilder spacingBuilder = new SpacingBuilder(settings, KlassLanguage.INSTANCE)
-                .before(TokenSet.create(KlassTypes.OPTIONAL_MARKER, KlassTypes.COMMA)).none()
-                .around(TokenSet.create(KlassTypes.DOT, KlassTypes.DOTDOT)).none()
-                .around(TokenSet.create(KlassTypes.LBRACKET, KlassTypes.LPAREN)).none()
-                .before(TokenSet.create(KlassTypes.RBRACKET, KlassTypes.RPAREN)).none()
-                .before(KlassTypes.MULTIPLICITY).none()
-                .around(TokenSet.create(KlassTypes.URL_CONSTANT, KlassTypes.URL_PART, KlassTypes.PATH_PARAMETER)).none()
-                .aroundInside(TokenSet.create(KlassTypes.SLASH, KlassTypes.LBRACE, KlassTypes.RBRACE), KlassTypes.URL_PART).none()
-                .before(KlassTypes.NOMBRE).spaces(1)
-                .aroundInside(KlassTypes.TICK, KlassTypes.NOMBRE).none()
-                .aroundInside(TokenSet.create(KlassTypes.SLASH, KlassTypes.URL_CONSTANT, KlassTypes.PATH_PARAMETER, KlassTypes.NOMBRE), KlassTypes.URL).none()
-                .around(TokenSet.create(KlassTypes.LBRACE, KlassTypes.RBRACE, KlassTypes.L_BRACE, KlassTypes.R_BRACE)).lineBreakInCode()
-                .after(KlassTypes.COLON).spaces(1)
-                .around(TokenSet.create(KlassTypes.OPERATOR, KlassTypes.ANDAND, KlassTypes.OROR)).spaces(1)
-                .before(KlassTypes.PARAMETERIZED_PROPERTY).blankLines(1)
-                .after(TokenSet.create(KlassTypes.COMMA, KlassTypes.DATA_TYPE_PROPERTY, KlassTypes.ENUMERATION_PROPERTY, KlassTypes.ASSOCIATION_END, KlassTypes.PROJECTION_INNER_NODE, KlassTypes.PROJECTION_LEAF_NODE, KlassTypes.SERVICE_MULTIPLICITY_CLAUSE, KlassTypes.SERVICE_CRITERIA_CLAUSE, KlassTypes.SERVICE_PROJECTION_CLAUSE, KlassTypes.SERVICE, KlassTypes.URL, KlassTypes.URL_GROUP, KlassTokenType.END_OF_LINE_COMMENT)).lineBreakInCode()
-                .around(TokenSet.create(KlassTypes.KLASS, KlassTypes.ENUMERATION, KlassTypes.ASSOCIATION, KlassTypes.PROJECTION, KlassTypes.SERVICE_GROUP, KlassTypes.PARAMETERIZED_PROPERTY)).blankLines(1)
-                .between(keywords, keywords).spaces(1)
-                .between(keywords, TokenSet.create(KlassTypes.NOMBRE, KlassTypes.KLASS_NAME)).spaces(1)
-                .between(KlassTypes.SYSTEM_TEMPORAL_KEYWORD, KlassTypes.VERSIONED_KEYWORD).spaces(1);
+                .before(NONE_BEFORE).none()
+                .around(NONE_AROUND).none()
+                .aroundInside(TokenSet.ANY, NONE_INSIDE).none()
+
+                .after(TokenSet.create(
+                        KlassTokenType.END_OF_LINE_COMMENT,
+                        KlassTypes.LBRACE,
+                        KlassTypes.L_BRACE)).lineBreakInCode()
+                .before(TokenSet.create(KlassTypes.RBRACE, KlassTypes.R_BRACE)).lineBreakInCode()
+
+                .around(BLANK_LINE_AROUND).blankLines(1)
+                .before(BLANK_LINE_BEFORE).blankLines(1)
+
+                .before(LINE_BREAK_BEFORE).lineBreakInCode()
+                .after(LINE_BREAK_AFTER).lineBreakInCode()
+                .around(BRACES).lineBreakInCode()
+                .around(LINE_BREAK_AROUND_HIGH_PRIORITY).lineBreakInCode()
+
+                .before(KlassTokenType.END_OF_LINE_COMMENT).blankLines(1)
+                .around(KlassTypes.PARAMETERIZED_PROPERTY).blankLines(1)
+
+                .around(LINE_BREAK_AROUND).lineBreakInCode()
+
+                .before(ONE_SPACE_BEFORE).spaces(1)
+                .after(ONE_SPACE_AFTER).spaces(1)
+                .around(ONE_SPACE_AROUND).spaces(1);
 
         RuleBuilder colonRuleBuilder = spacingBuilder.before(KlassTypes.COLON);
         if (commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS)
