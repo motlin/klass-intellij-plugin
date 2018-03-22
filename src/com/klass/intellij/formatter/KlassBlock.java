@@ -52,6 +52,7 @@ public class KlassBlock extends AbstractBlock
             KlassTypes.PARAMETERIZED_PROPERTY,
             KlassTypes.CRITERIA_AND,
             KlassTypes.CRITERIA_OR);
+    public static final Wrap WRAP = Wrap.createWrap(WrapType.NONE, false);
 
     private final SpacingBuilder spacingBuilder;
     private final CodeStyleSettings settings;
@@ -83,11 +84,10 @@ public class KlassBlock extends AbstractBlock
             IElementType elementType = child.getElementType();
             if (elementType != TokenType.WHITE_SPACE)
             {
-                Wrap wrap = Wrap.createWrap(WrapType.NONE, false);
                 Block block =
                         new KlassBlock(
                                 child,
-                                wrap,
+                                WRAP,
                                 this.getAlignment(elementType),
                                 this.spacingBuilder,
                                 this.settings,
@@ -101,10 +101,19 @@ public class KlassBlock extends AbstractBlock
 
     private Alignment getAlignment(IElementType elementType)
     {
-        if (elementType == KlassTypes.COLON && this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS)
+        if (elementType != KlassTypes.COLON)
+        {
+            return null;
+        }
+
+        IElementType parentElementType = this.myNode.getElementType();
+        if ((parentElementType == KlassTypes.DATA_TYPE_PROPERTY
+                || parentElementType == KlassTypes.ENUMERATION_PROPERTY)
+                && this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS)
         {
             return COLON_ALIGNMENT;
         }
+
         return null;
     }
 
