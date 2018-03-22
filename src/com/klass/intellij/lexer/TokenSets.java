@@ -37,6 +37,8 @@ public interface TokenSets
             KEY_KEYWORD,
             PRIVATE_KEYWORD,
             CRITERIA_KEYWORD,
+            VALIDATE_KEYWORD,
+            AUTHORIZE_KEYWORD,
             MULTIPLICITY_KEYWORD,
             ORDER_BY_KEYWORD,
             ASCENDING_KEYWORD,

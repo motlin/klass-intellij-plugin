@@ -63,6 +63,8 @@
     PATCH_VERB='PATCH'
     DELETE_VERB='DELETE'
     CRITERIA_KEYWORD='criteria'
+    VALIDATE_KEYWORD='validate'
+    AUTHORIZE_KEYWORD='authorize'
     MULTIPLICITY_KEYWORD='multiplicity'
     ORDER_BY_KEYWORD='orderBy'
     ASCENDING_KEYWORD='ascending'
@@ -103,10 +105,12 @@ url ::= urlPart+ '/'?
 urlPart ::= ('/' urlConstant) | ('/' '{' pathParameter '}') {pin='/'}
 urlConstant ::= nombre
 pathParameter ::= nombre {methods=[setName]}
-service ::= verb lBrace serviceMultiplicityClause serviceCriteriaClause? serviceProjectionClause orderByClause? rBrace {pin=1 methods=[getPresentation]}
+service ::= verb lBrace serviceMultiplicityClause serviceCriteriaClause? serviceValidateClause? serviceAuthorizeClause? serviceProjectionClause orderByClause? rBrace {pin=1 methods=[getPresentation]}
 
 serviceMultiplicityClause ::= 'multiplicity' ':' serviceMultiplicity
 serviceCriteriaClause ::= 'criteria' ':' criteriaExpression
+serviceValidateClause ::= 'validate' ':' criteriaExpression
+serviceAuthorizeClause ::= 'authorize' ':' criteriaExpression
 serviceProjectionClause ::= 'projection' ':' projectionName ('(' parameterName (',' parameterName)* ')')?
 orderByClause ::= 'orderBy' ':' (orderByProperty) (',' orderByProperty)*
 orderByProperty ::= 'this' '.' propertyName orderByDirection?
