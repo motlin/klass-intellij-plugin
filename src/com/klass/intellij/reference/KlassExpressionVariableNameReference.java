@@ -19,9 +19,6 @@ public class KlassExpressionVariableNameReference extends PsiReferenceBase<PsiEl
 {
     private final String expressionVariableName;
 
-    private KlassPathParameter pathParameter;
-    private KlassParameterDeclaration parameterDeclaration;
-
     public KlassExpressionVariableNameReference(@NotNull PsiElement element, String expressionVariableName)
     {
         super(element, new TextRange(0, expressionVariableName.length()));
@@ -32,33 +29,32 @@ public class KlassExpressionVariableNameReference extends PsiReferenceBase<PsiEl
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode)
     {
-        if (this.pathParameter != null)
-        {
-            return new PsiElementResolveResult[]{new PsiElementResolveResult(this.pathParameter)};
-        }
-
-        if (this.parameterDeclaration != null)
-        {
-            return new PsiElementResolveResult[]{new PsiElementResolveResult(this.parameterDeclaration)};
-        }
-
         KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
-        KlassParameterizedProperty parameterizedProperty =
-                PsiTreeUtil.getParentOfType(this.myElement, KlassParameterizedProperty.class);
-
         if (klassUrlGroup != null)
         {
             KlassUrl url = klassUrlGroup.getUrl();
-            ResolveResult[] resolveResults = url.getUrlPartList()
+            List<PsiElementResolveResult> queryParamResults = url.getQueryParamPartList()
+                    .stream()
+                    .map(KlassQueryParamPart::getQueryParameter)
+                    .filter(queryParameter -> queryParameter.getName().equals(this.expressionVariableName))
+                    .map(PsiElementResolveResult::new)
+                    .collect(Collectors.toList());
+            List<PsiElementResolveResult> pathParameterResults = url.getUrlPartList()
                     .stream()
                     .map(KlassUrlPart::getPathParameter)
                     .filter(Objects::nonNull)
                     .filter(pathParameter -> pathParameter.getName().equals(this.expressionVariableName))
                     .map(PsiElementResolveResult::new)
-                    .toArray(ResolveResult[]::new);
-            return resolveResults;
+                    .collect(Collectors.toList());
+
+            List<PsiElementResolveResult> results = new ArrayList<>();
+            results.addAll(queryParamResults);
+            results.addAll(pathParameterResults);
+            return results.toArray(new ResolveResult[results.size()]);
         }
 
+        KlassParameterizedProperty parameterizedProperty =
+                PsiTreeUtil.getParentOfType(this.myElement, KlassParameterizedProperty.class);
         if (parameterizedProperty != null)
         {
             List<KlassParameterDeclaration> parameterDeclarationList =
@@ -86,18 +82,26 @@ public class KlassExpressionVariableNameReference extends PsiReferenceBase<PsiEl
     {
         List<LookupElement> variants = new ArrayList<>();
         KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
-        KlassUrl url = klassUrlGroup.getUrl();
-        List<KlassPathParameter> pathParameters = url.getUrlPartList()
+
+        klassUrlGroup.getUrl()
+                .getUrlPartList()
                 .stream()
                 .map(KlassUrlPart::getPathParameter)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        for (KlassPathParameter pathParameter : pathParameters)
-        {
-            LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(pathParameter.getName())
-                    .withIcon(AllIcons.Nodes.Variable);
-            variants.add(lookupElementBuilder);
-        }
+                .map(PsiNamedElement::getName)
+                .map(LookupElementBuilder::create)
+                .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Variable))
+                .forEach(variants::add);
+
+        klassUrlGroup.getUrl()
+                .getQueryParamPartList()
+                .stream()
+                .map(KlassQueryParamPart::getQueryParameter)
+                .map(PsiNamedElement::getName)
+                .map(LookupElementBuilder::create)
+                .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Variable))
+                .forEach(variants::add);
+
         return variants.toArray();
     }
 }

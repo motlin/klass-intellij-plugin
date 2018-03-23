@@ -110,6 +110,15 @@ public class KlassElementFactory
         return (KlassPathParameter) file.getFirstChild();
     }
 
+    public static KlassQueryParameter createQueryParameter(Project project, String name)
+    {
+        // TODO: Real query parameter
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "");
+        return (KlassQueryParameter) file.getFirstChild();
+    }
+
     public static KlassParameterDeclaration createParameterDeclaration(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(

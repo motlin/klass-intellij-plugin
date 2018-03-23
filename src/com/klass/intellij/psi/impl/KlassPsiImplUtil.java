@@ -125,6 +125,18 @@ public class KlassPsiImplUtil
         return element;
     }
 
+    public static PsiElement setName(KlassQueryParameter element, String newName)
+    {
+        ASTNode classNameNode = element.getNombre().getNode();
+        if (classNameNode != null)
+        {
+            KlassQueryParameter klass = KlassElementFactory.createQueryParameter(element.getProject(), newName);
+            ASTNode newQueryParameterNameNode = klass.getNombre().getNode();
+            element.getNode().replaceChild(classNameNode, newQueryParameterNameNode);
+        }
+        return element;
+    }
+
     public static PsiElement setName(KlassParameterDeclaration element, String newName)
     {
         ASTNode classNameNode = element.getNombre().getNode();

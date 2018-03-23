@@ -13,10 +13,10 @@
   psiImplUtilClass="com.klass.intellij.psi.impl.KlassPsiImplUtil"
   tokenTypeClass="com.klass.intellij.psi.KlassTokenType"
 
-  mixin("klass|association|enumeration|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|pathParameter|parameterDeclaration") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
+  mixin("klass|association|enumeration|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|pathParameter|queryParameter|parameterDeclaration") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
   mixin("projection")="com.klass.intellij.psi.impl.AbstractKlassProjectionNode"
   mixin("projectionInnerNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
-  implements("klass|association|enumeration|projection|member|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|pathParameter|parameterDeclaration") = "com.klass.intellij.psi.KlassNamedElement"
+  implements("klass|association|enumeration|projection|member|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|pathParameter|queryParameter|parameterDeclaration") = "com.klass.intellij.psi.KlassNamedElement"
   implements("projection|projectionInnerNode")="com.klass.intellij.psi.KlassTypedElement"
 
   tokens = [
@@ -44,6 +44,9 @@
     MINUS='-'
     PERCENT='%'
     EXCL='!'
+    QUESTION_MARK='?'
+    EQ='='
+    AND='&'
     CONTAINS_OPERATOR='contains'
     STARTS_WITH_OPERATOR='startsWith'
     ENDS_WITH_OPERATOR='endsWith'
@@ -102,10 +105,12 @@ projectionLeafNode ::= propertyName ':'? header?
 header ::= STRING_LITERAL
 
 urlGroup ::= url service+ {methods=[getPresentation]}
-url ::= urlPart+ '/'?
+url ::= urlPart+ '/'? ('?' queryParamPart ('&' queryParamPart)*)?
 urlPart ::= ('/' urlConstant) | ('/' '{' pathParameter '}') {pin='/'}
 urlConstant ::= nombre
 pathParameter ::= nombre {methods=[setName]}
+queryParameter ::= nombre {methods=[setName]}
+queryParamPart ::= '{' queryParameter '}'
 service ::= verb lBrace serviceMultiplicityClause serviceCriteriaClause? serviceValidateClause? serviceAuthorizeClause? serviceProjectionClause orderByClause? rBrace {pin=1 methods=[getPresentation]}
 
 serviceMultiplicityClause ::= 'multiplicity' ':' serviceMultiplicity

@@ -65,7 +65,7 @@ public class KlassAnnotator implements Annotator
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES);
             }
-            else if (parent instanceof KlassPathParameter)
+            else if (parent instanceof KlassPathParameter || parent instanceof KlassQueryParameter)
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.PATH_PARAMETER);
             }

@@ -177,7 +177,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  "<<" { return KlassTypes.LTLT; }
   ">" { return KlassTypes.GT; }
   ">=" { return KlassTypes.GE; }
-//  "&" { return KlassTypes.AND; }
+  "&" { return KlassTypes.AND; }
   "&&" { return KlassTypes.ANDAND; }
 //
 //  "+=" { return KlassTypes.PLUSEQ; }
@@ -202,7 +202,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "."   { return KlassTypes.DOT; }
   "`"   { return KlassTypes.TICK; }
 
-//  "=" { return KlassTypes.EQ; }
+  "=" { return KlassTypes.EQ; }
   "!" { return KlassTypes.EXCL; }
 //  "~" { return KlassTypes.TILDE; }
   "?" { return KlassTypes.QUESTION_MARK; }
