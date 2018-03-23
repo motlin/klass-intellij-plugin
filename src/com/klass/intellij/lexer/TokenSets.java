@@ -23,6 +23,7 @@ public interface TokenSets
             PROJECTION_KEYWORD,
             SERVICE_KEYWORD,
             USER_KEYWORD,
+            USER_PRINCIPAL_KEYWORD,
             VALID_TEMPORAL_KEYWORD,
             SYSTEM_TEMPORAL_KEYWORD,
             BITEMPORAL_KEYWORD,

@@ -80,6 +80,7 @@
     TRUE_KEYWORD='true'
     FALSE_KEYWORD='false'
     NULL_KEYWORD='null'
+    USER_PRINCIPAL_KEYWORD='userPrincipal'
   ]
 
   extends("klass|association|enumeration|projection|serviceGroup")=topLevelItem
@@ -91,7 +92,7 @@
 compilationUnit ::= topLevelItem*
 
 topLevelItem ::= klass | association | enumeration | projection | serviceGroup {recoverWhile="topLevelItem_recover"}
-private topLevelItem_recover ::= !('}' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user')
+private topLevelItem_recover ::= !('}' | 'class' | 'user' | 'association' | 'enumeration' | 'projection' | 'service')
 
 klass ::= ('class' | 'user') nombre serviceProjection* keywordOnClass* lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
 association ::= 'association' nombre '{' associationEnd* relationship? '}' {pin="{" methods=[setName getPresentation]}
@@ -135,7 +136,7 @@ criteriaOperator ::= sourceExpressionValue operator targetExpressionValue
 criteriaNative ::= 'native' '(' nombre ')'
 sourceExpressionValue ::= expressionValue
 targetExpressionValue ::= expressionValue
-expressionValue ::= expressionLiteral | expressionProperty | expressionVariableName
+expressionValue ::= expressionLiteral | expressionProperty | expressionNativeValue | expressionVariableName
 expressionLiteral ::= INTEGER_LITERAL | FLOAT_LITERAL | STRING_LITERAL | booleanLiteral
 expressionProperty ::= criteriaType '.' propertyName
 criteriaType ::= 'this' | klassName
@@ -173,6 +174,7 @@ propertyName ::= nombre {methods=[getReference]}
 associationEndName ::= nombre {methods=[getReference]}
 parameterizedPropertyName ::= nombre {methods=[getReference]}
 projectionName ::= nombre {methods=[getReference]}
+expressionNativeValue ::= 'userPrincipal' {methods=[getReference]}
 expressionVariableName ::= nombre {methods=[getReference]}
 parameterName ::= nombre {methods=[getReference]}
 optionalMarker ::= QUESTION_MARK

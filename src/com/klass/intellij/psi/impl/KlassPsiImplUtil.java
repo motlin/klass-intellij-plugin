@@ -205,6 +205,17 @@ public class KlassPsiImplUtil
         return new KlassParameterReference(klassParameterName, parameterNameText);
     }
 
+    public static PsiReference getReference(KlassExpressionNativeValue klassExpressionNativeValue)
+    {
+        String expressionNativeValueText = klassExpressionNativeValue.getText();
+        if (expressionNativeValueText == null)
+        {
+            return null;
+        }
+
+        return new KlassExpressionNativeValueReference(klassExpressionNativeValue, expressionNativeValueText);
+    }
+
     public static PsiReference getReference(KlassDataType klassDataType)
     {
         String dataType = klassDataType.getText();

@@ -64,6 +64,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "true" { return KlassTypes.TRUE_KEYWORD; }
   "false" { return KlassTypes.FALSE_KEYWORD; }
   "null" { return KlassTypes.NULL_KEYWORD; }
+  "userPrincipal" { return KlassTypes.USER_PRINCIPAL_KEYWORD; }
 
   "class" { return KlassTypes.CLASS_KEYWORD; }
   "association" { return KlassTypes.ASSOCIATION_KEYWORD; }
