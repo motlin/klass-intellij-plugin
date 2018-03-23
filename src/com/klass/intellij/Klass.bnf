@@ -65,6 +65,7 @@
     CRITERIA_KEYWORD='criteria'
     VALIDATE_KEYWORD='validate'
     AUTHORIZE_KEYWORD='authorize'
+    NATIVE_KEYWORD='native'
     MULTIPLICITY_KEYWORD='multiplicity'
     ORDER_BY_KEYWORD='orderBy'
     ASCENDING_KEYWORD='ascending'
@@ -118,11 +119,15 @@ orderByDirection ::= 'ascending' | 'descending'
 serviceMultiplicity ::= 'one' | 'many'
 verb ::= 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
-criteriaExpression ::= criteriaAnd | criteriaOr | criteriaOperator
-criteriaAnd ::= criteriaExpression '&&' criteriaExpression
-criteriaOr ::= criteriaExpression '||' criteriaExpression
+// Left recursion isn't well supported in Grammar-Kit
+criteriaExpression ::= criteriaAnd
+criteriaAnd ::= (criteriaOr '&&' criteriaOr) | criteriaOr
+criteriaOr ::= (atomicCriteria '||' atomicCriteria) | atomicCriteria
+atomicCriteria ::= criteriaGroup | criteriaOperator | criteriaNative
+criteriaGroup ::= '(' criteriaExpression ')'
 // Overly generic, since clauses like 1 == 2 and 2 == $id don't make sense
 criteriaOperator ::= sourceExpressionValue operator targetExpressionValue
+criteriaNative ::= 'native' '(' nombre ')'
 sourceExpressionValue ::= expressionValue
 targetExpressionValue ::= expressionValue
 expressionValue ::= expressionLiteral | expressionProperty | expressionVariableName

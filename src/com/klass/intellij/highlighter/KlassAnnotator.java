@@ -193,5 +193,19 @@ public class KlassAnnotator implements Annotator
                 this.annotationHolder.createErrorAnnotation(klassUpperBound, message);
             }
         }
+
+        @Override
+        public void visitExpressionVariableName(@NotNull KlassExpressionVariableName expressionVariableName)
+        {
+            PsiReference reference = expressionVariableName.getReference();
+            PsiElement parameter = reference.resolve();
+            if (parameter == null)
+            {
+                String message = String.format("Cannot resolve symbol '%s'", expressionVariableName.getText());
+                this.annotationHolder.createErrorAnnotation(
+                        expressionVariableName,
+                        message);
+            }
+        }
     }
 }

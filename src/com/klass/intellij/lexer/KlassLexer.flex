@@ -96,6 +96,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "criteria" { return KlassTypes.CRITERIA_KEYWORD; }
   "validate" { return KlassTypes.VALIDATE_KEYWORD; }
   "authorize" { return KlassTypes.AUTHORIZE_KEYWORD; }
+  "native" { return KlassTypes.NATIVE_KEYWORD; }
   "orderBy" { return KlassTypes.ORDER_BY_KEYWORD; }
   "ascending" { return KlassTypes.ASCENDING_KEYWORD; }
   "descending" { return KlassTypes.DESCENDING_KEYWORD; }
