@@ -196,7 +196,8 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
     @Override
     public Object[] getVariants()
     {
-        PsiElement containingElement = this.myElement.getParent().getParent();
+        PsiElement parent = this.myElement.getParent();
+        PsiElement containingElement = parent.getParent();
         if (containingElement instanceof KlassProjectionInnerNode)
         {
             KlassAssociationEndName associationEndName =
@@ -231,8 +232,50 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
             KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
             return this.getKlassResolveResults(klassKlass);
         }
+        else if (parent instanceof KlassExpressionProperty)
+        {
+            KlassExpressionProperty expressionProperty = (KlassExpressionProperty) parent;
+            KlassCriteriaType criteriaType = expressionProperty.getCriteriaType();
+            KlassKlassName klassName = criteriaType.getKlassName();
+
+            if (klassName == null)
+            {
+                KlassKlass klassKlass =
+                        PsiTreeUtil.getParentOfType(this.myElement, KlassKlass.class);
+
+                if (klassKlass != null)
+                {
+                    return this.getKlassMemberLookups(klassKlass);
+                }
+
+                KlassServiceGroup klassServiceGroup =
+                        PsiTreeUtil.getParentOfType(this.myElement, KlassServiceGroup.class);
+                if (klassServiceGroup != null)
+                {
+                    PsiReference reference = klassServiceGroup.getKlassName().getReference();
+                    KlassKlass serviceKlass = (KlassKlass) reference.resolve();
+                    return this.getKlassMemberLookups(serviceKlass);
+                }
+            }
+            else
+            {
+                PsiReference klassNameReference = klassName.getReference();
+                KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
+
+                return this.getKlassMemberLookups(klassKlass);
+            }
+        }
 
         return new Object[]{};
+    }
+
+    private Object[] getKlassMemberLookups(KlassKlass klassKlass)
+    {
+        return klassKlass.getMemberList().stream()
+                .map(PsiNamedElement::getName)
+                .map(LookupElementBuilder::create)
+                .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Property))
+                .toArray();
     }
 
     // Based heavily on the insert handler for xml attributes, where it inserts =""

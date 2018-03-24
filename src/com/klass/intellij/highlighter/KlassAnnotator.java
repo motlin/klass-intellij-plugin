@@ -197,13 +197,24 @@ public class KlassAnnotator implements Annotator
         @Override
         public void visitExpressionVariableName(@NotNull KlassExpressionVariableName expressionVariableName)
         {
-            PsiReference reference = expressionVariableName.getReference();
+            this.annotateResolvableReference(expressionVariableName);
+        }
+
+        @Override
+        public void visitPropertyName(@NotNull KlassPropertyName propertyName)
+        {
+            this.annotateResolvableReference(propertyName);
+        }
+
+        private void annotateResolvableReference(PsiElement psiElement)
+        {
+            PsiReference reference = psiElement.getReference();
             PsiElement parameter = reference.resolve();
             if (parameter == null)
             {
-                String message = String.format("Cannot resolve symbol '%s'", expressionVariableName.getText());
+                String message = String.format("Cannot resolve symbol '%s'", psiElement.getText());
                 this.annotationHolder.createErrorAnnotation(
-                        expressionVariableName,
+                        psiElement,
                         message);
             }
         }
