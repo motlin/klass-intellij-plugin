@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public class KlassMemberReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
 {
@@ -261,7 +262,6 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
             {
                 PsiReference klassNameReference = klassName.getReference();
                 KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
-
                 return this.getKlassMemberLookups(klassKlass);
             }
         }
@@ -271,7 +271,13 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
 
     private Object[] getKlassMemberLookups(KlassKlass klassKlass)
     {
-        return klassKlass.getMemberList().stream()
+        if (klassKlass == null)
+        {
+            return new Object[]{};
+        }
+        return Objects.requireNonNull(klassKlass)
+                .getMemberList()
+                .stream()
                 .map(PsiNamedElement::getName)
                 .map(LookupElementBuilder::create)
                 .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Property))
