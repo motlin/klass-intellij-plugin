@@ -47,7 +47,7 @@ public class KlassParameterReference extends PsiReferenceBase<PsiElement> implem
             KlassUrl url = urlGroup.getUrl();
             ResolveResult[] resolveResults = url.getUrlPartList()
                     .stream()
-                    .map(KlassUrlPart::getPathParameter)
+                    .map(KlassUrlPart::getParameterDeclaration)
                     .filter(Objects::nonNull)
                     .filter(pathParameter -> pathParameter.getName().equals(this.parameterName))
                     .map(PsiElementResolveResult::new)

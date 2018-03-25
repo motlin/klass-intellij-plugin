@@ -65,12 +65,10 @@ public class KlassAnnotator implements Annotator
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES);
             }
-            else if (parent instanceof KlassPathParameter || parent instanceof KlassQueryParameter)
-            {
-                infoAnnotation.setTextAttributes(KlassHighlightingColors.PATH_PARAMETER);
-            }
             else if (parent instanceof KlassParameterDeclaration)
             {
+                // infoAnnotation.setTextAttributes(KlassHighlightingColors.PATH_PARAMETER);
+
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.PARAMETER_ATTRIBUTES);
             }
             else if (parent instanceof KlassParameterName)
@@ -215,6 +213,20 @@ public class KlassAnnotator implements Annotator
                 String message = String.format("Cannot resolve symbol '%s'", psiElement.getText());
                 this.annotationHolder.createErrorAnnotation(
                         psiElement,
+                        message);
+            }
+        }
+
+        @Override
+        public void visitParameterDeclaration(@NotNull KlassParameterDeclaration parameterDeclaration)
+        {
+            if (parameterDeclaration.getMultiplicity() == null)
+            {
+                String message = String.format(
+                        "Expected a type declaration on parameter: '%s'.",
+                        parameterDeclaration.getText());
+                this.annotationHolder.createErrorAnnotation(
+                        parameterDeclaration,
                         message);
             }
         }
