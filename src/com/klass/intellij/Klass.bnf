@@ -47,6 +47,7 @@
     QUESTION_MARK='?'
     EQ='='
     AND='&'
+    IN_OPERATOR='in'
     CONTAINS_OPERATOR='contains'
     STARTS_WITH_OPERATOR='startsWith'
     ENDS_WITH_OPERATOR='endsWith'
@@ -138,11 +139,12 @@ criteriaOperator ::= sourceExpressionValue operator targetExpressionValue
 criteriaNative ::= 'native' '(' nombre ')'
 sourceExpressionValue ::= expressionValue
 targetExpressionValue ::= expressionValue
-expressionValue ::= expressionLiteral | expressionProperty | expressionNativeValue | expressionVariableName
+expressionValue ::= expressionLiteral | expressionLiteralList | expressionProperty | expressionNativeValue | expressionVariableName
 expressionLiteral ::= INTEGER_LITERAL | FLOAT_LITERAL | STRING_LITERAL | booleanLiteral
+expressionLiteralList ::= '(' expressionLiteral (',' expressionLiteral)* ')'
 expressionProperty ::= criteriaType '.' propertyName
 criteriaType ::= 'this' | klassName
-operator ::= EQEQ | NE | LT | GT | LE | GE | 'contains' | 'startsWith' | 'endsWith'
+operator ::= EQEQ | NE | LT | GT | LE | GE | 'in' | 'contains' | 'startsWith' | 'endsWith'
 
 relationship ::= 'relationship' criteriaExpression
 
@@ -164,7 +166,7 @@ rBrace ::= '}'
 
 // Just can't be called name, because the getName method would clash
 nombre ::= nombreText | '`' nombreText '`'
-nombreText ::= IDENTIFIER | 'package' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD
+nombreText ::= IDENTIFIER | 'package' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')?
 
 parameterDeclaration ::= nombre (':' (dataType | enumerationType) multiplicity)? {methods=[setName]}
