@@ -38,6 +38,7 @@ public interface TokenSets
             DELETE_KEYWORD,
             KEY_KEYWORD,
             PRIVATE_KEYWORD,
+            OWNED_KEYWORD,
             CRITERIA_KEYWORD,
             VALIDATE_KEYWORD,
             AUTHORIZE_KEYWORD,

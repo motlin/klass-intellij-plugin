@@ -60,6 +60,7 @@
     USER_KEYWORD='user'
     KEY_KEYWORD='key'
     PRIVATE_KEYWORD='private'
+    OWNED_KEYWORD='owned'
     ON_KEYWORD='on'
     RELATIONSHIP_KEYWORD='relationship'
     GET_VERB='GET'
@@ -97,6 +98,7 @@ package ::= 'package' packagePart ('.' packagePart)*
 packagePart ::= nombre
 
 topLevelItem ::= klass | association | enumeration | projection | serviceGroup {recoverWhile="topLevelItem_recover"}
+// TODO: Recovery rule isn't working
 private topLevelItem_recover ::= !('}' | 'class' | 'user' | 'association' | 'enumeration' | 'projection' | 'service')
 
 klass ::= ('class' | 'user') nombre serviceProjection* keywordOnClass* lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
@@ -156,17 +158,18 @@ parameterizedProperty ::= nombre '(' (parameterDeclaration (',' parameterDeclara
 keywordOnClass ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD  | VERSIONED_KEYWORD | AUDITED_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD
 serviceProjection ::= serviceCategory ('(' projectionName ')')?
 serviceCategory ::= READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD
-propertyKeyword ::= 'key' | 'private'
+propertyKeyword ::= 'key' | 'private' | 'owned'
 
 // TODO: packages, imports, fully qualified class names
-associationEnd ::= nombre ':' klassName? multiplicity? orderByClause? {methods=[setName getPresentation]}
+// TODO: split property keywords and association end keywords
+associationEnd ::= propertyKeyword* nombre ':' klassName multiplicity orderByClause? {methods=[setName getPresentation]}
 
 lBrace ::= '{'
 rBrace ::= '}'
 
 // Just can't be called name, because the getName method would clash
 nombre ::= nombreText | '`' nombreText '`'
-nombreText ::= IDENTIFIER | 'package' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR
+nombreText ::= IDENTIFIER | 'package' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | 'owned' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')?
 
 parameterDeclaration ::= nombre (':' (dataType | enumerationType) multiplicity)? {methods=[setName]}

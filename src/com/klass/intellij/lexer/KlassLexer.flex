@@ -27,11 +27,10 @@ WHITE_SPACE_CHAR = [\ \n\r\t\f]
 IDENTIFIER = [:jletter:] [:jletterdigit:]*
 
 C_STYLE_COMMENT=("/*"[^"*"]{COMMENT_TAIL})|"/*"
+// TODO: Doc comments (the kind that show up with Ctrl+Q
 DOC_COMMENT="/*""*"+("/"|([^"/""*"]{COMMENT_TAIL}))?
 COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 END_OF_LINE_COMMENT="/""/"[^\r\n]*
-
-DOTDOT = ".."
 
 DIGIT = [0-9]
 DIGIT_OR_UNDERSCORE = [_0-9]
@@ -91,6 +90,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "endsWith" { return KlassTypes.ENDS_WITH_OPERATOR; }
 
   "key" { return KlassTypes.KEY_KEYWORD; }
+  "owned" { return KlassTypes.OWNED_KEYWORD; }
   "on" { return KlassTypes.ON_KEYWORD; }
   "relationship" { return KlassTypes.RELATIONSHIP_KEYWORD; }
 

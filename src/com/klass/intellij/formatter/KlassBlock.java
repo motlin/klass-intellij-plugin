@@ -169,6 +169,7 @@ public class KlassBlock extends AbstractBlock
     public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2)
     {
         Spacing spacing = this.spacingBuilder.getSpacing(this, child1, child2);
+
         /*
         if (child1 instanceof KlassBlock)
         {
