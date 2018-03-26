@@ -34,6 +34,8 @@ public class KlassBlock extends AbstractBlock
             KlassTypes.SERVICE_MULTIPLICITY_CLAUSE,
             KlassTypes.SERVICE_CRITERIA_CLAUSE,
             KlassTypes.SERVICE_PROJECTION_CLAUSE,
+            KlassTypes.SERVICE_VALIDATE_CLAUSE,
+            KlassTypes.SERVICE_AUTHORIZE_CLAUSE,
             KlassTypes.CRITERIA_OPERATOR,
             KlassTypes.SERVICE_PROJECTION,
             KlassTypes.ORDER_BY_CLAUSE,

@@ -34,6 +34,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
     public static final TokenSet NONE_INSIDE = TokenSet.create(
             KlassTypes.URL,
             KlassTypes.URL_PART,
+            KlassTypes.QUERY_PARAM_PART,
             KlassTypes.NOMBRE);
 
     public static final TokenSet BLANK_LINE_BEFORE = TokenSet.create(
@@ -151,6 +152,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
                 .before(BLANK_LINE_BEFORE).blankLines(1)
 
                 .before(LINE_BREAK_BEFORE).lineBreakInCode()
+                .afterInside(KlassTypes.COMMA, KlassTypes.EXPRESSION_LITERAL_LIST).spaces(1)
                 .after(LINE_BREAK_AFTER).lineBreakInCode()
                 .around(BRACES).lineBreakInCode()
                 .around(LINE_BREAK_AROUND_HIGH_PRIORITY).lineBreakInCode()
