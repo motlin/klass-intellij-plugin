@@ -13,10 +13,10 @@
   psiImplUtilClass="com.klass.intellij.psi.impl.KlassPsiImplUtil"
   tokenTypeClass="com.klass.intellij.psi.KlassTokenType"
 
-  mixin("klass|association|enumeration|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|parameterDeclaration") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
+  mixin("klass|association|enumeration|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|parameterDeclaration|enumerationLiteral") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
   mixin("projection")="com.klass.intellij.psi.impl.AbstractKlassProjectionNode"
   mixin("projectionInnerNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
-  implements("klass|association|enumeration|projection|member|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|parameterDeclaration") = "com.klass.intellij.psi.KlassNamedElement"
+  implements("klass|association|enumeration|projection|member|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|parameterDeclaration|enumerationLiteral") = "com.klass.intellij.psi.KlassNamedElement"
   implements("projection|projectionInnerNode")="com.klass.intellij.psi.KlassTypedElement"
 
   tokens = [
@@ -170,7 +170,7 @@ rBrace ::= '}'
 // Just can't be called name, because the getName method would clash
 nombre ::= nombreText | '`' nombreText '`'
 nombreText ::= IDENTIFIER | 'package' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | 'owned' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR
-enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')?
+enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')? {methods=[setName getPresentation]}
 
 parameterDeclaration ::= nombre (':' (dataType | enumerationType) multiplicity)? {methods=[setName]}
 dataType ::= ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD {methods=[getReference]}

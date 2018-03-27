@@ -68,9 +68,18 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
             else
             {
                 PsiReference klassNameReference = klassName.getReference();
-                KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
-
-                return this.getKlassResolveResults(klassKlass);
+                PsiElement resolve = klassNameReference.resolve();
+                if (resolve instanceof KlassKlass)
+                {
+                    KlassKlass klass = (KlassKlass) resolve;
+                    return this.getKlassResolveResults(klass);
+                }
+                if (resolve instanceof KlassEnumeration)
+                {
+                    KlassEnumeration enumeration = (KlassEnumeration) resolve;
+                    return this.getEnumerationResolveResults(enumeration);
+                }
+                throw new AssertionError();
             }
         }
         else if (parent instanceof KlassOrderByProperty)
@@ -176,11 +185,20 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
         return new ResolveResult[]{};
     }
 
-    private ResolveResult[] getKlassResolveResults(KlassKlass klassKlass)
+    private ResolveResult[] getKlassResolveResults(KlassKlass klass)
     {
-        return klassKlass.getMemberList()
+        return klass.getMemberList()
                 .stream()
                 .filter(klassMember -> klassMember.getName().equals(this.propertyName))
+                .map(PsiElementResolveResult::new)
+                .toArray(ResolveResult[]::new);
+    }
+
+    private ResolveResult[] getEnumerationResolveResults(KlassEnumeration enumeration)
+    {
+        return enumeration.getEnumerationLiteralList()
+                .stream()
+                .filter(enumerationLiteral -> enumerationLiteral.getName().equals(this.propertyName))
                 .map(PsiElementResolveResult::new)
                 .toArray(ResolveResult[]::new);
     }
@@ -260,9 +278,22 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
             }
             else
             {
-                PsiReference klassNameReference = klassName.getReference();
-                KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
-                return this.getKlassMemberLookups(klassKlass);
+                KlassKlassReference klassNameReference = (KlassKlassReference) klassName.getReference();
+                PsiElement resolve = klassNameReference.resolve();
+                if (resolve instanceof KlassKlass)
+                {
+                    KlassKlass klassKlass = (KlassKlass) resolve;
+                    return this.getKlassMemberLookups(klassKlass);
+                }
+                if (resolve instanceof KlassEnumeration)
+                {
+                    KlassEnumeration enumeration = (KlassEnumeration) resolve;
+                    return this.getEnumerationLiteralLookups(enumeration);
+                }
+                if (resolve != null)
+                {
+                    throw new AssertionError();
+                }
             }
         }
 
@@ -281,6 +312,17 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
                 .map(PsiNamedElement::getName)
                 .map(LookupElementBuilder::create)
                 .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Property))
+                .toArray();
+    }
+
+    public Object[] getEnumerationLiteralLookups(KlassEnumeration enumeration)
+    {
+        return Objects.requireNonNull(enumeration)
+                .getEnumerationLiteralList()
+                .stream()
+                .map(PsiNamedElement::getName)
+                .map(LookupElementBuilder::create)
+                .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Enum))
                 .toArray();
     }
 

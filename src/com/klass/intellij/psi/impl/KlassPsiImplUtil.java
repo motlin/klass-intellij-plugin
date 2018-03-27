@@ -126,6 +126,19 @@ public class KlassPsiImplUtil
         return element;
     }
 
+    public static PsiElement setName(KlassEnumerationLiteral element, String newName)
+    {
+        ASTNode primitiveLiteralNameNode = element.getNombre().getNode();
+        if (primitiveLiteralNameNode != null)
+        {
+            KlassEnumerationLiteral enumerationLiteral =
+                    KlassElementFactory.createEnumerationLiteral(element.getProject(), newName);
+            ASTNode newPrimitiveLiteralNameNode = enumerationLiteral.getNombre().getNode();
+            element.getNode().replaceChild(primitiveLiteralNameNode, newPrimitiveLiteralNameNode);
+        }
+        return element;
+    }
+
     public static PsiReference getReference(KlassKlassName klassKlassName)
     {
         String className = klassKlassName.getText();

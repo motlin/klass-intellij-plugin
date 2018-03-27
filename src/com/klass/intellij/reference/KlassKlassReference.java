@@ -9,7 +9,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.klass.intellij.KlassUtil;
+import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassNamedElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,29 +21,29 @@ import java.util.stream.Collectors;
 
 public class KlassKlassReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
 {
-    private final String className;
+    private final String name;
 
-    private KlassKlass klass;
+    private KlassNamedElement namedElement;
 
-    public KlassKlassReference(@NotNull PsiElement element, String className)
+    public KlassKlassReference(@NotNull PsiElement element, String name)
     {
-        super(element, new TextRange(0, className.length()));
-        this.className = className;
+        super(element, new TextRange(0, name.length()));
+        this.name = name;
     }
 
     @NotNull
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode)
     {
-        if (this.klass != null)
+        if (this.namedElement != null)
         {
-            return new PsiElementResolveResult[]{new PsiElementResolveResult(this.klass)};
+            return new PsiElementResolveResult[]{new PsiElementResolveResult(this.namedElement)};
         }
 
         Project project = this.myElement.getProject();
         List<KlassKlass> klasses = KlassUtil.findClasses(project)
                 .stream()
-                .filter(klassKlass -> klassKlass.getName().equals(this.className))
+                .filter(klass -> klass.getName().equals(this.name))
                 .collect(Collectors.toList());
         if (klasses.size() == 2)
         {
@@ -49,8 +51,23 @@ public class KlassKlassReference extends PsiReferenceBase<PsiElement> implements
         }
         if (klasses.size() == 1)
         {
-            this.klass = klasses.get(0);
-            return new PsiElementResolveResult[]{new PsiElementResolveResult(this.klass)};
+            this.namedElement = klasses.get(0);
+            return new PsiElementResolveResult[]{new PsiElementResolveResult(this.namedElement)};
+        }
+
+        List<KlassEnumeration> enumerations1 = KlassUtil.findEnumerations(project);
+        List<KlassEnumeration> enumerations = enumerations1
+                .stream()
+                .filter(enumeration -> enumeration.getName().equals(this.name))
+                .collect(Collectors.toList());
+        if (enumerations.size() == 2)
+        {
+            throw new AssertionError();
+        }
+        if (enumerations.size() == 1)
+        {
+            this.namedElement = enumerations.get(0);
+            return new PsiElementResolveResult[]{new PsiElementResolveResult(this.namedElement)};
         }
         return new ResolveResult[]{};
     }

@@ -8,13 +8,13 @@ public class KlassElementFactory
 {
     public static KlassKlass createClass(Project project, String name)
     {
-        KlassFile file = KlassElementFactory.createFile(project, String.format("class %s {}", name));
+        KlassFile file = KlassElementFactory.createFile(project, String.format("class %s{}", name));
         return (KlassKlass) file.getFirstChild();
     }
 
     public static KlassEnumeration createEnumeration(Project project, String name)
     {
-        KlassFile file = KlassElementFactory.createFile(project, String.format("enumeration %s {}", name));
+        KlassFile file = KlassElementFactory.createFile(project, String.format("enumeration %s{DUMMY,}", name));
         return (KlassEnumeration) file.getFirstChild();
     }
 
@@ -113,6 +113,15 @@ public class KlassElementFactory
                         + "    }\n"
                         + "}\n");
         return (KlassParameterDeclaration) file.getFirstChild().getFirstChild();
+    }
+
+    // TODO: Try running all the rename refactorings
+    public static KlassEnumerationLiteral createEnumerationLiteral(Project project, String name)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                String.format("enumeration Dummy{%s,}", name));
+        return (KlassEnumerationLiteral) file.getFirstChild().getFirstChild();
     }
 
     public static KlassFile createFile(Project project, String text)

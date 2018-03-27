@@ -56,13 +56,16 @@ public class KlassAnnotator implements Annotator
         {
             Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(klassNombreText, null);
             PsiElement parent = klassNombreText.getParent().getParent();
-            if (parent instanceof KlassEnumeration)
+            if (parent instanceof KlassPropertyName)
+            {
+                // Handled specially by resolving reference first
+            }
+            else if (parent instanceof KlassEnumeration)
             {
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_NAME_ATTRIBUTES);
             }
             else if (parent instanceof KlassMember
                     || parent instanceof KlassAssociationEnd
-                    || parent instanceof KlassPropertyName
                     || parent instanceof KlassAssociationEndName
                     || parent instanceof KlassParameterizedPropertyName)
             {
@@ -202,25 +205,45 @@ public class KlassAnnotator implements Annotator
         @Override
         public void visitExpressionVariableName(@NotNull KlassExpressionVariableName expressionVariableName)
         {
-            this.annotateResolvableReference(expressionVariableName);
+            PsiReference reference = expressionVariableName.getReference();
+            PsiElement resolved = reference.resolve();
+            this.annotateCannotResolve(expressionVariableName, resolved);
+        }
+
+        public void annotateCannotResolve(
+                @NotNull KlassExpressionVariableName expressionVariableName,
+                PsiElement resolved)
+        {
+            if (resolved == null)
+            {
+                String message = String.format("Cannot resolve symbol '%s'", expressionVariableName.getText());
+                this.annotationHolder.createErrorAnnotation(
+                        expressionVariableName,
+                        message);
+            }
         }
 
         @Override
         public void visitPropertyName(@NotNull KlassPropertyName propertyName)
         {
-            this.annotateResolvableReference(propertyName);
-        }
-
-        private void annotateResolvableReference(PsiElement psiElement)
-        {
-            PsiReference reference = psiElement.getReference();
-            PsiElement parameter = reference.resolve();
-            if (parameter == null)
+            PsiReference reference = propertyName.getReference();
+            PsiElement resolved = reference.resolve();
+            if (resolved == null)
             {
-                String message = String.format("Cannot resolve symbol '%s'", psiElement.getText());
+                String message = String.format("Cannot resolve symbol '%s'", propertyName.getText());
                 this.annotationHolder.createErrorAnnotation(
-                        psiElement,
+                        propertyName,
                         message);
+            }
+            else if (resolved instanceof KlassDataTypeProperty || resolved instanceof KlassEnumerationProperty)
+            {
+                Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(propertyName, null);
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES);
+            }
+            else if (resolved instanceof KlassEnumerationLiteral)
+            {
+                Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(propertyName, null);
+                infoAnnotation.setTextAttributes(KlassHighlightingColors.STATIC_FINAL_FIELD_ATTRIBUTES);
             }
         }
 
@@ -298,7 +321,8 @@ public class KlassAnnotator implements Annotator
             KlassExpressionProperty expressionProperty = expressionValue.getExpressionProperty();
             if (expressionProperty != null)
             {
-                PsiReference reference = expressionProperty.getPropertyName().getReference();
+                KlassPropertyName propertyName = expressionProperty.getPropertyName();
+                PsiReference reference = propertyName.getReference();
                 PsiElement resolve = reference.resolve();
                 if (resolve instanceof KlassDataTypeProperty)
                 {
@@ -318,7 +342,7 @@ public class KlassAnnotator implements Annotator
                     }
                     return result;
                 }
-                else if (resolve instanceof KlassEnumerationProperty)
+                if (resolve instanceof KlassEnumerationProperty)
                 {
                     KlassEnumerationProperty enumerationProperty = (KlassEnumerationProperty) resolve;
                     // TODO: Create a common interface above KlassEnumerationType and KlassDataType and reduce some code duplication
@@ -328,6 +352,16 @@ public class KlassAnnotator implements Annotator
                             PrimitiveTypeType.DATA_TYPE,
                             enumerationType.getText(),
                             optionalMarker == null ? Multiplicity.ONE_TO_ONE : Multiplicity.ZERO_TO_ONE));
+                }
+                if (resolve instanceof KlassEnumerationLiteral)
+                {
+                    KlassEnumerationLiteral enumerationLiteral = (KlassEnumerationLiteral) resolve;
+                    KlassEnumeration enumeration = (KlassEnumeration) enumerationLiteral.getParent();
+
+                    return Collections.singletonList(new Type(
+                            PrimitiveTypeType.DATA_TYPE,
+                            enumeration.getName(),
+                            Multiplicity.ONE_TO_ONE));
                 }
                 throw new AssertionError();
             }
