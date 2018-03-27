@@ -6,9 +6,16 @@ import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
+import com.klass.intellij.highlighter.type.Multiplicity;
+import com.klass.intellij.highlighter.type.PrimitiveTypeType;
+import com.klass.intellij.highlighter.type.Type;
 import com.klass.intellij.psi.*;
+import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.impl.factory.Lists;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -230,5 +237,187 @@ public class KlassAnnotator implements Annotator
                         message);
             }
         }
+
+        @Override
+        public void visitCriteriaOperator(@NotNull KlassCriteriaOperator criteriaOperator)
+        {
+            KlassExpressionValue sourceExpressionValue =
+                    criteriaOperator.getSourceExpressionValue().getExpressionValue();
+            KlassExpressionValue targetExpressionValue =
+                    criteriaOperator.getTargetExpressionValue().getExpressionValue();
+            KlassOperator operator = criteriaOperator.getOperator();
+
+            List<Type> possibleSourceTypes = this.getPossibleTypes(sourceExpressionValue);
+            List<Type> possibleTargetTypes = this.getPossibleTypes(targetExpressionValue);
+            if (!Type.compatible(possibleSourceTypes, possibleTargetTypes))
+            {
+                String message = String.format(
+                        "Incompatible types: '%s' and '%s' in '%s'.",
+                        possibleSourceTypes.get(0),
+                        possibleTargetTypes.get(0),
+                        criteriaOperator.getText());
+                this.annotationHolder.createErrorAnnotation(
+                        criteriaOperator,
+                        message);
+            }
+        }
+
+        private List<Type> getPossibleTypes(KlassExpressionValue expressionValue)
+        {
+            KlassExpressionLiteral expressionLiteral = expressionValue.getExpressionLiteral();
+            if (expressionLiteral != null)
+            {
+                return KlassAnnotator.getExpressionLiteralTypes(expressionLiteral, Multiplicity.ONE_TO_ONE);
+            }
+
+            KlassExpressionLiteralList expressionLiteralListNode = expressionValue.getExpressionLiteralList();
+            if (expressionLiteralListNode != null)
+            {
+                List<KlassExpressionLiteral> expressionLiteralList =
+                        expressionLiteralListNode.getExpressionLiteralList();
+                int size = expressionLiteralList.size();
+                // Test empty one
+                return KlassAnnotator.getExpressionLiteralTypes(
+                        expressionLiteralList.get(0),
+                        Multiplicity.ZERO_TO_MANY);
+            }
+
+            KlassExpressionNativeValue expressionNativeValue = expressionValue.getExpressionNativeValue();
+            if (expressionNativeValue != null)
+            {
+                if (expressionNativeValue.getText().equals("userPrincipal"))
+                {
+                    return Collections.singletonList(new Type(
+                            PrimitiveTypeType.DATA_TYPE,
+                            "String",
+                            Multiplicity.ONE_TO_ONE));
+                }
+                throw new UnsupportedOperationException(expressionNativeValue.getText());
+            }
+
+            KlassExpressionProperty expressionProperty = expressionValue.getExpressionProperty();
+            if (expressionProperty != null)
+            {
+                PsiReference reference = expressionProperty.getPropertyName().getReference();
+                PsiElement resolve = reference.resolve();
+                if (resolve instanceof KlassDataTypeProperty)
+                {
+                    KlassDataTypeProperty dataTypeProperty = (KlassDataTypeProperty) resolve;
+                    KlassDataType dataType = dataTypeProperty.getDataType();
+                    KlassOptionalMarker optionalMarker = dataTypeProperty.getOptionalMarker();
+                    Multiplicity multiplicity =
+                            optionalMarker == null ? Multiplicity.ONE_TO_ONE : Multiplicity.ZERO_TO_ONE;
+                    String dataTypeText = dataType.getText();
+                    MutableList<Type> result = Lists.mutable.with(new Type(
+                            PrimitiveTypeType.DATA_TYPE,
+                            dataTypeText,
+                            multiplicity));
+                    if (dataTypeText.equals("ID"))
+                    {
+                        result.add(new Type(PrimitiveTypeType.DATA_TYPE, "Long", multiplicity));
+                    }
+                    return result;
+                }
+                else if (resolve instanceof KlassEnumerationProperty)
+                {
+                    KlassEnumerationProperty enumerationProperty = (KlassEnumerationProperty) resolve;
+                    // TODO: Create a common interface above KlassEnumerationType and KlassDataType and reduce some code duplication
+                    KlassEnumerationType enumerationType = enumerationProperty.getEnumerationType();
+                    KlassOptionalMarker optionalMarker = enumerationProperty.getOptionalMarker();
+                    return Collections.singletonList(new Type(
+                            PrimitiveTypeType.DATA_TYPE,
+                            enumerationType.getText(),
+                            optionalMarker == null ? Multiplicity.ONE_TO_ONE : Multiplicity.ZERO_TO_ONE));
+                }
+                throw new AssertionError();
+            }
+
+            KlassExpressionVariableName expressionVariableName = expressionValue.getExpressionVariableName();
+            if (expressionVariableName != null)
+            {
+                PsiReference reference = expressionVariableName.getReference();
+                KlassParameterDeclaration klassParameterDeclaration = (KlassParameterDeclaration) reference.resolve();
+                KlassMultiplicity multiplicity = klassParameterDeclaration.getMultiplicity();
+                KlassDataType dataType = klassParameterDeclaration.getDataType();
+                if (dataType != null)
+                {
+                    return Collections.singletonList(new Type(
+                            PrimitiveTypeType.DATA_TYPE,
+                            dataType.getText(),
+                            this.getMultiplicity(multiplicity)));
+                }
+                KlassEnumerationType enumerationType = klassParameterDeclaration.getEnumerationType();
+                if (enumerationType != null)
+                {
+                    return Collections.singletonList(new Type(
+                            PrimitiveTypeType.ENUMERATION,
+                            enumerationType.getText(),
+                            this.getMultiplicity(multiplicity)));
+                }
+                throw new UnsupportedOperationException(expressionVariableName.getText());
+            }
+
+            throw new AssertionError(expressionValue.getText());
+        }
+
+        private Multiplicity getMultiplicity(KlassMultiplicity multiplicity)
+        {
+            String lowerBound = multiplicity.getLowerBound().getText();
+            String uppderBound = multiplicity.getUpperBound().getText();
+
+            if (lowerBound.equals("0") && uppderBound.equals("1"))
+            {
+                return Multiplicity.ZERO_TO_ONE;
+            }
+
+            if (lowerBound.equals("1") && uppderBound.equals("1"))
+            {
+                return Multiplicity.ONE_TO_ONE;
+            }
+
+            if (lowerBound.equals("0") && uppderBound.equals("*"))
+            {
+                return Multiplicity.ZERO_TO_MANY;
+            }
+
+            if (lowerBound.equals("1") && uppderBound.equals("*"))
+            {
+                return Multiplicity.ONE_TO_MANY;
+            }
+
+            throw new AssertionError(multiplicity.getText());
+        }
+    }
+
+    private static List<Type> getExpressionLiteralTypes(
+            KlassExpressionLiteral expressionLiteral,
+            Multiplicity multiplicity)
+    {
+        KlassBooleanLiteral booleanLiteral = expressionLiteral.getBooleanLiteral();
+        if (booleanLiteral != null)
+        {
+            return Collections.singletonList(new Type(PrimitiveTypeType.DATA_TYPE, "Boolean", multiplicity));
+        }
+
+        KlassIntegerLiteralNode integerLiteralNode = expressionLiteral.getIntegerLiteralNode();
+        if (integerLiteralNode != null)
+        {
+            return Arrays.asList(
+                    new Type(PrimitiveTypeType.DATA_TYPE, "Integer", multiplicity),
+                    new Type(PrimitiveTypeType.DATA_TYPE, "Long", multiplicity));
+        }
+        KlassFloatLiteralNode floatLiteralNode = expressionLiteral.getFloatLiteralNode();
+        if (floatLiteralNode != null)
+        {
+            return Arrays.asList(
+                    new Type(PrimitiveTypeType.DATA_TYPE, "Float", multiplicity),
+                    new Type(PrimitiveTypeType.DATA_TYPE, "Double", multiplicity));
+        }
+        KlassStringLiteralNode stringLiteralNode = expressionLiteral.getStringLiteralNode();
+        if (stringLiteralNode != null)
+        {
+            return Collections.singletonList(new Type(PrimitiveTypeType.DATA_TYPE, "String", multiplicity));
+        }
+        throw new AssertionError(expressionLiteral.getText());
     }
 }

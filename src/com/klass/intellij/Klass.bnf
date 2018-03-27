@@ -142,7 +142,7 @@ criteriaNative ::= 'native' '(' nombre ')'
 sourceExpressionValue ::= expressionValue
 targetExpressionValue ::= expressionValue
 expressionValue ::= expressionLiteral | expressionLiteralList | expressionProperty | expressionNativeValue | expressionVariableName
-expressionLiteral ::= INTEGER_LITERAL | FLOAT_LITERAL | STRING_LITERAL | booleanLiteral
+expressionLiteral ::= integerLiteralNode | floatLiteralNode | stringLiteralNode | booleanLiteral
 expressionLiteralList ::= '(' expressionLiteral (',' expressionLiteral)* ')'
 expressionProperty ::= criteriaType '.' propertyName
 criteriaType ::= 'this' | klassName
@@ -192,3 +192,6 @@ dummyMultiplicity ::= lowerBound | lowerBound '..' {methods=[getReference]}
 lowerBound ::= INTEGER_LITERAL
 upperBound ::= INTEGER_LITERAL | ASTERISK
 booleanLiteral ::= 'true' | 'false' | 'null'
+integerLiteralNode ::= INTEGER_LITERAL
+floatLiteralNode ::= FLOAT_LITERAL
+stringLiteralNode ::= STRING_LITERAL
