@@ -18,4 +18,9 @@ public enum Multiplicity
     {
         return this.prettyName;
     }
+
+    public boolean isToMany()
+    {
+        return this == ZERO_TO_MANY || this == ONE_TO_MANY;
+    }
 }

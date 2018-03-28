@@ -13,6 +13,7 @@ import com.klass.intellij.psi.*;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.factory.Lists;
+import org.eclipse.collections.impl.list.mutable.ListAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -274,7 +275,6 @@ public class KlassAnnotator implements Annotator
                     criteriaOperator.getSourceExpressionValue().getExpressionValue();
             KlassExpressionValue targetExpressionValue =
                     criteriaOperator.getTargetExpressionValue().getExpressionValue();
-            KlassOperator operator = criteriaOperator.getOperator();
 
             List<Type> possibleSourceTypes = this.getPossibleTypes(sourceExpressionValue);
             List<Type> possibleTargetTypes = this.getPossibleTypes(targetExpressionValue);
@@ -285,6 +285,28 @@ public class KlassAnnotator implements Annotator
                         possibleSourceTypes.get(0),
                         possibleTargetTypes.get(0),
                         criteriaOperator.getText());
+                this.annotationHolder.createErrorAnnotation(
+                        criteriaOperator,
+                        message);
+            }
+
+            if (ListAdapter.adapt(possibleSourceTypes).allSatisfy(type -> type.getMultiplicity().isToMany()))
+            {
+                String message = String.format(
+                        "Invalid multiplicity '%s'.",
+                        possibleSourceTypes.get(0));
+                this.annotationHolder.createErrorAnnotation(
+                        criteriaOperator,
+                        message);
+            }
+            KlassOperator operator = criteriaOperator.getOperator();
+            boolean expectMany = operator.getText().equals("in");
+            if (ListAdapter.adapt(possibleTargetTypes).allSatisfy(type -> type.getMultiplicity().isToMany())
+                    != expectMany)
+            {
+                String message = String.format(
+                        "Invalid multiplicity '%s'.",
+                        possibleTargetTypes.get(0));
                 this.annotationHolder.createErrorAnnotation(
                         criteriaOperator,
                         message);
