@@ -10,6 +10,7 @@ import com.klass.intellij.highlighter.type.Multiplicity;
 import com.klass.intellij.highlighter.type.PrimitiveTypeType;
 import com.klass.intellij.highlighter.type.Type;
 import com.klass.intellij.psi.*;
+import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.factory.Lists;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +24,9 @@ import java.util.stream.Collectors;
 
 public class KlassAnnotator implements Annotator
 {
+    public static final ImmutableList<String> TEMPORAL_PROPERTY_KEYWORDS =
+            Lists.immutable.with("validTemporal", "systemTemporal", "bitemporal");
+
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder)
     {
@@ -235,7 +239,9 @@ public class KlassAnnotator implements Annotator
                         propertyName,
                         message);
             }
-            else if (resolved instanceof KlassDataTypeProperty || resolved instanceof KlassEnumerationProperty)
+            else if (resolved instanceof KlassDataTypeProperty
+                    || resolved instanceof KlassEnumerationProperty
+                    || resolved instanceof KlassKeywordOnClass)
             {
                 Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(propertyName, null);
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES);
@@ -363,7 +369,20 @@ public class KlassAnnotator implements Annotator
                             enumeration.getName(),
                             Multiplicity.ONE_TO_ONE));
                 }
-                throw new AssertionError();
+                if (resolve instanceof KlassKeywordOnClass)
+                {
+                    KlassKeywordOnClass keywordOnClass = (KlassKeywordOnClass) resolve;
+                    String keywordText = keywordOnClass.getText();
+                    if (!TEMPORAL_PROPERTY_KEYWORDS.contains(keywordText))
+                    {
+                        throw new AssertionError(keywordText);
+                    }
+                    return Collections.singletonList(new Type(
+                            PrimitiveTypeType.DATA_TYPE,
+                            "Instant",
+                            Multiplicity.ONE_TO_ONE));
+                }
+                throw new AssertionError(resolve.getClass());
             }
 
             KlassExpressionVariableName expressionVariableName = expressionValue.getExpressionVariableName();

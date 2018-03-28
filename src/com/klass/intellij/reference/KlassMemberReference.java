@@ -14,6 +14,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.text.CharArrayUtil;
 import com.klass.intellij.psi.*;
+import org.eclipse.collections.api.list.ImmutableList;
+import org.eclipse.collections.impl.factory.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +24,10 @@ import java.util.Objects;
 
 public class KlassMemberReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
 {
+    public static final ImmutableList<String> VALID_PROPERTIES =
+            Lists.immutable.with("valid", "validFrom", "validTo");
+    public static final ImmutableList<String> SYSTEM_PROPERTIES =
+            Lists.immutable.with("system", "systemFrom", "systemTo");
     private final String propertyName;
 
     public KlassMemberReference(@NotNull PsiElement element, String propertyName)
@@ -187,9 +193,33 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
 
     private ResolveResult[] getKlassResolveResults(KlassKlass klass)
     {
-        return klass.getMemberList()
+        ResolveResult[] resolveResults = klass.getMemberList()
                 .stream()
                 .filter(klassMember -> klassMember.getName().equals(this.propertyName))
+                .map(PsiElementResolveResult::new)
+                .toArray(ResolveResult[]::new);
+        if (resolveResults.length == 0)
+        {
+            if (VALID_PROPERTIES.contains(this.propertyName))
+            {
+                return this.getTemporalReference(klass, "validTemporal");
+            }
+            if (SYSTEM_PROPERTIES.contains(this.propertyName))
+            {
+                return this.getTemporalReference(klass, "systemTemporal");
+            }
+        }
+        return resolveResults;
+    }
+
+    private ResolveResult[] getTemporalReference(KlassKlass klass, String temporalKeyword)
+    {
+        return klass
+                .getKeywordOnClassList()
+                .stream()
+                .filter(keywordOnClass ->
+                        keywordOnClass.getText().equals(temporalKeyword)
+                                || keywordOnClass.getText().equals("bitemporal"))
                 .map(PsiElementResolveResult::new)
                 .toArray(ResolveResult[]::new);
     }
