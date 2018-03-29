@@ -117,12 +117,12 @@ url ::= urlPart+ '/'? ('?' queryParamPart ('&' queryParamPart)*)?
 urlPart ::= ('/' urlConstant) | ('/' '{' parameterDeclaration '}') {pin='/'}
 urlConstant ::= nombre
 queryParamPart ::= '{' parameterDeclaration '}'
-service ::= verb lBrace serviceMultiplicityClause serviceCriteriaClause? serviceValidateClause? serviceAuthorizeClause? serviceProjectionClause orderByClause? rBrace {pin=1 methods=[getPresentation]}
+service ::= verb lBrace serviceMultiplicityClause serviceCriteriaClause? serviceAuthorizeClause? serviceValidateClause? serviceProjectionClause orderByClause? rBrace {pin=1 methods=[getPresentation]}
 
 serviceMultiplicityClause ::= 'multiplicity' ':' serviceMultiplicity
 serviceCriteriaClause ::= 'criteria' ':' criteriaExpression
-serviceValidateClause ::= 'validate' ':' criteriaExpression
 serviceAuthorizeClause ::= 'authorize' ':' criteriaExpression
+serviceValidateClause ::= 'validate' ':' criteriaExpression
 serviceProjectionClause ::= 'projection' ':' projectionName ('(' parameterName (',' parameterName)* ')')?
 orderByClause ::= 'orderBy' ':' (orderByProperty) (',' orderByProperty)*
 orderByProperty ::= 'this' '.' propertyName orderByDirection?
