@@ -479,7 +479,7 @@ public class KlassAnnotator implements Annotator
             KlassExpressionNativeValue expressionNativeValue = expressionValue.getExpressionNativeValue();
             if (expressionNativeValue != null)
             {
-                if (expressionNativeValue.getText().equals("userPrincipal"))
+                if (expressionNativeValue.getText().equals("user"))
                 {
                     return Collections.singletonList(new Type(
                             PrimitiveTypeType.DATA_TYPE,

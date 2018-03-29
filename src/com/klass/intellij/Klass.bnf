@@ -83,7 +83,6 @@
     TRUE_KEYWORD='true'
     FALSE_KEYWORD='false'
     NULL_KEYWORD='null'
-    USER_PRINCIPAL_KEYWORD='userPrincipal'
   ]
 
   extends("klass|association|enumeration|projection|serviceGroup")=topLevelItem
@@ -183,7 +182,7 @@ propertyName ::= nombre {methods=[getReference]}
 associationEndName ::= nombre {methods=[getReference]}
 parameterizedPropertyName ::= nombre {methods=[getReference]}
 projectionName ::= nombre {methods=[getReference]}
-expressionNativeValue ::= 'userPrincipal' {methods=[getReference]}
+expressionNativeValue ::= 'user' {methods=[getReference]}
 expressionVariableName ::= nombre {methods=[getReference]}
 parameterName ::= nombre {methods=[getReference]}
 optionalMarker ::= QUESTION_MARK
