@@ -142,49 +142,54 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
                     return this.getKlassResolveResults(klassKlass);
                 }
             }
-            else if (projectionNodeParent instanceof KlassProjectionInnerNode)
+            else if (projectionNodeParent instanceof KlassProjectionAssociationEndNode)
             {
-                KlassProjectionInnerNode projectionInnerNode = (KlassProjectionInnerNode) projectionNodeParent;
+                KlassProjectionAssociationEndNode associationEndNode =
+                        (KlassProjectionAssociationEndNode) projectionNodeParent;
                 KlassAssociationEndName associationEndName =
-                        projectionInnerNode.getAssociationEndName();
+                        associationEndNode.getAssociationEndName();
+
+                PsiReference associationEndReference = associationEndName.getReference();
+                KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) associationEndReference.resolve();
+
+                if (klassAssociationEnd != null)
+                {
+                    KlassKlassName klassName = klassAssociationEnd.getKlassName();
+                    PsiReference klassNameReference = klassName.getReference();
+                    KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
+
+                    if (klassKlass != null)
+                    {
+                        return this.getKlassResolveResults(klassKlass);
+                    }
+                }
+            }
+            else if (projectionNodeParent instanceof KlassProjectionParameterizedPropertyNode)
+            {
+                KlassProjectionParameterizedPropertyNode parameterizedPropertyNode =
+                        (KlassProjectionParameterizedPropertyNode) projectionNodeParent;
                 KlassParameterizedPropertyName parameterizedPropertyName =
-                        projectionInnerNode.getParameterizedPropertyName();
+                        parameterizedPropertyNode.getParameterizedPropertyName();
 
-                if (associationEndName != null)
+                PsiReference parameterizedPropertyNameReference = parameterizedPropertyName.getReference();
+                KlassParameterizedProperty klassParameterizedProperty =
+                        (KlassParameterizedProperty) parameterizedPropertyNameReference.resolve();
+
+                if (klassParameterizedProperty != null)
                 {
-                    PsiReference associationEndReference = associationEndName.getReference();
-                    KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) associationEndReference.resolve();
+                    KlassKlassName klassName = klassParameterizedProperty.getKlassName();
+                    PsiReference klassNameReference = klassName.getReference();
+                    KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
 
-                    if (klassAssociationEnd != null)
+                    if (klassKlass != null)
                     {
-                        KlassKlassName klassName = klassAssociationEnd.getKlassName();
-                        PsiReference klassNameReference = klassName.getReference();
-                        KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
-
-                        if (klassKlass != null)
-                        {
-                            return this.getKlassResolveResults(klassKlass);
-                        }
+                        return this.getKlassResolveResults(klassKlass);
                     }
                 }
-                else if (parameterizedPropertyName != null)
-                {
-                    PsiReference parameterizedPropertyNameReference = parameterizedPropertyName.getReference();
-                    KlassParameterizedProperty klassParameterizedProperty =
-                            (KlassParameterizedProperty) parameterizedPropertyNameReference.resolve();
-
-                    if (klassParameterizedProperty != null)
-                    {
-                        KlassKlassName klassName = klassParameterizedProperty.getKlassName();
-                        PsiReference klassNameReference = klassName.getReference();
-                        KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
-
-                        if (klassKlass != null)
-                        {
-                            return this.getKlassResolveResults(klassKlass);
-                        }
-                    }
-                }
+            }
+            else
+            {
+                throw new AssertionError();
             }
         }
 
@@ -247,29 +252,55 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
     {
         PsiElement parent = this.myElement.getParent();
         PsiElement containingElement = parent.getParent();
-        if (containingElement instanceof KlassProjectionInnerNode)
+        if (containingElement instanceof KlassProjectionAssociationEndNode)
         {
-            KlassAssociationEndName associationEndName =
-                    ((KlassProjectionInnerNode) containingElement).getAssociationEndName();
-            PsiReference reference = associationEndName.getReference();
-            if (reference != null)
+            KlassProjectionAssociationEndNode associationEndNode =
+                    (KlassProjectionAssociationEndNode) containingElement;
+            KlassAssociationEndName associationEndName = associationEndNode.getAssociationEndName();
+            KlassAssociationEndReference associationEndReference =
+                    (KlassAssociationEndReference) associationEndName.getReference();
+            KlassAssociationEnd associationEnd = (KlassAssociationEnd) associationEndReference.resolve();
+            if (associationEnd != null)
             {
-                KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) reference.resolve();
-                if (klassAssociationEnd != null)
+                KlassKlassName klassName = associationEnd.getKlassName();
+                PsiReference klassNameReference = klassName.getReference();
+                KlassKlass klass = (KlassKlass) klassNameReference.resolve();
+                if (klass != null)
                 {
-                    KlassKlassName klassName = klassAssociationEnd.getKlassName();
-                    PsiReference klassNameReference = klassName.getReference();
-                    KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
-                    if (klassKlass != null)
-                    {
-                        List<KlassMember> propertyList = klassKlass.getMemberList();
-                        return propertyList.stream()
-                                .map(klassMember -> LookupElementBuilder.create(klassMember.getName())
-                                        .withIcon(AllIcons.Nodes.Property)
-                                        .withTypeText(klassMember.getContainingFile().getName())
-                                        .withInsertHandler(ProjectionLeafInsertHandler.INSTANCE))
-                                .toArray();
-                    }
+                    List<KlassMember> propertyList = klass.getMemberList();
+                    return propertyList.stream()
+                            .map(member -> LookupElementBuilder.create(member.getName())
+                                    .withIcon(AllIcons.Nodes.Property)
+                                    .withTypeText(member.getContainingFile().getName())
+                                    .withInsertHandler(ProjectionLeafInsertHandler.INSTANCE))
+                            .toArray();
+                }
+            }
+        }
+        else if (containingElement instanceof KlassProjectionParameterizedPropertyNode)
+        {
+            KlassProjectionParameterizedPropertyNode parameterizedPropertyNode =
+                    (KlassProjectionParameterizedPropertyNode) containingElement;
+            KlassParameterizedPropertyName parameterizedPropertyName =
+                    parameterizedPropertyNode.getParameterizedPropertyName();
+            KlassParameterizedPropertyReference parameterizedPropertyReference =
+                    (KlassParameterizedPropertyReference) parameterizedPropertyName.getReference();
+            KlassParameterizedProperty parameterizedProperty =
+                    (KlassParameterizedProperty) parameterizedPropertyReference.resolve();
+            if (parameterizedProperty != null)
+            {
+                KlassKlassName klassName = parameterizedProperty.getKlassName();
+                PsiReference klassNameReference = klassName.getReference();
+                KlassKlass klass = (KlassKlass) klassNameReference.resolve();
+                if (klass != null)
+                {
+                    List<KlassMember> propertyList = klass.getMemberList();
+                    return propertyList.stream()
+                            .map(klassMember -> LookupElementBuilder.create(klassMember.getName())
+                                    .withIcon(AllIcons.Nodes.Property)
+                                    .withTypeText(klassMember.getContainingFile().getName())
+                                    .withInsertHandler(ProjectionLeafInsertHandler.INSTANCE))
+                            .toArray();
                 }
             }
         }
@@ -325,6 +356,10 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
                     throw new AssertionError();
                 }
             }
+        }
+        else
+        {
+            throw new AssertionError();
         }
 
         return new Object[]{};

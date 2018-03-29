@@ -6,15 +6,21 @@ import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.klass.intellij.highlighter.type.Multiplicity;
 import com.klass.intellij.highlighter.type.PrimitiveTypeType;
 import com.klass.intellij.highlighter.type.Type;
 import com.klass.intellij.psi.*;
+import com.klass.intellij.reference.KlassMemberReference;
+import com.klass.intellij.reference.KlassParameterReference;
+import com.klass.intellij.reference.KlassParameterizedPropertyReference;
+import com.klass.intellij.reference.KlassProjectionReference;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.list.mutable.ListAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -210,13 +216,18 @@ public class KlassAnnotator implements Annotator
         @Override
         public void visitExpressionVariableName(@NotNull KlassExpressionVariableName expressionVariableName)
         {
-            PsiReference reference = expressionVariableName.getReference();
+            this.annotateCannotResolve(expressionVariableName);
+        }
+
+        public void annotateCannotResolve(@NotNull PsiElement psiElement)
+        {
+            PsiReference reference = psiElement.getReference();
             PsiElement resolved = reference.resolve();
-            this.annotateCannotResolve(expressionVariableName, resolved);
+            this.annotateCannotResolve(psiElement, resolved);
         }
 
         public void annotateCannotResolve(
-                @NotNull KlassExpressionVariableName expressionVariableName,
+                @NotNull PsiElement expressionVariableName,
                 PsiElement resolved)
         {
             if (resolved == null)
@@ -257,7 +268,7 @@ public class KlassAnnotator implements Annotator
         @Override
         public void visitParameterDeclaration(@NotNull KlassParameterDeclaration parameterDeclaration)
         {
-            if (parameterDeclaration.getMultiplicity() == null)
+            if (parameterDeclaration.getPrimitiveTypeDeclaration().getMultiplicity() == null)
             {
                 String message = String.format(
                         "Expected a type declaration on parameter: '%s'.",
@@ -313,6 +324,138 @@ public class KlassAnnotator implements Annotator
             }
         }
 
+        @Override
+        public void visitServiceProjectionClause(@NotNull KlassServiceProjectionClause projectionClause)
+        {
+            List<KlassParameterName> parameterNameList = projectionClause.getParameterNameList();
+            KlassProjectionName projectionName = projectionClause.getProjectionName();
+            KlassProjectionReference projectionReference = (KlassProjectionReference) projectionName.getReference();
+            KlassProjection projection = (KlassProjection) projectionReference.resolve();
+            if (projection != null)
+            {
+                MutableList<KlassParameterDeclaration> projectionParameterDeclarations =
+                        ListAdapter.adapt(projection.getParameterDeclarationList());
+
+                MutableList<KlassParameterDeclaration> serviceParameterDeclarations =
+                        ListAdapter.adapt(parameterNameList)
+                                .collect(KlassParameterName::getReference)
+                                .collect(KlassParameterReference.class::cast)
+                                .collect(KlassParameterReference::resolve)
+                                .collect(KlassParameterDeclaration.class::cast);
+
+                if (serviceParameterDeclarations.contains(null))
+                {
+                    return;
+                }
+
+                if (parameterNameList.size() == projectionParameterDeclarations.size())
+                {
+                    this.typeCheckPassedParameters(
+                            parameterNameList,
+                            projectionParameterDeclarations,
+                            serviceParameterDeclarations);
+                }
+                else
+                {
+                    String message = String.format(
+                            "Projection '%s' cannot be applied to given types;%nrequired: '%s'%nfound:'%s'%nreason: actual and formal argument lists differ in length.",
+                            projectionName.getText(),
+                            projectionParameterDeclarations
+                                    .collect(KlassParameterDeclaration::getPrimitiveTypeDeclaration)
+                                    .collect(PsiElement::getText)
+                                    .makeString(),
+                            serviceParameterDeclarations
+                                    .collect(KlassParameterDeclaration::getPrimitiveTypeDeclaration)
+                                    .collect(PsiElement::getText)
+                                    .makeString());
+                    this.annotationHolder.createErrorAnnotation(
+                            projectionClause.getProjectionName(),
+                            message);
+                }
+            }
+        }
+
+        @Override
+        public void visitProjectionParameterizedPropertyNode(@NotNull KlassProjectionParameterizedPropertyNode projectionParameterizedPropertyNode)
+        {
+            KlassParameterizedPropertyName parameterizedPropertyName =
+                    projectionParameterizedPropertyNode.getParameterizedPropertyName();
+            KlassParameterizedPropertyReference parameterizedPropertyReference =
+                    (KlassParameterizedPropertyReference) parameterizedPropertyName.getReference();
+            KlassParameterizedProperty parameterizedProperty =
+                    (KlassParameterizedProperty) parameterizedPropertyReference.resolve();
+
+            List<KlassParameterName> parameterNameList = projectionParameterizedPropertyNode.getParameterNameList();
+
+            KlassProjection projection =
+                    PsiTreeUtil.getParentOfType(projectionParameterizedPropertyNode, KlassProjection.class);
+
+            MutableList<KlassParameterDeclaration> propertyParameterDeclarations =
+                    ListAdapter.adapt(parameterizedProperty.getParameterDeclarationList());
+
+            MutableList<KlassParameterDeclaration> projectionParameterDeclarations =
+                    ListAdapter.adapt(parameterNameList)
+                            .collect(KlassParameterName::getReference)
+                            .collect(KlassParameterReference.class::cast)
+                            .collect(KlassParameterReference::resolve)
+                            .collect(KlassParameterDeclaration.class::cast);
+
+            if (parameterNameList.size() == propertyParameterDeclarations.size())
+            {
+                this.typeCheckPassedParameters(
+                        parameterNameList,
+                        propertyParameterDeclarations,
+                        projectionParameterDeclarations);
+            }
+            else
+            {
+                String message = String.format(
+                        "Projection '%s' cannot be applied to given types;%nrequired: '%s'%nfound:'%s'%nreason: actual and formal argument lists differ in length.",
+                        parameterizedPropertyName.getText(),
+                        propertyParameterDeclarations
+                                .collect(KlassParameterDeclaration::getPrimitiveTypeDeclaration)
+                                .collect(PsiElement::getText)
+                                .makeString(),
+                        projectionParameterDeclarations
+                                .collect(KlassParameterDeclaration::getPrimitiveTypeDeclaration)
+                                .collect(PsiElement::getText)
+                                .makeString());
+                this.annotationHolder.createErrorAnnotation(
+                        parameterizedPropertyName,
+                        message);
+            }
+        }
+
+        public void typeCheckPassedParameters(
+                List<KlassParameterName> parameterNameList,
+                MutableList<KlassParameterDeclaration> propertyParameterDeclarations,
+                MutableList<KlassParameterDeclaration> projectionParameterDeclarations)
+        {
+            for (int i = 0; i < parameterNameList.size(); i++)
+            {
+                KlassParameterName parameterName = parameterNameList.get(i);
+                KlassParameterDeclaration serviceParameterDeclaration = projectionParameterDeclarations.get(i);
+                KlassParameterDeclaration projectionParameterDeclaration =
+                        propertyParameterDeclarations.get(i);
+
+                List<Type> serviceParameterTypes =
+                        this.getParameterDeclarationType(serviceParameterDeclaration);
+                List<Type> projectionParameterTypes =
+                        this.getParameterDeclarationType(projectionParameterDeclaration);
+
+                if (!Type.compatible(serviceParameterTypes, projectionParameterTypes))
+                {
+                    String message = String.format(
+                            "Incompatible types: '%s' cannot be converted to '%s'.",
+                            serviceParameterTypes.get(0),
+                            projectionParameterTypes.get(0));
+                    this.annotationHolder.createErrorAnnotation(
+                            parameterName,
+                            message);
+                }
+            }
+        }
+
         private List<Type> getPossibleTypes(KlassExpressionValue expressionValue)
         {
             KlassExpressionLiteral expressionLiteral = expressionValue.getExpressionLiteral();
@@ -327,7 +470,7 @@ public class KlassAnnotator implements Annotator
                 List<KlassExpressionLiteral> expressionLiteralList =
                         expressionLiteralListNode.getExpressionLiteralList();
                 int size = expressionLiteralList.size();
-                // Test empty one
+                // TODO: Test empty literal list
                 return KlassAnnotator.getExpressionLiteralTypes(
                         expressionLiteralList.get(0),
                         Multiplicity.ZERO_TO_MANY);
@@ -350,7 +493,7 @@ public class KlassAnnotator implements Annotator
             if (expressionProperty != null)
             {
                 KlassPropertyName propertyName = expressionProperty.getPropertyName();
-                PsiReference reference = propertyName.getReference();
+                KlassMemberReference reference = (KlassMemberReference) propertyName.getReference();
                 PsiElement resolve = reference.resolve();
                 if (resolve instanceof KlassDataTypeProperty)
                 {
@@ -411,28 +554,46 @@ public class KlassAnnotator implements Annotator
             if (expressionVariableName != null)
             {
                 PsiReference reference = expressionVariableName.getReference();
-                KlassParameterDeclaration klassParameterDeclaration = (KlassParameterDeclaration) reference.resolve();
-                KlassMultiplicity multiplicity = klassParameterDeclaration.getMultiplicity();
-                KlassDataType dataType = klassParameterDeclaration.getDataType();
-                if (dataType != null)
+                KlassParameterDeclaration parameterDeclaration = (KlassParameterDeclaration) reference.resolve();
+                List<Type> result = this.getParameterDeclarationType(parameterDeclaration);
+                if (result != null)
                 {
-                    return Collections.singletonList(new Type(
-                            PrimitiveTypeType.DATA_TYPE,
-                            dataType.getText(),
-                            this.getMultiplicity(multiplicity)));
-                }
-                KlassEnumerationType enumerationType = klassParameterDeclaration.getEnumerationType();
-                if (enumerationType != null)
-                {
-                    return Collections.singletonList(new Type(
-                            PrimitiveTypeType.ENUMERATION,
-                            enumerationType.getText(),
-                            this.getMultiplicity(multiplicity)));
+                    return result;
                 }
                 throw new UnsupportedOperationException(expressionVariableName.getText());
             }
 
             throw new AssertionError(expressionValue.getText());
+        }
+
+        @Override
+        public void visitParameterName(@NotNull KlassParameterName parameterName)
+        {
+            this.annotateCannotResolve(parameterName);
+        }
+
+        @Nullable
+        private List<Type> getParameterDeclarationType(KlassParameterDeclaration parameterDeclaration)
+        {
+            KlassPrimitiveTypeDeclaration primitiveTypeDeclaration = parameterDeclaration.getPrimitiveTypeDeclaration();
+            KlassMultiplicity multiplicity = primitiveTypeDeclaration.getMultiplicity();
+            KlassDataType dataType = primitiveTypeDeclaration.getDataType();
+            if (dataType != null)
+            {
+                return Collections.singletonList(new Type(
+                        PrimitiveTypeType.DATA_TYPE,
+                        dataType.getText(),
+                        this.getMultiplicity(multiplicity)));
+            }
+            KlassEnumerationType enumerationType = primitiveTypeDeclaration.getEnumerationType();
+            if (enumerationType != null)
+            {
+                return Collections.singletonList(new Type(
+                        PrimitiveTypeType.ENUMERATION,
+                        enumerationType.getText(),
+                        this.getMultiplicity(multiplicity)));
+            }
+            return null;
         }
 
         private Multiplicity getMultiplicity(KlassMultiplicity multiplicity)

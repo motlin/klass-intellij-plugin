@@ -15,7 +15,7 @@
 
   mixin("klass|association|enumeration|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|parameterDeclaration|enumerationLiteral") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
   mixin("projection")="com.klass.intellij.psi.impl.AbstractKlassProjectionNode"
-  mixin("projectionInnerNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
+  mixin("projectionAssociationEndNode|projectionParameterizedPropertyNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
   implements("klass|association|enumeration|projection|member|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|parameterDeclaration|enumerationLiteral") = "com.klass.intellij.psi.KlassNamedElement"
   implements("projection|projectionInnerNode")="com.klass.intellij.psi.KlassTypedElement"
 
@@ -88,7 +88,7 @@
 
   extends("klass|association|enumeration|projection|serviceGroup")=topLevelItem
   extends("dataTypeProperty|enumerationProperty|parameterizedProperty")=member
-  extends("projectionInnerNode|projectionLeafNode")=projectionNode
+  extends("projectionAssociationEndNode|projectionParameterizedPropertyNode|projectionLeafNode")=projectionNode
   extends("criteriaAnd|criteriaOr|criteriaOperator")=criteriaExpression
 }
 
@@ -107,8 +107,9 @@ enumeration ::= 'enumeration' nombre lBrace (enumerationLiteral COMMA)* rBrace {
 projection ::= 'projection' nombre ('(' parameterDeclaration (',' parameterDeclaration)* ')')? 'on' klassName lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
 serviceGroup ::= 'service' klassName lBrace urlGroup* rBrace {pin="{" methods=[getPresentation]}
 
-projectionNode ::= projectionInnerNode | projectionLeafNode
-projectionInnerNode ::= ((parameterizedPropertyName '(' parameterName (',' parameterName)* ')') | associationEndName) ':' '{' (projectionNode ',')* '}'
+projectionNode ::= projectionAssociationEndNode | projectionParameterizedPropertyNode | projectionLeafNode
+projectionAssociationEndNode ::= associationEndName ':' '{' (projectionNode ',')* '}'
+projectionParameterizedPropertyNode ::= parameterizedPropertyName '(' (parameterName (',' parameterName)*)? ')' ':' '{' (projectionNode ',')* '}'
 projectionLeafNode ::= propertyName ':'? header?
 header ::= STRING_LITERAL
 
@@ -172,7 +173,8 @@ nombre ::= nombreText | '`' nombreText '`'
 nombreText ::= IDENTIFIER | 'package' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | 'owned' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')? {methods=[setName getPresentation]}
 
-parameterDeclaration ::= nombre (':' (dataType | enumerationType) multiplicity)? {methods=[setName]}
+parameterDeclaration ::= nombre (':' primitiveTypeDeclaration)? {methods=[setName]}
+primitiveTypeDeclaration ::= (dataType | enumerationType) multiplicity
 dataType ::= ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD {methods=[getReference]}
 enumerationType ::= nombre {methods=[getReference]}
 enumerationPrettyName ::= STRING_LITERAL

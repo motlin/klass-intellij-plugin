@@ -17,6 +17,7 @@ public abstract class AbstractKlassInnerProjectionNode extends ASTWrapperPsiElem
     @Override
     public PsiElement getType()
     {
+        // TODO: Clean up this old unused stuff
         System.out.println("AbstractKlassInnerProjectionNode.getType");
         return null;
     }
