@@ -83,6 +83,11 @@ public class KlassExpressionVariableNameReference extends PsiReferenceBase<PsiEl
         List<LookupElement> variants = new ArrayList<>();
         KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
 
+        if (klassUrlGroup == null)
+        {
+            return new Object[]{};
+        }
+
         klassUrlGroup.getUrl()
                 .getUrlPartList()
                 .stream()
