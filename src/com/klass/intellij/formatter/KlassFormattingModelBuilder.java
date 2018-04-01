@@ -23,7 +23,8 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.COMMA,
             KlassTypes.RBRACKET,
             KlassTypes.RPAREN,
-            KlassTypes.MULTIPLICITY);
+            KlassTypes.MULTIPLICITY,
+            KlassTypes.COLON);
     public static final TokenSet NONE_AROUND = TokenSet.create(
             KlassTypes.URL_CONSTANT,
             KlassTypes.URL_PART,
@@ -118,7 +119,10 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
                         Alignment.createAlignment(),
                         KlassFormattingModelBuilder.createSpaceBuilder(settings),
                         settings,
-                        this.getChildIndent(element)),
+                        this.getChildIndent(element),
+                        null,
+                        null,
+                        null),
                 settings);
     }
 

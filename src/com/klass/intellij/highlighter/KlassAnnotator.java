@@ -242,8 +242,8 @@ public class KlassAnnotator implements Annotator
         @Override
         public void visitPropertyName(@NotNull KlassPropertyName propertyName)
         {
-            PsiReference reference = propertyName.getReference();
-            PsiElement resolved = reference.resolve();
+            KlassMemberReference memberReference = (KlassMemberReference) propertyName.getReference();
+            PsiElement resolved = memberReference.resolve();
             if (resolved == null)
             {
                 String message = String.format("Cannot resolve symbol '%s'", propertyName.getText());

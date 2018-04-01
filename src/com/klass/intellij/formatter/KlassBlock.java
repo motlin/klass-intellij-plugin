@@ -62,6 +62,9 @@ public class KlassBlock extends AbstractBlock
     private final CodeStyleSettings settings;
     private final CommonCodeStyleSettings commonSettings;
     private final Indent childIndent;
+    private final Alignment serviceColonAlignment;
+    private final Alignment parentProjectionColonAlignment;
+    private final Alignment projectionColonAlignment;
 
     protected KlassBlock(
             @NotNull ASTNode node,
@@ -69,13 +72,19 @@ public class KlassBlock extends AbstractBlock
             @Nullable Alignment alignment,
             SpacingBuilder spacingBuilder,
             CodeStyleSettings settings,
-            Indent childIndent)
+            Indent childIndent,
+            Alignment serviceColonAlignment,
+            Alignment parentProjectionColonAlignment,
+            Alignment projectionColonAlignment)
     {
         super(node, wrap, alignment);
         this.spacingBuilder = spacingBuilder;
         this.settings = settings;
         this.commonSettings = settings.getCommonSettings(KlassLanguage.INSTANCE);
         this.childIndent = childIndent;
+        this.serviceColonAlignment = serviceColonAlignment;
+        this.parentProjectionColonAlignment = parentProjectionColonAlignment;
+        this.projectionColonAlignment = projectionColonAlignment;
     }
 
     @Override
@@ -95,12 +104,36 @@ public class KlassBlock extends AbstractBlock
                                 this.getAlignment(elementType),
                                 this.spacingBuilder,
                                 this.settings,
-                                this.getIndentForChildren(child));
+                                this.getIndentForChildren(child),
+                                this.getChildColonAlignment(elementType),
+                                this.getProjectionColonAlignment(elementType),
+                                this.parentProjectionColonAlignment);
                 blocks.add(block);
             }
             child = child.getTreeNext();
         }
         return blocks;
+    }
+
+    private Alignment getChildColonAlignment(IElementType elementType)
+    {
+        if (elementType == KlassTypes.SERVICE_GROUP)
+        {
+            return Alignment.createAlignment(true);
+        }
+        return this.serviceColonAlignment;
+    }
+
+    private Alignment getProjectionColonAlignment(IElementType elementType)
+    {
+        if (elementType == KlassTypes.PROJECTION
+                || elementType == KlassTypes.PROJECTION_ASSOCIATION_END_NODE
+                || elementType == KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE
+                || elementType == KlassTypes.PROJECTION_LEAF_NODE)
+        {
+            return Alignment.createAlignment(true);
+        }
+        return null;
     }
 
     private Alignment getAlignment(IElementType elementType)
@@ -111,11 +144,24 @@ public class KlassBlock extends AbstractBlock
         }
 
         IElementType parentElementType = this.myNode.getElementType();
-        if ((parentElementType == KlassTypes.DATA_TYPE_PROPERTY
+        if (parentElementType == KlassTypes.DATA_TYPE_PROPERTY
                 || parentElementType == KlassTypes.ENUMERATION_PROPERTY)
-                && this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS)
         {
-            return COLON_ALIGNMENT;
+            return this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS ? COLON_ALIGNMENT : null;
+        }
+
+        IElementType grandparentElementType = this.myNode.getTreeParent().getElementType();
+        if (grandparentElementType == KlassTypes.SERVICE)
+        {
+            return this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS ? this.serviceColonAlignment : null;
+        }
+
+        if (parentElementType == KlassTypes.PROJECTION
+                || parentElementType == KlassTypes.PROJECTION_ASSOCIATION_END_NODE
+                || parentElementType == KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE
+                || parentElementType == KlassTypes.PROJECTION_LEAF_NODE)
+        {
+            return this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS ? this.projectionColonAlignment : null;
         }
 
         return null;
