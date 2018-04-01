@@ -54,21 +54,39 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
 
             if (klassName == null)
             {
-                KlassKlass klassKlass =
+                KlassKlass klass =
                         PsiTreeUtil.getParentOfType(this.myElement, KlassKlass.class);
 
-                if (klassKlass != null)
+                if (klass != null)
                 {
-                    return this.getKlassResolveResults(klassKlass);
+                    return this.getKlassResolveResults(klass);
                 }
 
-                KlassServiceGroup klassServiceGroup =
+                KlassServiceGroup serviceGroup =
                         PsiTreeUtil.getParentOfType(this.myElement, KlassServiceGroup.class);
-                if (klassServiceGroup != null)
+                if (serviceGroup != null)
                 {
-                    PsiReference reference = klassServiceGroup.getKlassName().getReference();
+                    PsiReference reference = serviceGroup.getKlassName().getReference();
                     KlassKlass serviceKlass = (KlassKlass) reference.resolve();
                     return this.getKlassResolveResults(serviceKlass);
+                }
+
+                KlassAssociation association =
+                        PsiTreeUtil.getParentOfType(this.myElement, KlassAssociation.class);
+
+                if (association != null)
+                {
+                    KlassAssociationEnd associationEnd = association.getAssociationEndList().get(0);
+                    KlassKlassReference klassReference =
+                            (KlassKlassReference) associationEnd.getKlassName().getReference();
+                    KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
+
+                    ResolveResult[] resolveResults = klassKlass.getMemberList()
+                            .stream()
+                            .filter(klassMember -> klassMember.getName().equals(this.propertyName))
+                            .map(PsiElementResolveResult::new)
+                            .toArray(ResolveResult[]::new);
+                    return this.getTemporalResolveResults(klass, resolveResults);
                 }
             }
             else
@@ -189,7 +207,7 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
             }
             else
             {
-                throw new AssertionError();
+                throw new AssertionError(projectionNodeParent.getClass());
             }
         }
 
@@ -203,16 +221,22 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
                 .filter(klassMember -> klassMember.getName().equals(this.propertyName))
                 .map(PsiElementResolveResult::new)
                 .toArray(ResolveResult[]::new);
-        if (resolveResults.length == 0)
+        return this.getTemporalResolveResults(klass, resolveResults);
+    }
+
+    public ResolveResult[] getTemporalResolveResults(KlassKlass klass, ResolveResult[] resolveResults)
+    {
+        if (resolveResults.length != 0)
         {
-            if (VALID_PROPERTIES.contains(this.propertyName))
-            {
-                return this.getTemporalReference(klass, "validTemporal");
-            }
-            if (SYSTEM_PROPERTIES.contains(this.propertyName))
-            {
-                return this.getTemporalReference(klass, "systemTemporal");
-            }
+            return resolveResults;
+        }
+        if (VALID_PROPERTIES.contains(this.propertyName))
+        {
+            return this.getTemporalReference(klass, "validTemporal");
+        }
+        if (SYSTEM_PROPERTIES.contains(this.propertyName))
+        {
+            return this.getTemporalReference(klass, "systemTemporal");
         }
         return resolveResults;
     }
