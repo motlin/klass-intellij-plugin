@@ -5,7 +5,71 @@ import com.intellij.psi.tree.TokenSet;
 import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static com.klass.intellij.psi.KlassTokenType.C_STYLE_COMMENT;
 import static com.klass.intellij.psi.KlassTokenType.END_OF_LINE_COMMENT;
-import static com.klass.intellij.psi.KlassTypes.*;
+import static com.klass.intellij.psi.KlassTypes.ANDAND;
+import static com.klass.intellij.psi.KlassTypes.ASCENDING_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.ASSOCIATION;
+import static com.klass.intellij.psi.KlassTypes.ASSOCIATION_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.AUDITED_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.AUTHORIZE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.BITEMPORAL_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.BOOLEAN_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.CLASS_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.COLON;
+import static com.klass.intellij.psi.KlassTypes.CONFLICT_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.CONTAINS_OPERATOR;
+import static com.klass.intellij.psi.KlassTypes.CREATE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.CRITERIA_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.DELETE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.DESCENDING_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.DOUBLE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.ENDS_WITH_OPERATOR;
+import static com.klass.intellij.psi.KlassTypes.ENUMERATION_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.EQEQ;
+import static com.klass.intellij.psi.KlassTypes.FALSE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.FLOAT_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.GE;
+import static com.klass.intellij.psi.KlassTypes.GT;
+import static com.klass.intellij.psi.KlassTypes.ID_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.INSTANT_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.INTEGER_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.IN_OPERATOR;
+import static com.klass.intellij.psi.KlassTypes.KEY_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.KLASS;
+import static com.klass.intellij.psi.KlassTypes.LE;
+import static com.klass.intellij.psi.KlassTypes.LOCAL_DATE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.LONG_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.LT;
+import static com.klass.intellij.psi.KlassTypes.MANY_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.MULTIPLICITY_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.NE;
+import static com.klass.intellij.psi.KlassTypes.NULL_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.ONE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.ON_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.OPTIMISTICALLY_LOCKED_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.ORDER_BY_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.OROR;
+import static com.klass.intellij.psi.KlassTypes.OWNED_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.PACKAGE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.PERCENT;
+import static com.klass.intellij.psi.KlassTypes.PRIVATE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.PROJECTION_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.QUESTION_MARK;
+import static com.klass.intellij.psi.KlassTypes.READ_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.RELATIONSHIP_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.SERVICE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.STARTS_WITH_OPERATOR;
+import static com.klass.intellij.psi.KlassTypes.STRING_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.SYSTEM_TEMPORAL_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.TEMPORAL_INSTANT_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.TEMPORAL_RANGE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.THIS_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.TRUE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.UPDATE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.USER_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.VALIDATE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.VALID_TEMPORAL_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.VERSIONED_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.WRITE_KEYWORD;
 
 public interface TokenSets
 {
@@ -74,7 +138,9 @@ public interface TokenSets
             DOUBLE_KEYWORD,
             STRING_KEYWORD,
             INSTANT_KEYWORD,
-            LOCAL_DATE_KEYWORD);
+            LOCAL_DATE_KEYWORD,
+            TEMPORAL_INSTANT_KEYWORD,
+            TEMPORAL_RANGE_KEYWORD);
 
     //    TokenSet EXPRESSION_BIT_SET = TokenSet.create(
     //            REFERENCE_EXPRESSION, LITERAL_EXPRESSION, THIS_EXPRESSION, SUPER_EXPRESSION, PARENTH_EXPRESSION, METHOD_CALL_EXPRESSION,

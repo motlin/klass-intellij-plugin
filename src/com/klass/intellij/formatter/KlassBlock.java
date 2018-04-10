@@ -1,6 +1,16 @@
 package com.klass.intellij.formatter;
 
-import com.intellij.formatting.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.intellij.formatting.Alignment;
+import com.intellij.formatting.Block;
+import com.intellij.formatting.ChildAttributes;
+import com.intellij.formatting.Indent;
+import com.intellij.formatting.Spacing;
+import com.intellij.formatting.SpacingBuilder;
+import com.intellij.formatting.Wrap;
+import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -13,9 +23,6 @@ import com.klass.intellij.psi.KlassTokenType;
 import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class KlassBlock extends AbstractBlock
 {
@@ -150,7 +157,13 @@ public class KlassBlock extends AbstractBlock
             return this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS ? COLON_ALIGNMENT : null;
         }
 
-        IElementType grandparentElementType = this.myNode.getTreeParent().getElementType();
+        ASTNode treeParent = this.myNode.getTreeParent();
+        if (treeParent == null)
+        {
+            return null;
+        }
+
+        IElementType grandparentElementType = treeParent.getElementType();
         if (grandparentElementType == KlassTypes.SERVICE)
         {
             return this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS ? this.serviceColonAlignment : null;

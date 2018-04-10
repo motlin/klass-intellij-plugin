@@ -115,6 +115,8 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "String" { return KlassTypes.STRING_KEYWORD; }
   "Instant" { return KlassTypes.INSTANT_KEYWORD; }
   "LocalDate" { return KlassTypes.LOCAL_DATE_KEYWORD; }
+  "TemporalInstant" { return KlassTypes.TEMPORAL_INSTANT_KEYWORD; }
+  "TemporalRange" { return KlassTypes.TEMPORAL_RANGE_KEYWORD; }
 
   "GET" { return KlassTypes.GET_VERB; }
   "POST" { return KlassTypes.POST_VERB; }

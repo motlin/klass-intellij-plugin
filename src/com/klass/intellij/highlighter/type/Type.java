@@ -1,32 +1,32 @@
 package com.klass.intellij.highlighter.type;
 
+import java.util.List;
+import java.util.Objects;
+
 import org.eclipse.collections.api.block.HashingStrategy;
 import org.eclipse.collections.impl.block.factory.HashingStrategies;
 import org.eclipse.collections.impl.list.mutable.ListAdapter;
 import org.eclipse.collections.impl.set.strategy.mutable.UnifiedSetWithHashingStrategy;
 
-import java.util.List;
-import java.util.Objects;
-
 public class Type
 {
-    private final PrimitiveTypeType primitiveTypeType;
-    private final String typeName;
+    private final DataTypeType dataTypeType;
+    private final String       typeName;
     private final Multiplicity multiplicity;
 
     public Type(
-            PrimitiveTypeType primitiveTypeType,
+            DataTypeType dataTypeType,
             String typeName,
             Multiplicity multiplicity)
     {
-        this.primitiveTypeType = Objects.requireNonNull(primitiveTypeType);
+        this.dataTypeType = Objects.requireNonNull(dataTypeType);
         this.typeName = Objects.requireNonNull(typeName);
         this.multiplicity = Objects.requireNonNull(multiplicity);
     }
 
-    public PrimitiveTypeType getPrimitiveTypeType()
+    public DataTypeType getDataTypeType()
     {
-        return this.primitiveTypeType;
+        return this.dataTypeType;
     }
 
     public String getTypeName()
@@ -53,7 +53,7 @@ public class Type
 
         Type type = (Type) o;
 
-        if (this.primitiveTypeType != type.primitiveTypeType)
+        if (this.dataTypeType != type.dataTypeType)
         {
             return false;
         }
@@ -67,7 +67,7 @@ public class Type
     @Override
     public int hashCode()
     {
-        int result = this.primitiveTypeType.hashCode();
+        int result = this.dataTypeType.hashCode();
         result = 31 * result + this.typeName.hashCode();
         result = 31 * result + this.multiplicity.hashCode();
         return result;
@@ -82,7 +82,7 @@ public class Type
     public static boolean compatible(List<Type> sourceTypes, List<Type> targetTypes)
     {
         HashingStrategy<Type> hashingStrategy = HashingStrategies.fromFunctions(
-                Type::getPrimitiveTypeType,
+                Type::getDataTypeType,
                 Type::getTypeName);
         UnifiedSetWithHashingStrategy<Type> set = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
         set.addAll(sourceTypes);

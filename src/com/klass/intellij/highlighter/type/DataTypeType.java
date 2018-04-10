@@ -1,7 +1,7 @@
 package com.klass.intellij.highlighter.type;
 
-public enum PrimitiveTypeType
+public enum DataTypeType
 {
-    DATA_TYPE,
+    PRIMITIVE_TYPE,
     ENUMERATION,
 }

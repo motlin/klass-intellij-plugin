@@ -1,5 +1,12 @@
 package com.klass.intellij.highlighter;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
@@ -7,10 +14,53 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.klass.intellij.highlighter.type.DataTypeType;
 import com.klass.intellij.highlighter.type.Multiplicity;
-import com.klass.intellij.highlighter.type.PrimitiveTypeType;
 import com.klass.intellij.highlighter.type.Type;
-import com.klass.intellij.psi.*;
+import com.klass.intellij.psi.KlassAssociation;
+import com.klass.intellij.psi.KlassAssociationEnd;
+import com.klass.intellij.psi.KlassAssociationEndName;
+import com.klass.intellij.psi.KlassBooleanLiteral;
+import com.klass.intellij.psi.KlassCriteriaOperator;
+import com.klass.intellij.psi.KlassDataType;
+import com.klass.intellij.psi.KlassDataTypeProperty;
+import com.klass.intellij.psi.KlassDummyMultiplicity;
+import com.klass.intellij.psi.KlassEnumeration;
+import com.klass.intellij.psi.KlassEnumerationLiteral;
+import com.klass.intellij.psi.KlassEnumerationProperty;
+import com.klass.intellij.psi.KlassEnumerationType;
+import com.klass.intellij.psi.KlassExpressionLiteral;
+import com.klass.intellij.psi.KlassExpressionLiteralList;
+import com.klass.intellij.psi.KlassExpressionNativeValue;
+import com.klass.intellij.psi.KlassExpressionProperty;
+import com.klass.intellij.psi.KlassExpressionValue;
+import com.klass.intellij.psi.KlassExpressionVariableName;
+import com.klass.intellij.psi.KlassFloatLiteralNode;
+import com.klass.intellij.psi.KlassIntegerLiteralNode;
+import com.klass.intellij.psi.KlassKeywordOnClass;
+import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassKlassName;
+import com.klass.intellij.psi.KlassLowerBound;
+import com.klass.intellij.psi.KlassMember;
+import com.klass.intellij.psi.KlassMultiplicity;
+import com.klass.intellij.psi.KlassNombreText;
+import com.klass.intellij.psi.KlassOperator;
+import com.klass.intellij.psi.KlassOptionalMarker;
+import com.klass.intellij.psi.KlassParameterDeclaration;
+import com.klass.intellij.psi.KlassParameterName;
+import com.klass.intellij.psi.KlassParameterizedProperty;
+import com.klass.intellij.psi.KlassParameterizedPropertyName;
+import com.klass.intellij.psi.KlassPrimitiveTypeDeclaration;
+import com.klass.intellij.psi.KlassProjection;
+import com.klass.intellij.psi.KlassProjectionName;
+import com.klass.intellij.psi.KlassProjectionParameterizedPropertyNode;
+import com.klass.intellij.psi.KlassPropertyName;
+import com.klass.intellij.psi.KlassServiceProjectionClause;
+import com.klass.intellij.psi.KlassStringLiteralNode;
+import com.klass.intellij.psi.KlassUpperBound;
+import com.klass.intellij.psi.KlassUrlConstant;
+import com.klass.intellij.psi.KlassVerb;
+import com.klass.intellij.psi.KlassVisitor;
 import com.klass.intellij.reference.KlassMemberReference;
 import com.klass.intellij.reference.KlassParameterReference;
 import com.klass.intellij.reference.KlassParameterizedPropertyReference;
@@ -21,13 +71,6 @@ import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.list.mutable.ListAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class KlassAnnotator implements Annotator
 {
@@ -482,7 +525,7 @@ public class KlassAnnotator implements Annotator
                 if (expressionNativeValue.getText().equals("user"))
                 {
                     return Collections.singletonList(new Type(
-                            PrimitiveTypeType.DATA_TYPE,
+                            DataTypeType.PRIMITIVE_TYPE,
                             "String",
                             Multiplicity.ONE_TO_ONE));
                 }
@@ -504,12 +547,12 @@ public class KlassAnnotator implements Annotator
                             optionalMarker == null ? Multiplicity.ONE_TO_ONE : Multiplicity.ZERO_TO_ONE;
                     String dataTypeText = dataType.getText();
                     MutableList<Type> result = Lists.mutable.with(new Type(
-                            PrimitiveTypeType.DATA_TYPE,
+                            DataTypeType.PRIMITIVE_TYPE,
                             dataTypeText,
                             multiplicity));
                     if (dataTypeText.equals("ID"))
                     {
-                        result.add(new Type(PrimitiveTypeType.DATA_TYPE, "Long", multiplicity));
+                        result.add(new Type(DataTypeType.PRIMITIVE_TYPE, "Long", multiplicity));
                     }
                     return result;
                 }
@@ -520,7 +563,7 @@ public class KlassAnnotator implements Annotator
                     KlassEnumerationType enumerationType = enumerationProperty.getEnumerationType();
                     KlassOptionalMarker optionalMarker = enumerationProperty.getOptionalMarker();
                     return Collections.singletonList(new Type(
-                            PrimitiveTypeType.DATA_TYPE,
+                            DataTypeType.PRIMITIVE_TYPE,
                             enumerationType.getText(),
                             optionalMarker == null ? Multiplicity.ONE_TO_ONE : Multiplicity.ZERO_TO_ONE));
                 }
@@ -530,7 +573,7 @@ public class KlassAnnotator implements Annotator
                     KlassEnumeration enumeration = (KlassEnumeration) enumerationLiteral.getParent();
 
                     return Collections.singletonList(new Type(
-                            PrimitiveTypeType.DATA_TYPE,
+                            DataTypeType.PRIMITIVE_TYPE,
                             enumeration.getName(),
                             Multiplicity.ONE_TO_ONE));
                 }
@@ -542,10 +585,20 @@ public class KlassAnnotator implements Annotator
                     {
                         throw new AssertionError(keywordText);
                     }
-                    return Collections.singletonList(new Type(
-                            PrimitiveTypeType.DATA_TYPE,
+                    Type instantType = new Type(
+                            DataTypeType.PRIMITIVE_TYPE,
                             "Instant",
-                            Multiplicity.ONE_TO_ONE));
+                            Multiplicity.ONE_TO_ONE);
+                    // TODO: Date literals in the language, infinity and now global variables
+                    Type temporalInstantType = new Type(
+                            DataTypeType.PRIMITIVE_TYPE,
+                            "TemporalInstant",
+                            Multiplicity.ONE_TO_ONE);
+                    Type temporalRangeType = new Type(
+                            DataTypeType.PRIMITIVE_TYPE,
+                            "TemporalRange",
+                            Multiplicity.ONE_TO_ONE);
+                    return Lists.immutable.with(instantType, temporalInstantType, temporalRangeType).castToList();
                 }
                 throw new AssertionError(resolve.getClass());
             }
@@ -581,7 +634,7 @@ public class KlassAnnotator implements Annotator
             if (dataType != null)
             {
                 return Collections.singletonList(new Type(
-                        PrimitiveTypeType.DATA_TYPE,
+                        DataTypeType.PRIMITIVE_TYPE,
                         dataType.getText(),
                         this.getMultiplicity(multiplicity)));
             }
@@ -589,7 +642,7 @@ public class KlassAnnotator implements Annotator
             if (enumerationType != null)
             {
                 return Collections.singletonList(new Type(
-                        PrimitiveTypeType.ENUMERATION,
+                        DataTypeType.ENUMERATION,
                         enumerationType.getText(),
                         this.getMultiplicity(multiplicity)));
             }
@@ -632,27 +685,27 @@ public class KlassAnnotator implements Annotator
         KlassBooleanLiteral booleanLiteral = expressionLiteral.getBooleanLiteral();
         if (booleanLiteral != null)
         {
-            return Collections.singletonList(new Type(PrimitiveTypeType.DATA_TYPE, "Boolean", multiplicity));
+            return Collections.singletonList(new Type(DataTypeType.PRIMITIVE_TYPE, "Boolean", multiplicity));
         }
 
         KlassIntegerLiteralNode integerLiteralNode = expressionLiteral.getIntegerLiteralNode();
         if (integerLiteralNode != null)
         {
             return Arrays.asList(
-                    new Type(PrimitiveTypeType.DATA_TYPE, "Integer", multiplicity),
-                    new Type(PrimitiveTypeType.DATA_TYPE, "Long", multiplicity));
+                    new Type(DataTypeType.PRIMITIVE_TYPE, "Integer", multiplicity),
+                    new Type(DataTypeType.PRIMITIVE_TYPE, "Long", multiplicity));
         }
         KlassFloatLiteralNode floatLiteralNode = expressionLiteral.getFloatLiteralNode();
         if (floatLiteralNode != null)
         {
             return Arrays.asList(
-                    new Type(PrimitiveTypeType.DATA_TYPE, "Float", multiplicity),
-                    new Type(PrimitiveTypeType.DATA_TYPE, "Double", multiplicity));
+                    new Type(DataTypeType.PRIMITIVE_TYPE, "Float", multiplicity),
+                    new Type(DataTypeType.PRIMITIVE_TYPE, "Double", multiplicity));
         }
         KlassStringLiteralNode stringLiteralNode = expressionLiteral.getStringLiteralNode();
         if (stringLiteralNode != null)
         {
-            return Collections.singletonList(new Type(PrimitiveTypeType.DATA_TYPE, "String", multiplicity));
+            return Collections.singletonList(new Type(DataTypeType.PRIMITIVE_TYPE, "String", multiplicity));
         }
         throw new AssertionError(expressionLiteral.getText());
     }
