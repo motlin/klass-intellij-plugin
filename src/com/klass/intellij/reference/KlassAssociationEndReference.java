@@ -1,18 +1,27 @@
 package com.klass.intellij.reference;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementResolveResult;
+import com.intellij.psi.PsiPolyVariantReference;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.ResolveResult;
 import com.klass.intellij.KlassUtil;
-import com.klass.intellij.psi.*;
+import com.klass.intellij.psi.KlassAssociation;
+import com.klass.intellij.psi.KlassAssociationEnd;
+import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassKlassName;
+import com.klass.intellij.psi.KlassTypedElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class KlassAssociationEndReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
 {
@@ -33,7 +42,11 @@ public class KlassAssociationEndReference extends PsiReferenceBase<PsiElement> i
         PsiElement type = klassTypedElement.getType();
         PsiReference reference = type.getReference();
         KlassKlass klassKlass = (KlassKlass) reference.resolve();
-        String typeName = klassKlass.getName();
+
+        if (klassKlass == null)
+        {
+            return new ResolveResult[]{};
+        }
 
         List<KlassAssociation> associations = KlassUtil.findAssociations(klassKlass.getProject());
         for (KlassAssociation association : associations)
@@ -50,9 +63,6 @@ public class KlassAssociationEndReference extends PsiReferenceBase<PsiElement> i
 
             KlassKlass sourceKlass = (KlassKlass) sourceTypeName.getReference().resolve();
             KlassKlass targetKlass = (KlassKlass) targetTypeName.getReference().resolve();
-
-            String sourceType = sourceKlass.getName();
-            String targetType = targetKlass.getName();
 
             if (sourceKlass == klassKlass && targetName.equals(this.associationEndName))
             {

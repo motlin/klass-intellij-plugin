@@ -105,6 +105,11 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
                             (KlassKlassReference) associationEnd.getKlassName().getReference();
                     KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
 
+                    if (klassKlass == null)
+                    {
+                        return new ResolveResult[]{};
+                    }
+
                     ResolveResult[] resolveResults = klassKlass.getMemberList()
                             .stream()
                             .filter(klassMember -> klassMember.getName().equals(this.propertyName))

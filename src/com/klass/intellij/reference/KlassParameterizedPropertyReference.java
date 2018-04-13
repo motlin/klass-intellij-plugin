@@ -1,20 +1,25 @@
 package com.klass.intellij.reference;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementResolveResult;
+import com.intellij.psi.PsiPolyVariantReference;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.ResolveResult;
 import com.klass.intellij.KlassUtil;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassParameterizedProperty;
 import com.klass.intellij.psi.KlassTypedElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class KlassParameterizedPropertyReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
 {
@@ -35,6 +40,11 @@ public class KlassParameterizedPropertyReference extends PsiReferenceBase<PsiEle
         PsiElement type = klassTypedElement.getType();
         PsiReference reference = type.getReference();
         KlassKlass klassKlass = (KlassKlass) reference.resolve();
+
+        if (klassKlass == null)
+        {
+            return new ResolveResult[]{};
+        }
 
         ResolveResult[] resolveResults = klassKlass.getMemberList()
                 .stream()

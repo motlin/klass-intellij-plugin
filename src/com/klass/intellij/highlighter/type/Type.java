@@ -24,6 +24,22 @@ public class Type
         this.multiplicity = Objects.requireNonNull(multiplicity);
     }
 
+    public static boolean compatible(List<Type> sourceTypes, List<Type> targetTypes)
+    {
+        if (sourceTypes.isEmpty() || targetTypes.isEmpty())
+        {
+            // No point displaying an incompatible type error when we're already going to have an unresolved type error
+            return true;
+        }
+
+        HashingStrategy<Type> hashingStrategy = HashingStrategies.fromFunctions(
+                Type::getDataTypeType,
+                Type::getTypeName);
+        UnifiedSetWithHashingStrategy<Type> set = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
+        set.addAll(sourceTypes);
+        return ListAdapter.adapt(targetTypes).anySatisfy(set::contains);
+    }
+
     public DataTypeType getDataTypeType()
     {
         return this.dataTypeType;
@@ -37,6 +53,15 @@ public class Type
     public Multiplicity getMultiplicity()
     {
         return this.multiplicity;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = this.dataTypeType.hashCode();
+        result = 31 * result + this.typeName.hashCode();
+        result = 31 * result + this.multiplicity.hashCode();
+        return result;
     }
 
     @Override
@@ -65,27 +90,8 @@ public class Type
     }
 
     @Override
-    public int hashCode()
-    {
-        int result = this.dataTypeType.hashCode();
-        result = 31 * result + this.typeName.hashCode();
-        result = 31 * result + this.multiplicity.hashCode();
-        return result;
-    }
-
-    @Override
     public String toString()
     {
         return String.format("%s[%s]", this.typeName, this.multiplicity.getPrettyName());
-    }
-
-    public static boolean compatible(List<Type> sourceTypes, List<Type> targetTypes)
-    {
-        HashingStrategy<Type> hashingStrategy = HashingStrategies.fromFunctions(
-                Type::getDataTypeType,
-                Type::getTypeName);
-        UnifiedSetWithHashingStrategy<Type> set = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
-        set.addAll(sourceTypes);
-        return ListAdapter.adapt(targetTypes).anySatisfy(set::contains);
     }
 }

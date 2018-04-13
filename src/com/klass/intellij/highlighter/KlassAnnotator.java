@@ -177,7 +177,8 @@ public class KlassAnnotator implements Annotator
                         message);
             }
 
-            if (ListAdapter.adapt(possibleSourceTypes).allSatisfy(type -> type.getMultiplicity().isToMany()))
+            if (!possibleSourceTypes.isEmpty()
+                    && ListAdapter.adapt(possibleSourceTypes).allSatisfy(type -> type.getMultiplicity().isToMany()))
             {
                 String message = String.format(
                         "Invalid multiplicity '%s'.",
@@ -188,8 +189,8 @@ public class KlassAnnotator implements Annotator
             }
             KlassOperator operator   = criteriaOperator.getOperator();
             boolean       expectMany = operator.getText().equals("in");
-            if (ListAdapter.adapt(possibleTargetTypes).allSatisfy(type -> type.getMultiplicity().isToMany())
-                    != expectMany)
+            boolean       actualMany = ListAdapter.adapt(possibleTargetTypes).allSatisfy(type -> type.getMultiplicity().isToMany());
+            if (!possibleTargetTypes.isEmpty() && actualMany != expectMany)
             {
                 String message = String.format(
                         "Invalid multiplicity '%s'.",
@@ -649,15 +650,18 @@ public class KlassAnnotator implements Annotator
             {
                 PsiReference              reference            = expressionVariableName.getReference();
                 KlassParameterDeclaration parameterDeclaration = (KlassParameterDeclaration) reference.resolve();
-                List<Type>                result               = this.getParameterDeclarationType(parameterDeclaration);
-                if (result != null)
+                if (parameterDeclaration != null)
                 {
-                    return result;
+                    List<Type> result = this.getParameterDeclarationType(parameterDeclaration);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                    throw new UnsupportedOperationException(expressionVariableName.getText());
                 }
-                throw new UnsupportedOperationException(expressionVariableName.getText());
             }
 
-            throw new AssertionError(expressionValue.getText());
+            return Lists.immutable.<Type>empty().castToList();
         }
 
         @Nullable
