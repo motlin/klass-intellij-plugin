@@ -92,6 +92,10 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
                 {
                     PsiReference reference    = serviceGroup.getKlassName().getReference();
                     KlassKlass   serviceKlass = (KlassKlass) reference.resolve();
+                    if (serviceKlass == null)
+                    {
+                        return new ResolveResult[]{};
+                    }
                     return this.getKlassResolveResults(serviceKlass);
                 }
 
