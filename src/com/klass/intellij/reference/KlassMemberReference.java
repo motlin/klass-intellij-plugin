@@ -9,6 +9,7 @@ import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
@@ -17,9 +18,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiPolyVariantReference;
+import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.text.CharArrayUtil;
@@ -27,6 +27,7 @@ import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassAssociationEndName;
 import com.klass.intellij.psi.KlassCriteriaType;
+import com.klass.intellij.psi.KlassElementFactory;
 import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassExpressionProperty;
 import com.klass.intellij.psi.KlassKlass;
@@ -46,7 +47,7 @@ import org.eclipse.collections.impl.factory.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class KlassMemberReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
+public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement>
 {
     public static final ImmutableList<String> VALID_PROPERTIES  =
             Lists.immutable.with("valid", "validFrom", "validTo");
@@ -150,6 +151,10 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
             {
                 PsiReference reference    = klassServiceGroup.getKlassName().getReference();
                 KlassKlass   serviceKlass = (KlassKlass) reference.resolve();
+                if (serviceKlass == null)
+                {
+                    return new ResolveResult[]{};
+                }
                 return this.getKlassResolveResults(serviceKlass);
             }
 
@@ -449,6 +454,22 @@ public class KlassMemberReference extends PsiReferenceBase<PsiElement> implement
                                 || keywordOnClass.getText().equals("bitemporal"))
                 .map(PsiElementResolveResult::new)
                 .toArray(ResolveResult[]::new);
+    }
+
+    @Override
+    public PsiElement handleElementRename(String newElementName)
+    {
+        ASTNode node = this.myElement.getNode();
+        if (node != null)
+        {
+            KlassPropertyName propertyName = KlassElementFactory.createPropertyName(
+                    this.myElement.getProject(),
+                    newElementName);
+
+            ASTNode newNode = propertyName.getNode();
+            node.getTreeParent().replaceChild(node, newNode);
+        }
+        return this.myElement;
     }
 
     // Based heavily on the insert handler for xml attributes, where it inserts =""

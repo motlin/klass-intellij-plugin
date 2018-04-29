@@ -1,22 +1,28 @@
 package com.klass.intellij.reference;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.klass.intellij.KlassUtil;
-import com.klass.intellij.psi.KlassEnumeration;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class KlassEnumerationReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
+import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.icons.AllIcons;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementResolveResult;
+import com.intellij.psi.PsiPolyVariantReferenceBase;
+import com.intellij.psi.ResolveResult;
+import com.klass.intellij.KlassUtil;
+import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassEnumeration;
+import com.klass.intellij.psi.KlassEnumerationType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class KlassEnumerationReference extends PsiPolyVariantReferenceBase<PsiElement>
 {
     public static final String[] VARIANTS = {
             "Boolean",
@@ -82,5 +88,21 @@ public class KlassEnumerationReference extends PsiReferenceBase<PsiElement> impl
         variants.addAll(DATA_TYPE_VARIANTS);
 
         return variants.toArray();
+    }
+
+    @Override
+    public PsiElement handleElementRename(String newElementName)
+    {
+        ASTNode node = this.myElement.getNode();
+        if (node != null)
+        {
+            KlassEnumerationType enumerationType = KlassElementFactory.createEnumerationType(
+                    this.myElement.getProject(),
+                    newElementName);
+
+            ASTNode newNode = enumerationType.getNode();
+            node.getTreeParent().replaceChild(node, newNode);
+        }
+        return this.myElement;
     }
 }

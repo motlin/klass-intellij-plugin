@@ -8,111 +8,157 @@ public class KlassElementFactory
 {
     public static KlassKlass createClass(Project project, String name)
     {
-        KlassFile file = KlassElementFactory.createFile(project, String.format("class %s{}", name));
-        return (KlassKlass) file.getFirstChild();
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                ""
+                        + "package dummy\n"
+                        + "\n"
+                        + "class " + name + "\n"
+                        + "{\n"
+                        + "}");
+        return file.findChildByClass(KlassKlass.class);
+    }
+
+    public static KlassFile createFile(Project project, String text)
+    {
+        String name = "dummy.klass";
+        return (KlassFile) PsiFileFactory.getInstance(project)
+                .createFileFromText(name, KlassFileType.INSTANCE, text);
     }
 
     public static KlassEnumeration createEnumeration(Project project, String name)
     {
-        KlassFile file = KlassElementFactory.createFile(project, String.format("enumeration %s{DUMMY,}", name));
-        return (KlassEnumeration) file.getFirstChild();
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "package dummy\n"
+                        + "\n"
+                        + "enumeration " + name + "\n"
+                        + "{\n"
+                        + "    DUMMY,\n"
+                        + "}");
+        return file.findChildByClass(KlassEnumeration.class);
     }
 
     public static KlassProjection createProjection(Project project, String name)
     {
-        KlassFile file = KlassElementFactory.createFile(project, String.format("projection %s(Dummy) {}", name));
-        return (KlassProjection) file.getFirstChild();
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "package dummy\n"
+                        + "\n"
+                        + "projection " + name + " on Dummy\n"
+                        + "{\n"
+                        + "}");
+        return file.findChildByClass(KlassProjection.class);
     }
 
     public static KlassAssociation createAssociation(Project project, String name)
     {
-        KlassFile file = KlassElementFactory.createFile(project, String.format("association %s {}", name));
-        return (KlassAssociation) file.getFirstChild();
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                ""
+                        + "package dummy\n"
+                        + "\n"
+                        + "association " + name + "\n"
+                        + "{\n"
+                        + "    firstSide: Dummy[1..1]\n"
+                        + "    secondSide: Dummy[0..*]\n"
+                        + "}");
+        return file.findChildByClass(KlassAssociation.class);
     }
 
     public static KlassDataTypeProperty createDataTypeProperty(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(
                 project,
-                "class DummyClass\n"
+                "package dummy\n"
+                        + "\n"
+                        + "class DummyClass\n"
                         + "{\n"
                         + "  " + name + ": String\n"
                         + "}\n");
-        return (KlassDataTypeProperty) ((KlassKlass) file.getFirstChild()).getMemberList().get(0);
+        KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
+        return (KlassDataTypeProperty) klassKlass.getMemberList().get(0);
     }
 
     public static KlassEnumerationProperty createEnumerationProperty(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(
                 project,
-                "class DummyClass\n"
+                "package dummy\n"
+                        + "\n"
+                        + "class DummyClass\n"
                         + "{\n"
                         + "  " + name + ": Status\n"
                         + "}\n");
-        return (KlassEnumerationProperty) ((KlassKlass) file.getFirstChild()).getMemberList().get(0);
+        KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
+        return (KlassEnumerationProperty) klassKlass.getMemberList().get(0);
     }
 
     public static KlassParameterizedProperty createParameterizedProperty(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(
                 project,
-                "class DummyClass\n"
+                "package dummy\n"
+                        + "\n"
+                        + "class DummyClass\n"
                         + "{\n"
                         + "  " + name + "(): DummyClass[1..1]\n"
                         + "    {\n"
                         + "        this.id == DummyClass.id\n"
                         + "    }\n"
                         + "}\n");
-        return (KlassParameterizedProperty) ((KlassKlass) file.getFirstChild()).getMemberList().get(0);
-    }
-
-    public static KlassEnumerationType createEnumerationType(Project project, String name)
-    {
-        KlassFile file = KlassElementFactory.createFile(
-                project,
-                "class DummyClass\n"
-                        + "{\n"
-                        + "  dummyProperty: " + name + "\n"
-                        + "}\n");
-        return (KlassEnumerationType) ((KlassKlass) file.getFirstChild()).getMemberList().get(0);
+        KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
+        return (KlassParameterizedProperty) klassKlass.getMemberList().get(0);
     }
 
     public static KlassAssociationEnd createAssociationEnd(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(
                 project,
-                "association DummyAssociation\n"
+                "package dummy\n"
+                        + "\n"
+                        + "association DummyAssociation\n"
                         + "{\n"
                         + "  " + name + ": DummyType[0..1]\n"
                         + "  target: DummyType[0..*]\n"
                         + "}\n");
-        return ((KlassAssociation) file.getFirstChild()).getAssociationEndList().get(0);
+        KlassAssociation klassAssociation = file.findChildByClass(KlassAssociation.class);
+        return klassAssociation.getAssociationEndList().get(0);
     }
 
-    public static KlassKlassName createAssociationEndType(Project project, String name)
+    public static KlassAssociationEnd createAssociationEndType(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(
                 project,
-                "association DummyAssociation\n"
+                "package dummy\n"
+                        + "\n"
+                        + "association DummyAssociation\n"
                         + "{\n"
                         + "  source: " + name + "[0..1]\n"
                         + "  target: " + name + "[0..*]\n"
+                        + "\n"
+                        + "  relationship: this.id == " + name + ".sourceId\n"
                         + "}\n");
-        return ((KlassAssociation) file.getFirstChild()).getAssociationEndList().get(0).getKlassName();
+        KlassAssociation klassAssociation = file.findChildByClass(KlassAssociation.class);
+        return klassAssociation.getAssociationEndList().get(0);
     }
 
     public static KlassParameterDeclaration createParameterDeclaration(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(
                 project,
-                "class Dummy\n"
+                "package dummy\n"
+                        + "\n"
+                        + "class Dummy\n"
                         + "{\n"
-                        + "    " + name + "(): Dummy[0..*]\n"
+                        + "    dummyProperty(" + name + ": String[1..1]): Dummy[0..*]\n"
                         + "    {\n"
                         + "        this.id == Dummy.id\n"
                         + "    }\n"
                         + "}\n");
-        return (KlassParameterDeclaration) file.getFirstChild().getFirstChild();
+        KlassKlass                 klassKlass            = file.findChildByClass(KlassKlass.class);
+        KlassParameterizedProperty parameterizedProperty = (KlassParameterizedProperty) klassKlass.getMemberList().get(0);
+        return parameterizedProperty.getParameterDeclarationList().get(0);
     }
 
     // TODO: Try running all the rename refactorings
@@ -120,14 +166,150 @@ public class KlassElementFactory
     {
         KlassFile file = KlassElementFactory.createFile(
                 project,
-                String.format("enumeration Dummy{%s,}", name));
-        return (KlassEnumerationLiteral) file.getFirstChild().getFirstChild();
+                "package dummy\n"
+                        + "\n"
+                        + "enumeration DummyEnumeration\n"
+                        + "{\n"
+                        + "    " + name + ",\n"
+                        + "}");
+        KlassEnumeration klassEnumeration = file.findChildByClass(KlassEnumeration.class);
+        return klassEnumeration.getEnumerationLiteralList().get(0);
     }
 
-    public static KlassFile createFile(Project project, String text)
+    public static KlassPropertyName createPropertyName(Project project, String newElementName)
     {
-        String name = "dummy.klass";
-        return (KlassFile) PsiFileFactory.getInstance(project).
-                createFileFromText(name, KlassFileType.INSTANCE, text);
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "package dummy\n"
+                        + "\n"
+                        + "projection DummyProjection on DummyClass\n"
+                        + "{\n"
+                        + "  " + newElementName + ": \"Dummy Header\",\n"
+                        + "}\n");
+        KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
+        KlassProjectionLeafNode projectionLeafNode = (KlassProjectionLeafNode) klassProjection.getProjectionNodeList().get(
+                0);
+        return projectionLeafNode.getPropertyName();
+    }
+
+    public static KlassProjectionName createProjectionName(Project project, String newElementName)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "package dummy\n"
+                        + "\n"
+                        + "class Dummy\n"
+                        + "    read(" + newElementName + ")\n"
+                        + "{\n"
+                        + "}\n");
+
+        return file.findChildByClass(KlassKlass.class)
+                .getServiceProjectionList()
+                .get(0)
+                .getProjectionName();
+    }
+
+    public static KlassEnumerationType createEnumerationType(Project project, String name)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "package dummy\n"
+                        + "\n"
+                        + "class DummyClass\n"
+                        + "{\n"
+                        + "  dummyProperty: " + name + "\n"
+                        + "}\n");
+        KlassKlass               klassKlass               = file.findChildByClass(KlassKlass.class);
+        KlassEnumerationProperty klassEnumerationProperty = (KlassEnumerationProperty) klassKlass.getMemberList().get(0);
+        return klassEnumerationProperty.getEnumerationType();
+    }
+
+    public static KlassKlassName createKlassName(Project project, String newElementName)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "package dummy\n"
+                        + "\n"
+                        + "projection DummyProjection on " + newElementName + "\n"
+                        + "{\n"
+                        + "}\n");
+        KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
+        return klassProjection.getKlassName();
+    }
+
+    public static KlassAssociationEndName createAssociationEndName(Project project, String newElementName)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "package dummy\n"
+                        + "\n"
+                        + "projection DummyProjection on DummyClass\n"
+                        + "{\n"
+                        + "    " + newElementName + ":\n"
+                        + "    {\n"
+                        + "    },\n"
+                        + "}\n");
+        KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
+        return ((KlassProjectionAssociationEndNode) klassProjection.getProjectionNodeList().get(0)).getAssociationEndName();
+    }
+
+    public static KlassParameterizedPropertyName createParameterizedPropertyName(Project project, String newElementName)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "package dummy\n"
+                        + "\n"
+                        + "projection DummyProjection on DummyClass\n"
+                        + "{\n"
+                        + "    " + newElementName + "():\n"
+                        + "    {\n"
+                        + "    },\n"
+                        + "}\n");
+        KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
+        return ((KlassProjectionParameterizedPropertyNode) klassProjection.getProjectionNodeList().get(0)).getParameterizedPropertyName();
+    }
+
+    public static KlassParameterName createParameterName(Project project, String newElementName)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "package dummy\n"
+                        + "\n"
+                        + "projection DummyProjection on DummyClass\n"
+                        + "{\n"
+                        + "    dummyParameterizedProperty(" + newElementName + "):\n"
+                        + "    {\n"
+                        + "    },\n"
+                        + "}\n");
+        KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
+        KlassProjectionNode klassProjectionNode = klassProjection
+                .getProjectionNodeList()
+                .get(0);
+        return ((KlassProjectionParameterizedPropertyNode) klassProjectionNode)
+                .getParameterNameList()
+                .get(0);
+    }
+
+    public static KlassExpressionVariableName createExpressionVariableName(Project project, String newElementName)
+    {
+        KlassFile file = KlassElementFactory.createFile(
+                project,
+                "package dummy\n"
+                        + "\n"
+                        + "class Dummy\n"
+                        + "{\n"
+                        + "    dummyProperty(" + newElementName + ": Long[1..1]): Dummy[0..*]\n"
+                        + "    {\n"
+                        + "        this.id == " + newElementName + "\n"
+                        + "    }\n"
+                        + "}\n");
+        KlassKlass                 klassKlass            = file.findChildByClass(KlassKlass.class);
+        KlassParameterizedProperty parameterizedProperty = (KlassParameterizedProperty) klassKlass.getMemberList().get(0);
+        KlassCriteriaOr            criteriaOr            = (KlassCriteriaOr) parameterizedProperty.getCriteriaExpression();
+        return criteriaOr.getAtomicCriteriaList().get(0)
+                .getCriteriaOperator()
+                .getTargetExpressionValue()
+                .getExpressionValue()
+                .getExpressionVariableName();
     }
 }

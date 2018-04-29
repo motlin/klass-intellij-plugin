@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassNamedElement;
 import com.klass.intellij.psi.KlassNombre;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,17 +26,15 @@ public class KlassRefactoringSupportProvider extends RefactoringSupportProvider
     }
 
     @Override
-    public boolean isMemberInplaceRenameAvailable(@NotNull PsiElement element, PsiElement context)
-    {
-        return element instanceof KlassKlass
-                || element instanceof KlassAssociation
-                || element instanceof KlassEnumeration;
-    }
-
-    @Override
     public boolean isInplaceRenameAvailable(@NotNull PsiElement element, PsiElement context)
     {
         return KlassRefactoringSupportProvider.mayRenameInplace(element, context);
+    }
+
+    @Override
+    public boolean isMemberInplaceRenameAvailable(@NotNull PsiElement element, PsiElement context)
+    {
+        return element instanceof KlassNamedElement;
     }
 
     public static boolean mayRenameInplace(PsiElement elementToRename, PsiElement nameSuggestionContext)
@@ -45,9 +44,7 @@ public class KlassRefactoringSupportProvider extends RefactoringSupportProvider
         {
             return false;
         }
-        if (!(elementToRename instanceof KlassKlass)
-                && !(elementToRename instanceof KlassAssociation)
-                && !(elementToRename instanceof KlassEnumeration))
+        if (!(elementToRename instanceof KlassNamedElement))
         {
             return false;
         }

@@ -1,21 +1,27 @@
 package com.klass.intellij.reference;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.klass.intellij.KlassUtil;
-import com.klass.intellij.psi.KlassProjection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class KlassProjectionReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
+import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.icons.AllIcons;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementResolveResult;
+import com.intellij.psi.PsiPolyVariantReferenceBase;
+import com.intellij.psi.ResolveResult;
+import com.klass.intellij.KlassUtil;
+import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassProjection;
+import com.klass.intellij.psi.KlassProjectionName;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class KlassProjectionReference extends PsiPolyVariantReferenceBase<PsiElement>
 {
     private final String projectionName;
 
@@ -79,5 +85,21 @@ public class KlassProjectionReference extends PsiReferenceBase<PsiElement> imple
             }
         }
         return variants.toArray();
+    }
+
+    @Override
+    public PsiElement handleElementRename(String newElementName)
+    {
+        ASTNode node = this.myElement.getNode();
+        if (node != null)
+        {
+            KlassProjectionName projectionReference = KlassElementFactory.createProjectionName(
+                    this.myElement.getProject(),
+                    newElementName);
+
+            ASTNode newNode = projectionReference.getNode();
+            node.getTreeParent().replaceChild(node, newNode);
+        }
+        return this.myElement;
     }
 }

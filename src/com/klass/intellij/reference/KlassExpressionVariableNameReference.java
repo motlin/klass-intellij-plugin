@@ -1,21 +1,34 @@
 package com.klass.intellij.reference;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.klass.intellij.psi.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class KlassExpressionVariableNameReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
+import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.icons.AllIcons;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementResolveResult;
+import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.PsiPolyVariantReferenceBase;
+import com.intellij.psi.ResolveResult;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.IncorrectOperationException;
+import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassExpressionVariableName;
+import com.klass.intellij.psi.KlassParameterDeclaration;
+import com.klass.intellij.psi.KlassParameterizedProperty;
+import com.klass.intellij.psi.KlassQueryParamPart;
+import com.klass.intellij.psi.KlassUrl;
+import com.klass.intellij.psi.KlassUrlGroup;
+import com.klass.intellij.psi.KlassUrlPart;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class KlassExpressionVariableNameReference extends PsiPolyVariantReferenceBase<PsiElement>
 {
     private final String expressionVariableName;
 
@@ -108,5 +121,21 @@ public class KlassExpressionVariableNameReference extends PsiReferenceBase<PsiEl
                 .forEach(variants::add);
 
         return variants.toArray();
+    }
+
+    @Override
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
+    {
+        ASTNode node = this.myElement.getNode();
+        if (node != null)
+        {
+            KlassExpressionVariableName expressionVariableName = KlassElementFactory.createExpressionVariableName(
+                    this.myElement.getProject(),
+                    newElementName);
+
+            ASTNode newNode = expressionVariableName.getNode();
+            node.getTreeParent().replaceChild(node, newNode);
+        }
+        return this.myElement;
     }
 }

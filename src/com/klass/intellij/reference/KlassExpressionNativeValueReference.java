@@ -1,18 +1,21 @@
 package com.klass.intellij.reference;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementResolveResult;
+import com.intellij.psi.PsiPolyVariantReferenceBase;
+import com.intellij.psi.ResolveResult;
 import com.klass.intellij.KlassUtil;
 import com.klass.intellij.psi.KlassExpressionNativeValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class KlassExpressionNativeValueReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
+public class KlassExpressionNativeValueReference extends PsiPolyVariantReferenceBase<PsiElement>
 {
     @NotNull
     private final String expressionNativeValueText;

@@ -6,24 +6,26 @@ import java.util.List;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.PsiPolyVariantReference;
+import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.klass.intellij.KlassUtil;
 import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassAssociationEnd;
+import com.klass.intellij.psi.KlassAssociationEndName;
+import com.klass.intellij.psi.KlassElementFactory;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
 import com.klass.intellij.psi.KlassTypedElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class KlassAssociationEndReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
+public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<PsiElement>
 {
     private final String associationEndName;
 
@@ -104,5 +106,21 @@ public class KlassAssociationEndReference extends PsiReferenceBase<PsiElement> i
             }
         }
         return variants.toArray();
+    }
+
+    @Override
+    public PsiElement handleElementRename(String newElementName)
+    {
+        ASTNode node = this.myElement.getNode();
+        if (node != null)
+        {
+            KlassAssociationEndName associationEndName = KlassElementFactory.createAssociationEndName(
+                    this.myElement.getProject(),
+                    newElementName);
+
+            ASTNode newNode = associationEndName.getNode();
+            node.getTreeParent().replaceChild(node, newNode);
+        }
+        return this.myElement;
     }
 }

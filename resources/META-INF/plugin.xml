@@ -34,12 +34,6 @@
         <annotator language="Klass" implementationClass="com.klass.intellij.highlighter.KlassAnnotator"/>
         <lang.refactoringSupport language="Klass" implementationClass="com.klass.intellij.refactor.KlassRefactoringSupportProvider"/>
         <lang.findUsagesProvider language="Klass" implementationClass="com.klass.intellij.usages.KlassFindUsagesProvider"/>
-        <lang.elementManipulator
-                forClass="com.klass.intellij.psi.impl.KlassKlassNameImpl"
-                implementationClass="com.klass.intellij.psi.impl.KlassKlassNameManipulator" />
-        <lang.elementManipulator
-                forClass="com.klass.intellij.psi.impl.KlassEnumerationTypeImpl"
-                implementationClass="com.klass.intellij.psi.impl.KlassEnumerationTypeManipulator" />
         <gotoClassContributor implementation="com.klass.intellij.navigation.KlassChooseByNameClassContributor" />
         <gotoSymbolContributor implementation="com.klass.intellij.navigation.KlassChooseByNameSymbolContributor" />
         <lang.psiStructureViewFactory language="Klass" implementationClass="com.klass.intellij.structure.KlassStructureViewFactory"/>

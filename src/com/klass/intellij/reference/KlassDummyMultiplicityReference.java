@@ -1,18 +1,18 @@
 package com.klass.intellij.reference;
 
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPolyVariantReference;
-import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.klass.intellij.psi.KlassDummyMultiplicity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class KlassDummyMultiplicityReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
+public class KlassDummyMultiplicityReference extends PsiPolyVariantReferenceBase<PsiElement>
 {
     public KlassDummyMultiplicityReference(KlassDummyMultiplicity klassDummyMultiplicity)
     {
-        super(klassDummyMultiplicity);
+        super(klassDummyMultiplicity, new TextRange(0, klassDummyMultiplicity.getText().length()));
     }
 
     @NotNull

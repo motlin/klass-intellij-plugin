@@ -1,22 +1,32 @@
 package com.klass.intellij.reference;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.klass.intellij.KlassUtil;
-import com.klass.intellij.psi.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class KlassParameterReference extends PsiReferenceBase<PsiElement> implements PsiPolyVariantReference
+import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.icons.AllIcons;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementResolveResult;
+import com.intellij.psi.PsiPolyVariantReferenceBase;
+import com.intellij.psi.ResolveResult;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.klass.intellij.KlassUtil;
+import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassParameterName;
+import com.klass.intellij.psi.KlassProjection;
+import com.klass.intellij.psi.KlassUrl;
+import com.klass.intellij.psi.KlassUrlGroup;
+import com.klass.intellij.psi.KlassUrlPart;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class KlassParameterReference extends PsiPolyVariantReferenceBase<PsiElement>
 {
     private final String parameterName;
 
@@ -84,5 +94,21 @@ public class KlassParameterReference extends PsiReferenceBase<PsiElement> implem
             }
         }
         return variants.toArray();
+    }
+
+    @Override
+    public PsiElement handleElementRename(String newElementName)
+    {
+        ASTNode node = this.myElement.getNode();
+        if (node != null)
+        {
+            KlassParameterName parameterName = KlassElementFactory.createParameterName(
+                    this.myElement.getProject(),
+                    newElementName);
+
+            ASTNode newNode = parameterName.getNode();
+            node.getTreeParent().replaceChild(node, newNode);
+        }
+        return this.myElement;
     }
 }
