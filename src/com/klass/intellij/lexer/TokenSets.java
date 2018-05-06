@@ -69,6 +69,7 @@ import static com.klass.intellij.psi.KlassTypes.USER_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.VALIDATE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.VALID_TEMPORAL_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.VERSIONED_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.VERSIONS_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.WRITE_KEYWORD;
 
 public interface TokenSets
@@ -92,6 +93,7 @@ public interface TokenSets
             SYSTEM_TEMPORAL_KEYWORD,
             BITEMPORAL_KEYWORD,
             VERSIONED_KEYWORD,
+            VERSIONS_KEYWORD,
             AUDITED_KEYWORD,
             OPTIMISTICALLY_LOCKED_KEYWORD,
             READ_KEYWORD,

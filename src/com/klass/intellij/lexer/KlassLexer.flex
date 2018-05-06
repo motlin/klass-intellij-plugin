@@ -82,6 +82,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "create" { return KlassTypes.CREATE_KEYWORD; }
   "update" { return KlassTypes.UPDATE_KEYWORD; }
   "delete" { return KlassTypes.DELETE_KEYWORD; }
+  "versions" { return KlassTypes.VERSIONS_KEYWORD; }
 
   "in" { return KlassTypes.IN_OPERATOR; }
   "contains" { return KlassTypes.CONTAINS_OPERATOR; }
