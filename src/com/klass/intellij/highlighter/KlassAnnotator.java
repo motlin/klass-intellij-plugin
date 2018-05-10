@@ -352,6 +352,10 @@ public class KlassAnnotator implements Annotator
             KlassParameterizedProperty parameterizedProperty =
                     (KlassParameterizedProperty) parameterizedPropertyReference.resolve();
 
+            if (parameterizedProperty == null)
+            {
+                return;
+            }
             List<KlassParameterName> parameterNameList = projectionParameterizedPropertyNode.getParameterNameList();
 
             KlassProjection projection =
