@@ -29,7 +29,7 @@ public class KlassBlock extends AbstractBlock
     private static final Alignment COLON_ALIGNMENT = Alignment.createAlignment(true);
 
     private static final TokenSet NORMAL_INDENT = TokenSet.create(
-            KlassTypes.DATA_TYPE_PROPERTY,
+            KlassTypes.PRIMITIVE_TYPE_PROPERTY,
             KlassTypes.ENUMERATION_PROPERTY,
             KlassTypes.PARAMETERIZED_PROPERTY,
             KlassTypes.ASSOCIATION_END,
@@ -48,7 +48,7 @@ public class KlassBlock extends AbstractBlock
             KlassTypes.CRITERIA_OPERATOR,
             KlassTypes.SERVICE_PROJECTION,
             KlassTypes.ORDER_BY_CLAUSE,
-            KlassTypes.KEYWORD_ON_CLASS,
+            KlassTypes.CLASS_MODIFIER,
             KlassTypes.RELATIONSHIP);
 
     public static final TokenSet NORMAL_INDENT_CHILDREN = TokenSet.create(
@@ -152,7 +152,7 @@ public class KlassBlock extends AbstractBlock
         }
 
         IElementType parentElementType = this.myNode.getElementType();
-        if (parentElementType == KlassTypes.DATA_TYPE_PROPERTY
+        if (parentElementType == KlassTypes.PRIMITIVE_TYPE_PROPERTY
                 || parentElementType == KlassTypes.ENUMERATION_PROPERTY)
         {
             return this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS ? COLON_ALIGNMENT : null;

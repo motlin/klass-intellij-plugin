@@ -1,15 +1,51 @@
 package com.klass.intellij.psi.impl;
 
+import javax.swing.*;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import com.klass.intellij.psi.*;
-import com.klass.intellij.reference.*;
+import com.klass.intellij.psi.KlassAssociation;
+import com.klass.intellij.psi.KlassAssociationEnd;
+import com.klass.intellij.psi.KlassAssociationEndName;
+import com.klass.intellij.psi.KlassDummyMultiplicity;
+import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassEnumeration;
+import com.klass.intellij.psi.KlassEnumerationLiteral;
+import com.klass.intellij.psi.KlassEnumerationProperty;
+import com.klass.intellij.psi.KlassEnumerationType;
+import com.klass.intellij.psi.KlassExpressionNativeValue;
+import com.klass.intellij.psi.KlassExpressionVariableName;
+import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassKlassName;
+import com.klass.intellij.psi.KlassOptionalMarker;
+import com.klass.intellij.psi.KlassParameterDeclaration;
+import com.klass.intellij.psi.KlassParameterName;
+import com.klass.intellij.psi.KlassParameterizedProperty;
+import com.klass.intellij.psi.KlassParameterizedPropertyName;
+import com.klass.intellij.psi.KlassPrimitiveType;
+import com.klass.intellij.psi.KlassPrimitiveTypeProperty;
+import com.klass.intellij.psi.KlassProjection;
+import com.klass.intellij.psi.KlassProjectionName;
+import com.klass.intellij.psi.KlassPropertyName;
+import com.klass.intellij.psi.KlassService;
+import com.klass.intellij.psi.KlassServiceCriteriaClause;
+import com.klass.intellij.psi.KlassServiceGroup;
+import com.klass.intellij.psi.KlassUrlGroup;
+import com.klass.intellij.reference.KlassAssociationEndReference;
+import com.klass.intellij.reference.KlassDataTypeReference;
+import com.klass.intellij.reference.KlassDummyMultiplicityReference;
+import com.klass.intellij.reference.KlassEnumerationReference;
+import com.klass.intellij.reference.KlassExpressionNativeValueReference;
+import com.klass.intellij.reference.KlassExpressionVariableNameReference;
+import com.klass.intellij.reference.KlassKlassReference;
+import com.klass.intellij.reference.KlassMemberReference;
+import com.klass.intellij.reference.KlassParameterReference;
+import com.klass.intellij.reference.KlassParameterizedPropertyReference;
+import com.klass.intellij.reference.KlassProjectionReference;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public class KlassPsiImplUtil
 {
@@ -18,8 +54,8 @@ public class KlassPsiImplUtil
         ASTNode classNameNode = element.getNombre().getNode();
         if (classNameNode != null)
         {
-            KlassKlass klass = KlassElementFactory.createClass(element.getProject(), newName);
-            ASTNode newClassNameNode = klass.getNombre().getNode();
+            KlassKlass klass            = KlassElementFactory.createClass(element.getProject(), newName);
+            ASTNode    newClassNameNode = klass.getNombre().getNode();
             element.getNode().replaceChild(classNameNode, newClassNameNode);
         }
         return element;
@@ -30,7 +66,9 @@ public class KlassPsiImplUtil
         ASTNode classNameNode = element.getNombre().getNode();
         if (classNameNode != null)
         {
-            KlassEnumeration klass = KlassElementFactory.createEnumeration(element.getProject(), newName);
+            KlassEnumeration klass = KlassElementFactory.createEnumeration(
+                    element.getProject(),
+                    newName);
             ASTNode newEnumerationNameNode = klass.getNombre().getNode();
             element.getNode().replaceChild(classNameNode, newEnumerationNameNode);
         }
@@ -42,7 +80,9 @@ public class KlassPsiImplUtil
         ASTNode associationNameNode = element.getNombre().getNode();
         if (associationNameNode != null)
         {
-            KlassAssociation association = KlassElementFactory.createAssociation(element.getProject(), newName);
+            KlassAssociation association = KlassElementFactory.createAssociation(
+                    element.getProject(),
+                    newName);
             ASTNode newAssociationNameNode = association.getNombre().getNode();
             element.getNode().replaceChild(associationNameNode, newAssociationNameNode);
         }
@@ -54,21 +94,22 @@ public class KlassPsiImplUtil
         ASTNode classNameNode = element.getNombre().getNode();
         if (classNameNode != null)
         {
-            KlassProjection klass = KlassElementFactory.createProjection(element.getProject(), newName);
-            ASTNode newProjectionNameNode = klass.getNombre().getNode();
+            KlassProjection klass                 = KlassElementFactory.createProjection(element.getProject(), newName);
+            ASTNode         newProjectionNameNode = klass.getNombre().getNode();
             element.getNode().replaceChild(classNameNode, newProjectionNameNode);
         }
         return element;
     }
 
-    public static PsiElement setName(KlassDataTypeProperty element, String newName)
+    public static PsiElement setName(KlassPrimitiveTypeProperty element, String newName)
     {
         ASTNode primitivePropertyNameNode = element.getNombre().getNode();
         if (primitivePropertyNameNode != null)
         {
-            KlassDataTypeProperty dataTypeProperty =
-                    KlassElementFactory.createDataTypeProperty(element.getProject(), newName);
-            ASTNode newPrimitivePropertyNameNode = dataTypeProperty.getNombre().getNode();
+            KlassPrimitiveTypeProperty primitiveTypeProperty = KlassElementFactory.createPrimitiveTypeProperty(
+                    element.getProject(),
+                    newName);
+            ASTNode newPrimitivePropertyNameNode = primitiveTypeProperty.getNombre().getNode();
             element.getNode().replaceChild(primitivePropertyNameNode, newPrimitivePropertyNameNode);
         }
         return element;
@@ -205,15 +246,15 @@ public class KlassPsiImplUtil
         return new KlassExpressionNativeValueReference(klassExpressionNativeValue, expressionNativeValueText);
     }
 
-    public static PsiReference getReference(KlassDataType klassDataType)
+    public static PsiReference getReference(KlassPrimitiveType klassPrimitiveType)
     {
-        String dataType = klassDataType.getText();
+        String dataType = klassPrimitiveType.getText();
         if (dataType == null)
         {
             return null;
         }
 
-        return new KlassDataTypeReference(klassDataType, dataType);
+        return new KlassDataTypeReference(klassPrimitiveType, dataType);
     }
 
     public static PsiReference getReference(KlassEnumerationType klassEnumerationType)
@@ -336,25 +377,25 @@ public class KlassPsiImplUtil
         return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Property);
     }
 
-    public static ItemPresentation getPresentation(KlassDataTypeProperty element)
+    public static ItemPresentation getPresentation(KlassPrimitiveTypeProperty element)
     {
-        boolean hasKeyProperty = element.getPropertyKeywordList()
+        boolean hasKeyProperty = element.getPropertyModifierList()
                 .stream()
-                .anyMatch(propertyKeyword -> propertyKeyword.getText().equals("key"));
-        String keyKeyword = hasKeyProperty ? "key " : "";
+                .anyMatch(propertyModifier -> propertyModifier.getText().equals("key"));
+        String keyModifier = hasKeyProperty ? "key " : "";
 
-        KlassOptionalMarker optionalMarker = element.getOptionalMarker();
-        String optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
+        KlassOptionalMarker optionalMarker     = element.getOptionalMarker();
+        String              optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
 
-        String locationString = keyKeyword + element.getDataType().getText() + optionalMarkerText;
+        String locationString = keyModifier + element.getPrimitiveType().getText() + optionalMarkerText;
         return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
     }
 
     public static ItemPresentation getPresentation(KlassEnumerationProperty element)
     {
-        KlassOptionalMarker optionalMarker = element.getOptionalMarker();
-        String optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
-        String locationString = element.getEnumerationType().getText() + optionalMarkerText;
+        KlassOptionalMarker optionalMarker     = element.getOptionalMarker();
+        String              optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
+        String              locationString     = element.getEnumerationType().getText() + optionalMarkerText;
         return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
     }
 
@@ -367,7 +408,6 @@ public class KlassPsiImplUtil
 
     public static ItemPresentation getPresentation(KlassService element)
     {
-        String locationString = element.getVerb().getText();
         return new ItemPresentation()
         {
             @Nullable

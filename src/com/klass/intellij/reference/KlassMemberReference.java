@@ -447,11 +447,11 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
     private ResolveResult[] getTemporalReference(KlassKlass klass, String temporalKeyword)
     {
         return klass
-                .getKeywordOnClassList()
+                .getClassModifierList()
                 .stream()
-                .filter(keywordOnClass ->
-                        keywordOnClass.getText().equals(temporalKeyword)
-                                || keywordOnClass.getText().equals("bitemporal"))
+                .filter(classModifier ->
+                        classModifier.getText().equals(temporalKeyword)
+                                || classModifier.getText().equals("bitemporal"))
                 .map(PsiElementResolveResult::new)
                 .toArray(ResolveResult[]::new);
     }

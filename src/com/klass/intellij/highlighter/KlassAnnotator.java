@@ -21,9 +21,9 @@ import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassAssociationEndName;
 import com.klass.intellij.psi.KlassBooleanLiteral;
+import com.klass.intellij.psi.KlassClassModifier;
 import com.klass.intellij.psi.KlassCriteriaOperator;
-import com.klass.intellij.psi.KlassDataType;
-import com.klass.intellij.psi.KlassDataTypeProperty;
+import com.klass.intellij.psi.KlassDataTypeDeclaration;
 import com.klass.intellij.psi.KlassDummyMultiplicity;
 import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassEnumerationLiteral;
@@ -37,7 +37,6 @@ import com.klass.intellij.psi.KlassExpressionValue;
 import com.klass.intellij.psi.KlassExpressionVariableName;
 import com.klass.intellij.psi.KlassFloatLiteralNode;
 import com.klass.intellij.psi.KlassIntegerLiteralNode;
-import com.klass.intellij.psi.KlassKeywordOnClass;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
 import com.klass.intellij.psi.KlassLowerBound;
@@ -50,7 +49,8 @@ import com.klass.intellij.psi.KlassParameterDeclaration;
 import com.klass.intellij.psi.KlassParameterName;
 import com.klass.intellij.psi.KlassParameterizedProperty;
 import com.klass.intellij.psi.KlassParameterizedPropertyName;
-import com.klass.intellij.psi.KlassPrimitiveTypeDeclaration;
+import com.klass.intellij.psi.KlassPrimitiveType;
+import com.klass.intellij.psi.KlassPrimitiveTypeProperty;
 import com.klass.intellij.psi.KlassProjection;
 import com.klass.intellij.psi.KlassProjectionName;
 import com.klass.intellij.psi.KlassProjectionParameterizedPropertyNode;
@@ -74,7 +74,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class KlassAnnotator implements Annotator
 {
-    public static final ImmutableList<String> TEMPORAL_PROPERTY_KEYWORDS =
+    public static final ImmutableList<String> TEMPORAL_PROPERTY_MODIFIERS =
             Lists.immutable.with("validTemporal", "systemTemporal", "bitemporal");
 
     private static List<Type> getExpressionLiteralTypes(
@@ -325,7 +325,7 @@ public class KlassAnnotator implements Annotator
         @Override
         public void visitParameterDeclaration(@NotNull KlassParameterDeclaration parameterDeclaration)
         {
-            if (parameterDeclaration.getPrimitiveTypeDeclaration().getMultiplicity() == null)
+            if (parameterDeclaration.getDataTypeDeclaration().getMultiplicity() == null)
             {
                 String message = String.format(
                         "Expected a type declaration on parameter: '%s'.",
@@ -384,11 +384,11 @@ public class KlassAnnotator implements Annotator
                         "Projection '%s' cannot be applied to given types;%nrequired: '%s'%nfound:'%s'%nreason: actual and formal argument lists differ in length.",
                         parameterizedPropertyName.getText(),
                         propertyParameterDeclarations
-                                .collect(KlassParameterDeclaration::getPrimitiveTypeDeclaration)
+                                .collect(KlassParameterDeclaration::getDataTypeDeclaration)
                                 .collect(PsiElement::getText)
                                 .makeString(),
                         projectionParameterDeclarations
-                                .collect(KlassParameterDeclaration::getPrimitiveTypeDeclaration)
+                                .collect(KlassParameterDeclaration::getDataTypeDeclaration)
                                 .collect(PsiElement::getText)
                                 .makeString());
                 this.annotationHolder.createErrorAnnotation(
@@ -409,9 +409,9 @@ public class KlassAnnotator implements Annotator
                         propertyName,
                         message);
             }
-            else if (resolved instanceof KlassDataTypeProperty
+            else if (resolved instanceof KlassPrimitiveTypeProperty
                     || resolved instanceof KlassEnumerationProperty
-                    || resolved instanceof KlassKeywordOnClass)
+                    || resolved instanceof KlassClassModifier)
             {
                 Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(propertyName, null);
                 infoAnnotation.setTextAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES);
@@ -460,11 +460,11 @@ public class KlassAnnotator implements Annotator
                             "Projection '%s' cannot be applied to given types;%nrequired: '%s'%nfound:'%s'%nreason: actual and formal argument lists differ in length.",
                             projectionName.getText(),
                             projectionParameterDeclarations
-                                    .collect(KlassParameterDeclaration::getPrimitiveTypeDeclaration)
+                                    .collect(KlassParameterDeclaration::getDataTypeDeclaration)
                                     .collect(PsiElement::getText)
                                     .makeString(),
                             serviceParameterDeclarations
-                                    .collect(KlassParameterDeclaration::getPrimitiveTypeDeclaration)
+                                    .collect(KlassParameterDeclaration::getDataTypeDeclaration)
                                     .collect(PsiElement::getText)
                                     .makeString());
                     this.annotationHolder.createErrorAnnotation(
@@ -581,14 +581,14 @@ public class KlassAnnotator implements Annotator
                 KlassPropertyName    propertyName = expressionProperty.getPropertyName();
                 KlassMemberReference reference    = (KlassMemberReference) propertyName.getReference();
                 PsiElement           resolve      = reference.resolve();
-                if (resolve instanceof KlassDataTypeProperty)
+                if (resolve instanceof KlassPrimitiveTypeProperty)
                 {
-                    KlassDataTypeProperty dataTypeProperty = (KlassDataTypeProperty) resolve;
-                    KlassDataType         dataType         = dataTypeProperty.getDataType();
-                    KlassOptionalMarker   optionalMarker   = dataTypeProperty.getOptionalMarker();
+                    KlassPrimitiveTypeProperty primitiveTypeProperty = (KlassPrimitiveTypeProperty) resolve;
+                    KlassPrimitiveType         primitiveType         = primitiveTypeProperty.getPrimitiveType();
+                    KlassOptionalMarker        optionalMarker        = primitiveTypeProperty.getOptionalMarker();
                     Multiplicity multiplicity =
                             optionalMarker == null ? Multiplicity.ONE_TO_ONE : Multiplicity.ZERO_TO_ONE;
-                    String dataTypeText = dataType.getText();
+                    String dataTypeText = primitiveType.getText();
                     MutableList<Type> result = Lists.mutable.with(new Type(
                             DataTypeType.PRIMITIVE_TYPE,
                             dataTypeText,
@@ -620,13 +620,13 @@ public class KlassAnnotator implements Annotator
                             enumeration.getName(),
                             Multiplicity.ONE_TO_ONE));
                 }
-                if (resolve instanceof KlassKeywordOnClass)
+                if (resolve instanceof KlassClassModifier)
                 {
-                    KlassKeywordOnClass keywordOnClass = (KlassKeywordOnClass) resolve;
-                    String              keywordText    = keywordOnClass.getText();
-                    if (!TEMPORAL_PROPERTY_KEYWORDS.contains(keywordText))
+                    KlassClassModifier classModifier = (KlassClassModifier) resolve;
+                    String             modifierText  = classModifier.getText();
+                    if (!TEMPORAL_PROPERTY_MODIFIERS.contains(modifierText))
                     {
-                        throw new AssertionError(keywordText);
+                        throw new AssertionError(modifierText);
                     }
                     Type instantType = new Type(
                             DataTypeType.PRIMITIVE_TYPE,
@@ -671,17 +671,17 @@ public class KlassAnnotator implements Annotator
         @Nullable
         private List<Type> getParameterDeclarationType(KlassParameterDeclaration parameterDeclaration)
         {
-            KlassPrimitiveTypeDeclaration primitiveTypeDeclaration = parameterDeclaration.getPrimitiveTypeDeclaration();
-            KlassMultiplicity             multiplicity             = primitiveTypeDeclaration.getMultiplicity();
-            KlassDataType                 dataType                 = primitiveTypeDeclaration.getDataType();
-            if (dataType != null)
+            KlassDataTypeDeclaration dataTypeDeclaration = parameterDeclaration.getDataTypeDeclaration();
+            KlassMultiplicity        multiplicity        = dataTypeDeclaration.getMultiplicity();
+            KlassPrimitiveType       primitiveType       = dataTypeDeclaration.getPrimitiveType();
+            if (primitiveType != null)
             {
                 return Collections.singletonList(new Type(
                         DataTypeType.PRIMITIVE_TYPE,
-                        dataType.getText(),
+                        primitiveType.getText(),
                         this.getMultiplicity(multiplicity)));
             }
-            KlassEnumerationType enumerationType = primitiveTypeDeclaration.getEnumerationType();
+            KlassEnumerationType enumerationType = dataTypeDeclaration.getEnumerationType();
             if (enumerationType != null)
             {
                 return Collections.singletonList(new Type(

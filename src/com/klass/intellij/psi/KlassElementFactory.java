@@ -66,7 +66,7 @@ public class KlassElementFactory
         return file.findChildByClass(KlassAssociation.class);
     }
 
-    public static KlassDataTypeProperty createDataTypeProperty(Project project, String name)
+    public static KlassPrimitiveTypeProperty createPrimitiveTypeProperty(Project project, String name)
     {
         KlassFile file = KlassElementFactory.createFile(
                 project,
@@ -77,7 +77,7 @@ public class KlassElementFactory
                         + "  " + name + ": String\n"
                         + "}\n");
         KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
-        return (KlassDataTypeProperty) klassKlass.getMemberList().get(0);
+        return (KlassPrimitiveTypeProperty) klassKlass.getMemberList().get(0);
     }
 
     public static KlassEnumerationProperty createEnumerationProperty(Project project, String name)

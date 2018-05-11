@@ -5,7 +5,13 @@ import com.intellij.ide.structureView.StructureViewModelBase;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.psi.PsiFile;
-import com.klass.intellij.psi.*;
+import com.klass.intellij.psi.KlassAssociation;
+import com.klass.intellij.psi.KlassAssociationEnd;
+import com.klass.intellij.psi.KlassEnumeration;
+import com.klass.intellij.psi.KlassEnumerationLiteral;
+import com.klass.intellij.psi.KlassEnumerationProperty;
+import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassPrimitiveTypeProperty;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassStructureViewModel
@@ -35,7 +41,7 @@ public class KlassStructureViewModel
     @Override
     public boolean isAlwaysLeaf(StructureViewTreeElement element)
     {
-        return element instanceof KlassDataTypeProperty
+        return element instanceof KlassPrimitiveTypeProperty
                 || element instanceof KlassEnumerationProperty
                 || element instanceof KlassAssociationEnd
                 || element instanceof KlassEnumerationLiteral;

@@ -91,8 +91,16 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 
   "key" { return KlassTypes.KEY_KEYWORD; }
   "owned" { return KlassTypes.OWNED_KEYWORD; }
+  "id" { return KlassTypes.ID_KEYWORD; }
   "on" { return KlassTypes.ON_KEYWORD; }
   "relationship" { return KlassTypes.RELATIONSHIP_KEYWORD; }
+
+  "valid" { return KlassTypes.VALID_KEYWORD; }
+  "validFrom" { return KlassTypes.VALID_FROM_KEYWORD; }
+  "validTo" { return KlassTypes.VALID_TO_KEYWORD; }
+  "system" { return KlassTypes.SYSTEM_KEYWORD; }
+  "systemFrom" { return KlassTypes.SYSTEM_FROM_KEYWORD; }
+  "systemTo" { return KlassTypes.SYSTEM_TO_KEYWORD; }
 
   "multiplicity" { return KlassTypes.MULTIPLICITY_KEYWORD; }
   "criteria" { return KlassTypes.CRITERIA_KEYWORD; }
@@ -107,7 +115,6 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "one" { return KlassTypes.ONE_KEYWORD; }
   "many" { return KlassTypes.MANY_KEYWORD; }
 
-  "ID" { return KlassTypes.ID_KEYWORD; }
   "Boolean" { return KlassTypes.BOOLEAN_KEYWORD; }
   "Integer" { return KlassTypes.INTEGER_KEYWORD; }
   "Double" { return KlassTypes.DOUBLE_KEYWORD; }

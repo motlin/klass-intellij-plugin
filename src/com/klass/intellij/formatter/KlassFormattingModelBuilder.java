@@ -1,7 +1,14 @@
 package com.klass.intellij.formatter;
 
-import com.intellij.formatting.*;
+import com.intellij.formatting.Alignment;
+import com.intellij.formatting.FormattingModel;
+import com.intellij.formatting.FormattingModelBuilder;
+import com.intellij.formatting.FormattingModelProvider;
+import com.intellij.formatting.Indent;
+import com.intellij.formatting.SpacingBuilder;
 import com.intellij.formatting.SpacingBuilder.RuleBuilder;
+import com.intellij.formatting.Wrap;
+import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -64,7 +71,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.OROR,
             KlassTypes.RELATIONSHIP_KEYWORD,
             KlassTypes.SERVICE_KEYWORD,
-            KlassTypes.PROPERTY_KEYWORD);
+            KlassTypes.PROPERTY_MODIFIER);
     public static final TokenSet ONE_SPACE_AROUND = TokenSet.create(
             KlassTypes.OPERATOR,
             KlassTypes.ON_KEYWORD);
@@ -74,15 +81,15 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.L_BRACE,
             KlassTypes.R_BRACE);
     public static final TokenSet LINE_BREAK_AROUND_HIGH_PRIORITY = TokenSet.create(
-            KlassTypes.KEYWORD_ON_CLASS,
+            KlassTypes.CLASS_MODIFIER,
             KlassTypes.SERVICE_PROJECTION,
             KlassTypes.SERVICE_CATEGORY,
             KlassTypes.VERB);
     public static final TokenSet LINE_BREAK_AROUND = TokenSet.create(
             KlassTypes.RELATIONSHIP,
             KlassTypes.ORDER_BY_CLAUSE,
-            KlassTypes.KEYWORD_ON_CLASS,
-            KlassTypes.DATA_TYPE_PROPERTY,
+            KlassTypes.CLASS_MODIFIER,
+            KlassTypes.PRIMITIVE_TYPE_PROPERTY,
             KlassTypes.ENUMERATION_PROPERTY,
             KlassTypes.ASSOCIATION_END,
             KlassTypes.PROJECTION_LEAF_NODE,

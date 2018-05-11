@@ -13,10 +13,10 @@
   psiImplUtilClass="com.klass.intellij.psi.impl.KlassPsiImplUtil"
   tokenTypeClass="com.klass.intellij.psi.KlassTokenType"
 
-  mixin("klass|association|enumeration|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|parameterDeclaration|enumerationLiteral") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
+  mixin("klass|association|enumeration|primitiveTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|parameterDeclaration|enumerationLiteral") = "com.klass.intellij.psi.impl.KlassNamedElementImpl"
   mixin("projection")="com.klass.intellij.psi.impl.AbstractKlassProjectionNode"
   mixin("projectionAssociationEndNode|projectionParameterizedPropertyNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
-  implements("klass|association|enumeration|projection|member|dataTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|parameterDeclaration|enumerationLiteral") = "com.klass.intellij.psi.KlassNamedElement"
+  implements("klass|association|enumeration|projection|member|primitiveTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|parameterDeclaration|enumerationLiteral") = "com.klass.intellij.psi.KlassNamedElement"
   implements("projection|projectionInnerNode")="com.klass.intellij.psi.KlassTypedElement"
 
   tokens = [
@@ -61,6 +61,13 @@
     KEY_KEYWORD='key'
     PRIVATE_KEYWORD='private'
     OWNED_KEYWORD='owned'
+    ID_KEYWORD='id'
+    VALID_KEYWORD='valid'
+    VALID_FROM_KEYWORD='validFrom'
+    VALID_TO_KEYWORD='validTo'
+    SYSTEM_KEYWORD='system'
+    SYSTEM_FROM_KEYWORD='systemFrom'
+    SYSTEM_TO_KEYWORD='systemTo'
     ON_KEYWORD='on'
     RELATIONSHIP_KEYWORD='relationship'
     GET_VERB='GET'
@@ -87,7 +94,7 @@
   ]
 
   extends("klass|association|enumeration|projection|serviceGroup")=topLevelItem
-  extends("dataTypeProperty|enumerationProperty|parameterizedProperty")=member
+  extends("primitiveTypeProperty|enumerationProperty|parameterizedProperty")=member
   extends("projectionAssociationEndNode|projectionParameterizedPropertyNode|projectionLeafNode")=projectionNode
   extends("criteriaAnd|criteriaOr|criteriaOperator")=criteriaExpression
 }
@@ -101,7 +108,7 @@ topLevelItem ::= klass | association | enumeration | projection | serviceGroup {
 // TODO: Recovery rule isn't working
 private topLevelItem_recover ::= !('}' | 'class' | 'user' | 'association' | 'enumeration' | 'projection' | 'service')
 
-klass ::= ('class' | 'user') nombre serviceProjection* keywordOnClass* versions? lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
+klass ::= ('class' | 'user') nombre serviceProjection* classModifier* versions? lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
 association ::= 'association' nombre versions? '{' associationEnd* relationship? '}' {pin="{" methods=[setName getPresentation]}
 enumeration ::= 'enumeration' nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
 projection ::= 'projection' nombre ('(' parameterDeclaration (',' parameterDeclaration)* ')')? 'on' klassName lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
@@ -155,32 +162,35 @@ operator ::= EQEQ | NE | LT | GT | LE | GE | 'in' | 'contains' | 'startsWith' | 
 
 relationship ::= 'relationship' criteriaExpression
 
-member ::= dataTypeProperty | enumerationProperty | parameterizedProperty
-dataTypeProperty ::= propertyKeyword* nombre ':' dataType optionalMarker? {methods=[setName getPresentation]}
-enumerationProperty ::= propertyKeyword* nombre ':' enumerationType optionalMarker? {methods=[setName getPresentation]}
+member ::= primitiveTypeProperty | enumerationProperty | parameterizedProperty
+primitiveTypeProperty ::= nombre ':' primitiveType optionalMarker? propertyModifier* {methods=[setName getPresentation]}
+enumerationProperty ::= nombre ':' enumerationType optionalMarker? propertyModifier* {methods=[setName getPresentation]}
 parameterizedProperty ::= nombre '(' (parameterDeclaration (',' parameterDeclaration)*)? ')' ':' klassName multiplicity orderByClause? lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
 
-keywordOnClass ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD  | VERSIONED_KEYWORD | AUDITED_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD
+classModifier ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD  | VERSIONED_KEYWORD | AUDITED_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD
+propertyModifier ::= KEY_KEYWORD | PRIVATE_KEYWORD | ID_KEYWORD | VALID_KEYWORD | VALID_FROM_KEYWORD | VALID_TO_KEYWORD | SYSTEM_KEYWORD | SYSTEM_FROM_KEYWORD | SYSTEM_TO_KEYWORD
+associationEndModifier ::= OWNED_KEYWORD
+parameterModifier::= 'version' | 'userId' | 'id'
+
 versions ::= VERSIONS_KEYWORD '(' klassName ')'
 serviceProjection ::= serviceCategory ('(' projectionName ')')?
 serviceCategory ::= READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD
-propertyKeyword ::= 'key' | 'private' | 'owned'
 
 // TODO: packages, imports, fully qualified class names
 // TODO: split property keywords and association end keywords
-associationEnd ::= propertyKeyword* nombre ':' klassName multiplicity orderByClause? {methods=[setName getPresentation]}
+associationEnd ::= nombre ':' klassName multiplicity orderByClause? associationEndModifier* {methods=[setName getPresentation]}
 
 lBrace ::= '{'
 rBrace ::= '}'
 
 // Just can't be called name, because the getName method would clash
 nombre ::= nombreText | '`' nombreText '`'
-nombreText ::= IDENTIFIER | 'package' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | 'owned' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | VERSIONS_KEYWORD | ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | TEMPORAL_INSTANT_KEYWORD | TEMPORAL_RANGE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR
+nombreText ::= IDENTIFIER | 'package' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | 'owned' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | VERSIONS_KEYWORD | ID_KEYWORD | VALID_KEYWORD | VALID_FROM_KEYWORD | VALID_TO_KEYWORD | SYSTEM_KEYWORD | SYSTEM_FROM_KEYWORD | SYSTEM_TO_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | TEMPORAL_INSTANT_KEYWORD | TEMPORAL_RANGE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')? {methods=[setName getPresentation]}
 
-parameterDeclaration ::= nombre (':' primitiveTypeDeclaration)? {methods=[setName]}
-primitiveTypeDeclaration ::= (dataType | enumerationType) multiplicity
-dataType ::= ID_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | TEMPORAL_INSTANT_KEYWORD | TEMPORAL_RANGE_KEYWORD {methods=[getReference]}
+parameterDeclaration ::= nombre (':' dataTypeDeclaration)? parameterModifier* {methods=[setName]}
+dataTypeDeclaration ::= (primitiveType | enumerationType) multiplicity
+primitiveType ::= BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | TEMPORAL_INSTANT_KEYWORD | TEMPORAL_RANGE_KEYWORD {methods=[getReference]}
 enumerationType ::= nombre {methods=[getReference]}
 enumerationPrettyName ::= STRING_LITERAL
 klassName ::= nombre {methods=[getReference]}
