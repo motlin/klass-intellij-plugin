@@ -58,16 +58,17 @@
     PROJECTION_KEYWORD='projection'
     SERVICE_KEYWORD='service'
     USER_KEYWORD='user'
-    KEY_KEYWORD='key'
-    PRIVATE_KEYWORD='private'
-    OWNED_KEYWORD='owned'
-    ID_KEYWORD='id'
-    VALID_KEYWORD='valid'
-    VALID_FROM_KEYWORD='validFrom'
-    VALID_TO_KEYWORD='validTo'
-    SYSTEM_KEYWORD='system'
-    SYSTEM_FROM_KEYWORD='systemFrom'
-    SYSTEM_TO_KEYWORD='systemTo'
+    KEY_MODIFIER='key'
+    PRIVATE_MODIFIER='private'
+    OWNED_MODIFIER='owned'
+    ID_MODIFIER='id'
+    USER_ID_MODIFIER='userId'
+    VALID_MODIFIER='valid'
+    VALID_FROM_MODIFIER='validFrom'
+    VALID_TO_MODIFIER='validTo'
+    SYSTEM_MODIFIER='system'
+    SYSTEM_FROM_MODIFIER='systemFrom'
+    SYSTEM_TO_MODIFIER='systemTo'
     ON_KEYWORD='on'
     RELATIONSHIP_KEYWORD='relationship'
     GET_VERB='GET'
@@ -101,19 +102,19 @@
 
 compilationUnit ::= package topLevelItem*
 
-package ::= 'package' packagePart ('.' packagePart)*
+package ::= PACKAGE_KEYWORD packagePart ('.' packagePart)*
 packagePart ::= nombre
 
 topLevelItem ::= klass | association | enumeration | projection | serviceGroup {recoverWhile="topLevelItem_recover"}
 // TODO: Recovery rule isn't working
-private topLevelItem_recover ::= !('}' | 'class' | 'user' | 'association' | 'enumeration' | 'projection' | 'service')
+private topLevelItem_recover ::= !('}' | CLASS_KEYWORD | USER_KEYWORD | ASSOCIATION_KEYWORD | ENUMERATION_KEYWORD | PROJECTION_KEYWORD | SERVICE_KEYWORD)
 
-klass ::= ('class' | 'user') nombre serviceProjection* classModifier* versions? lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
-association ::= 'association' nombre versions? '{' associationEnd* relationship? '}' {pin="{" methods=[setName getPresentation]}
-enumeration ::= 'enumeration' nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
-projection ::= 'projection' nombre ('(' parameterDeclaration (',' parameterDeclaration)* ')')? 'on' klassName lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
+klass ::= (CLASS_KEYWORD | USER_KEYWORD) nombre serviceProjection* classModifier* versions? lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
+association ::= ASSOCIATION_KEYWORD nombre versions? '{' associationEnd* relationship? '}' {pin="{" methods=[setName getPresentation]}
+enumeration ::= ENUMERATION_KEYWORD nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
+projection ::= PROJECTION_KEYWORD nombre ('(' parameterDeclaration (',' parameterDeclaration)* ')')? 'on' klassName lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
 // TODO: Consider moving serviceGroup inside class
-serviceGroup ::= 'service' klassName lBrace urlGroup* rBrace {pin="{" methods=[getPresentation]}
+serviceGroup ::= SERVICE_KEYWORD klassName lBrace urlGroup* rBrace {pin="{" methods=[getPresentation]}
 
 projectionNode ::= projectionAssociationEndNode | projectionParameterizedPropertyNode | projectionLeafNode
 projectionAssociationEndNode ::= associationEndName ':' '{' (projectionNode ',')* '}'
@@ -129,15 +130,15 @@ urlConstant ::= nombre
 queryParamPart ::= '{' parameterDeclaration '}'
 service ::= verb lBrace serviceMultiplicityClause? serviceCriteriaClause? serviceAuthorizeClause? serviceValidateClause? serviceConflictClause? serviceProjectionClause orderByClause? rBrace {pin=1 methods=[getPresentation]}
 
-serviceMultiplicityClause ::= 'multiplicity' ':' serviceMultiplicity
-serviceCriteriaClause ::= 'criteria' ':' criteriaExpression
+serviceMultiplicityClause ::= MULTIPLICITY_KEYWORD ':' serviceMultiplicity
+serviceCriteriaClause ::= CRITERIA_KEYWORD ':' criteriaExpression
 serviceAuthorizeClause ::= 'authorize' ':' criteriaExpression
-serviceValidateClause ::= 'validate' ':' criteriaExpression
-serviceConflictClause ::= 'conflict' ':' criteriaExpression
+serviceValidateClause ::= VALIDATE_KEYWORD ':' criteriaExpression
+serviceConflictClause ::= CONFLICT_KEYWORD ':' criteriaExpression
 // TODO: This only allows passing scoped variables, but expressions (literals) should work here
-serviceProjectionClause ::= 'projection' ':' projectionName ('(' parameterName (',' parameterName)* ')')?
-orderByClause ::= 'orderBy' ':' (orderByProperty) (',' orderByProperty)*
-orderByProperty ::= 'this' '.' propertyName orderByDirection?
+serviceProjectionClause ::= PROJECTION_KEYWORD ':' projectionName ('(' parameterName (',' parameterName)* ')')?
+orderByClause ::= ORDER_BY_KEYWORD ':' (orderByProperty) (',' orderByProperty)*
+orderByProperty ::= THIS_KEYWORD '.' propertyName orderByDirection?
 orderByDirection ::= 'ascending' | 'descending'
 serviceMultiplicity ::= 'one' | 'many'
 verb ::= 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
@@ -157,20 +158,20 @@ expressionValue ::= expressionLiteral | expressionLiteralList | expressionProper
 expressionLiteral ::= integerLiteralNode | floatLiteralNode | stringLiteralNode | booleanLiteral
 expressionLiteralList ::= '(' expressionLiteral (',' expressionLiteral)* ')'
 expressionProperty ::= criteriaType '.' propertyName
-criteriaType ::= 'this' | klassName
-operator ::= EQEQ | NE | LT | GT | LE | GE | 'in' | 'contains' | 'startsWith' | 'endsWith'
+criteriaType ::= THIS_KEYWORD | klassName
+operator ::= EQEQ | NE | LT | GT | LE | GE | 'in' | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR
 
-relationship ::= 'relationship' criteriaExpression
+relationship ::= RELATIONSHIP_KEYWORD criteriaExpression
 
 member ::= primitiveTypeProperty | enumerationProperty | parameterizedProperty
 primitiveTypeProperty ::= nombre ':' primitiveType optionalMarker? propertyModifier* {methods=[setName getPresentation]}
 enumerationProperty ::= nombre ':' enumerationType optionalMarker? propertyModifier* {methods=[setName getPresentation]}
 parameterizedProperty ::= nombre '(' (parameterDeclaration (',' parameterDeclaration)*)? ')' ':' klassName multiplicity orderByClause? lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
 
-classModifier ::= SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD  | VERSIONED_KEYWORD | AUDITED_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD
-propertyModifier ::= KEY_KEYWORD | PRIVATE_KEYWORD | ID_KEYWORD | VALID_KEYWORD | VALID_FROM_KEYWORD | VALID_TO_KEYWORD | SYSTEM_KEYWORD | SYSTEM_FROM_KEYWORD | SYSTEM_TO_KEYWORD
-associationEndModifier ::= OWNED_KEYWORD
-parameterModifier::= 'version' | 'userId' | 'id'
+classModifier ::= SYSTEM_TEMPORAL_MODIFIER | VALID_TEMPORAL_MODIFIER | BITEMPORAL_MODIFIER  | VERSIONED_MODIFIER | AUDITED_MODIFIER | OPTIMISTICALLY_LOCKED_MODIFIER
+propertyModifier ::= KEY_MODIFIER | PRIVATE_MODIFIER | ID_MODIFIER | USER_ID_MODIFIER | VALID_MODIFIER | VALID_FROM_MODIFIER | VALID_TO_MODIFIER | SYSTEM_MODIFIER | SYSTEM_FROM_MODIFIER | SYSTEM_TO_MODIFIER
+associationEndModifier ::= OWNED_MODIFIER
+parameterModifier::= VERSION_MODIFIER  | ID_MODIFIER | USER_ID_MODIFIER
 
 versions ::= VERSIONS_KEYWORD '(' klassName ')'
 serviceProjection ::= serviceCategory ('(' projectionName ')')?
@@ -178,14 +179,14 @@ serviceCategory ::= READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWO
 
 // TODO: packages, imports, fully qualified class names
 // TODO: split property keywords and association end keywords
-associationEnd ::= nombre ':' klassName multiplicity orderByClause? associationEndModifier* {methods=[setName getPresentation]}
+associationEnd ::= nombre ':' klassName multiplicity associationEndModifier* orderByClause? {methods=[setName getPresentation]}
 
 lBrace ::= '{'
 rBrace ::= '}'
 
 // Just can't be called name, because the getName method would clash
-nombre ::= nombreText | '`' nombreText '`'
-nombreText ::= IDENTIFIER | 'package' | 'class' | 'association' | 'enumeration' | 'projection' | 'service' | 'user' | 'key' | 'private' | 'owned' | SYSTEM_TEMPORAL_KEYWORD | VALID_TEMPORAL_KEYWORD | BITEMPORAL_KEYWORD | VERSIONED_KEYWORD | VERSIONS_KEYWORD | ID_KEYWORD | VALID_KEYWORD | VALID_FROM_KEYWORD | VALID_TO_KEYWORD | SYSTEM_KEYWORD | SYSTEM_FROM_KEYWORD | SYSTEM_TO_KEYWORD | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | TEMPORAL_INSTANT_KEYWORD | TEMPORAL_RANGE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | OPTIMISTICALLY_LOCKED_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR
+nombre ::= nombreText // TODO: Inline
+nombreText ::= IDENTIFIER | PACKAGE_KEYWORD | CLASS_KEYWORD | ASSOCIATION_KEYWORD | ENUMERATION_KEYWORD | PROJECTION_KEYWORD | SERVICE_KEYWORD | USER_KEYWORD | KEY_MODIFIER | PRIVATE_MODIFIER | OWNED_MODIFIER | SYSTEM_TEMPORAL_MODIFIER | VALID_TEMPORAL_MODIFIER | BITEMPORAL_KEYWORD | VERSIONED_MODIFIER | VERSIONS_KEYWORD | USER_ID_MODIFIER | ID_MODIFIER | VALID_MODIFIER | VALID_FROM_MODIFIER | VALID_TO_MODIFIER | SYSTEM_MODIFIER | SYSTEM_FROM_MODIFIER | SYSTEM_TO_MODIFIER | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | TEMPORAL_INSTANT_KEYWORD | TEMPORAL_RANGE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | OPTIMISTICALLY_LOCKED_MODIFIER | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')? {methods=[setName getPresentation]}
 
 parameterDeclaration ::= nombre (':' dataTypeDeclaration)? parameterModifier* {methods=[setName]}
@@ -198,7 +199,7 @@ propertyName ::= nombre {methods=[getReference]}
 associationEndName ::= nombre {methods=[getReference]}
 parameterizedPropertyName ::= nombre {methods=[getReference]}
 projectionName ::= nombre {methods=[getReference]}
-expressionNativeValue ::= 'user' {methods=[getReference]}
+expressionNativeValue ::= USER_KEYWORD {methods=[getReference]}
 expressionVariableName ::= nombre {methods=[getReference]}
 parameterName ::= nombre {methods=[getReference]}
 optionalMarker ::= QUESTION_MARK
@@ -208,7 +209,7 @@ dummyMultiplicity ::= lowerBound | lowerBound '..' {methods=[getReference]}
 
 lowerBound ::= INTEGER_LITERAL
 upperBound ::= INTEGER_LITERAL | ASTERISK
-booleanLiteral ::= 'true' | 'false' | 'null'
+booleanLiteral ::= TRUE_KEYWORD | FALSE_KEYWORD | NULL_KEYWORD
 integerLiteralNode ::= INTEGER_LITERAL
 floatLiteralNode ::= FLOAT_LITERAL
 stringLiteralNode ::= STRING_LITERAL

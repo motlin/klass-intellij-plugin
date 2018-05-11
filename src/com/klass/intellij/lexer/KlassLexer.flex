@@ -71,12 +71,13 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "service" { return KlassTypes.SERVICE_KEYWORD; }
   "user" { return KlassTypes.USER_KEYWORD; }
 
-  "systemTemporal" { return KlassTypes.SYSTEM_TEMPORAL_KEYWORD; }
-  "validTemporal" { return KlassTypes.VALID_TEMPORAL_KEYWORD; }
-  "bitemporal" { return KlassTypes.BITEMPORAL_KEYWORD; }
-  "versioned" { return KlassTypes.VERSIONED_KEYWORD; }
-  "audited" { return KlassTypes.AUDITED_KEYWORD; }
-  "optimisticallyLocked" { return KlassTypes.OPTIMISTICALLY_LOCKED_KEYWORD; }
+  "systemTemporal" { return KlassTypes.SYSTEM_TEMPORAL_MODIFIER; }
+  "validTemporal" { return KlassTypes.VALID_TEMPORAL_MODIFIER; }
+  "bitemporal" { return KlassTypes.BITEMPORAL_MODIFIER; }
+  "versioned" { return KlassTypes.VERSIONED_MODIFIER; }
+  "audited" { return KlassTypes.AUDITED_MODIFIER; }
+  "optimisticallyLocked" { return KlassTypes.OPTIMISTICALLY_LOCKED_MODIFIER; }
+
   "read" { return KlassTypes.READ_KEYWORD; }
   "write" { return KlassTypes.WRITE_KEYWORD; }
   "create" { return KlassTypes.CREATE_KEYWORD; }
@@ -89,18 +90,19 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "startsWith" { return KlassTypes.STARTS_WITH_OPERATOR; }
   "endsWith" { return KlassTypes.ENDS_WITH_OPERATOR; }
 
-  "key" { return KlassTypes.KEY_KEYWORD; }
-  "owned" { return KlassTypes.OWNED_KEYWORD; }
-  "id" { return KlassTypes.ID_KEYWORD; }
+  "key" { return KlassTypes.KEY_MODIFIER; }
+  "owned" { return KlassTypes.OWNED_MODIFIER; }
+  "id" { return KlassTypes.ID_MODIFIER; }
+  "userId" { return KlassTypes.USER_ID_MODIFIER; }
   "on" { return KlassTypes.ON_KEYWORD; }
   "relationship" { return KlassTypes.RELATIONSHIP_KEYWORD; }
 
-  "valid" { return KlassTypes.VALID_KEYWORD; }
-  "validFrom" { return KlassTypes.VALID_FROM_KEYWORD; }
-  "validTo" { return KlassTypes.VALID_TO_KEYWORD; }
-  "system" { return KlassTypes.SYSTEM_KEYWORD; }
-  "systemFrom" { return KlassTypes.SYSTEM_FROM_KEYWORD; }
-  "systemTo" { return KlassTypes.SYSTEM_TO_KEYWORD; }
+  "valid" { return KlassTypes.VALID_MODIFIER; }
+  "validFrom" { return KlassTypes.VALID_FROM_MODIFIER; }
+  "validTo" { return KlassTypes.VALID_TO_MODIFIER; }
+  "system" { return KlassTypes.SYSTEM_MODIFIER; }
+  "systemFrom" { return KlassTypes.SYSTEM_FROM_MODIFIER; }
+  "systemTo" { return KlassTypes.SYSTEM_TO_MODIFIER; }
 
   "multiplicity" { return KlassTypes.MULTIPLICITY_KEYWORD; }
   "criteria" { return KlassTypes.CRITERIA_KEYWORD; }
@@ -156,7 +158,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  "native" { return KlassTypes.NATIVE_KEYWORD; }
 //  "new" { return KlassTypes.NEW_KEYWORD; }
   "package" { return KlassTypes.PACKAGE_KEYWORD; }
-  "private" { return KlassTypes.PRIVATE_KEYWORD; }
+  "private" { return KlassTypes.PRIVATE_MODIFIER; }
 //  "public" { return KlassTypes.PUBLIC_KEYWORD; }
 //  "short" { return KlassTypes.SHORT_KEYWORD; }
 //  "super" { return KlassTypes.SUPER_KEYWORD; }

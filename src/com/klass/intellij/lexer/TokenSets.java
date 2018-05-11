@@ -9,7 +9,7 @@ import static com.klass.intellij.psi.KlassTypes.ANDAND;
 import static com.klass.intellij.psi.KlassTypes.ASCENDING_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.ASSOCIATION;
 import static com.klass.intellij.psi.KlassTypes.ASSOCIATION_KEYWORD;
-import static com.klass.intellij.psi.KlassTypes.AUDITED_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.AUDITED_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.AUTHORIZE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.BITEMPORAL_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.BOOLEAN_KEYWORD;
@@ -29,11 +29,11 @@ import static com.klass.intellij.psi.KlassTypes.FALSE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.FLOAT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.GE;
 import static com.klass.intellij.psi.KlassTypes.GT;
-import static com.klass.intellij.psi.KlassTypes.ID_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.ID_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.INSTANT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.INTEGER_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.IN_OPERATOR;
-import static com.klass.intellij.psi.KlassTypes.KEY_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.KEY_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.KLASS;
 import static com.klass.intellij.psi.KlassTypes.LE;
 import static com.klass.intellij.psi.KlassTypes.LOCAL_DATE_KEYWORD;
@@ -45,13 +45,13 @@ import static com.klass.intellij.psi.KlassTypes.NE;
 import static com.klass.intellij.psi.KlassTypes.NULL_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.ONE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.ON_KEYWORD;
-import static com.klass.intellij.psi.KlassTypes.OPTIMISTICALLY_LOCKED_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.OPTIMISTICALLY_LOCKED_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.ORDER_BY_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.OROR;
-import static com.klass.intellij.psi.KlassTypes.OWNED_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.OWNED_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.PACKAGE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.PERCENT;
-import static com.klass.intellij.psi.KlassTypes.PRIVATE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.PRIVATE_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.PROJECTION_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.QUESTION_MARK;
 import static com.klass.intellij.psi.KlassTypes.READ_KEYWORD;
@@ -59,16 +59,23 @@ import static com.klass.intellij.psi.KlassTypes.RELATIONSHIP_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.SERVICE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.STARTS_WITH_OPERATOR;
 import static com.klass.intellij.psi.KlassTypes.STRING_KEYWORD;
-import static com.klass.intellij.psi.KlassTypes.SYSTEM_TEMPORAL_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.SYSTEM_FROM_MODIFIER;
+import static com.klass.intellij.psi.KlassTypes.SYSTEM_MODIFIER;
+import static com.klass.intellij.psi.KlassTypes.SYSTEM_TEMPORAL_MODIFIER;
+import static com.klass.intellij.psi.KlassTypes.SYSTEM_TO_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.TEMPORAL_INSTANT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.TEMPORAL_RANGE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.THIS_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.TRUE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.UPDATE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.USER_ID_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.USER_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.VALIDATE_KEYWORD;
-import static com.klass.intellij.psi.KlassTypes.VALID_TEMPORAL_KEYWORD;
-import static com.klass.intellij.psi.KlassTypes.VERSIONED_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.VALID_FROM_MODIFIER;
+import static com.klass.intellij.psi.KlassTypes.VALID_MODIFIER;
+import static com.klass.intellij.psi.KlassTypes.VALID_TEMPORAL_MODIFIER;
+import static com.klass.intellij.psi.KlassTypes.VALID_TO_MODIFIER;
+import static com.klass.intellij.psi.KlassTypes.VERSIONED_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.VERSIONS_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.WRITE_KEYWORD;
 
@@ -89,21 +96,21 @@ public interface TokenSets
             PROJECTION_KEYWORD,
             SERVICE_KEYWORD,
             USER_KEYWORD,
-            VALID_TEMPORAL_KEYWORD,
-            SYSTEM_TEMPORAL_KEYWORD,
+            VALID_TEMPORAL_MODIFIER,
+            SYSTEM_TEMPORAL_MODIFIER,
             BITEMPORAL_KEYWORD,
-            VERSIONED_KEYWORD,
+            VERSIONED_MODIFIER,
             VERSIONS_KEYWORD,
-            AUDITED_KEYWORD,
-            OPTIMISTICALLY_LOCKED_KEYWORD,
+            AUDITED_MODIFIER,
+            OPTIMISTICALLY_LOCKED_MODIFIER,
             READ_KEYWORD,
             WRITE_KEYWORD,
             CREATE_KEYWORD,
             UPDATE_KEYWORD,
             DELETE_KEYWORD,
-            KEY_KEYWORD,
-            PRIVATE_KEYWORD,
-            OWNED_KEYWORD,
+            KEY_MODIFIER,
+            PRIVATE_MODIFIER,
+            OWNED_MODIFIER,
             CRITERIA_KEYWORD,
             VALIDATE_KEYWORD,
             AUTHORIZE_KEYWORD,
@@ -116,7 +123,15 @@ public interface TokenSets
             MANY_KEYWORD,
             THIS_KEYWORD,
             ON_KEYWORD,
-            RELATIONSHIP_KEYWORD);
+            RELATIONSHIP_KEYWORD,
+            USER_ID_MODIFIER,
+            ID_MODIFIER,
+            VALID_MODIFIER,
+            VALID_FROM_MODIFIER,
+            VALID_TO_MODIFIER,
+            SYSTEM_MODIFIER,
+            SYSTEM_FROM_MODIFIER,
+            SYSTEM_TO_MODIFIER);
 
     TokenSet LITERAL_BIT_SET = TokenSet.create(TRUE_KEYWORD, FALSE_KEYWORD, NULL_KEYWORD);
 
@@ -132,7 +147,7 @@ public interface TokenSets
     //            SYNCHRONIZED_KEYWORD, STRICTFP_KEYWORD, TRANSIENT_KEYWORD, VOLATILE_KEYWORD, DEFAULT_KEYWORD);
     //
     TokenSet PRIMITIVE_TYPE_BIT_SET = TokenSet.create(
-            ID_KEYWORD,
+            ID_MODIFIER,
             BOOLEAN_KEYWORD,
             INTEGER_KEYWORD,
             LONG_KEYWORD,
@@ -168,6 +183,8 @@ public interface TokenSets
     //
     //    TokenSet IMPORT_STATEMENT_BASE_BIT_SET = TokenSet.create(IMPORT_STATEMENT, IMPORT_STATIC_STATEMENT);
     TokenSet CLASS_KEYWORD_BIT_SET = TokenSet.create(CLASS_KEYWORD, ASSOCIATION_KEYWORD);
-    TokenSet MEMBER_BIT_SET = TokenSet.create(KLASS, ASSOCIATION/*, FIELD, ENUM_CONSTANT, METHOD, ANNOTATION_METHOD*/);
+    TokenSet MEMBER_BIT_SET        = TokenSet.create(
+            KLASS,
+            ASSOCIATION/*, FIELD, ENUM_CONSTANT, METHOD, ANNOTATION_METHOD*/);
     //    TokenSet FULL_MEMBER_BIT_SET = TokenSet.orSet(MEMBER_BIT_SET, TokenSet.create(CLASS_INITIALIZER));
 }
