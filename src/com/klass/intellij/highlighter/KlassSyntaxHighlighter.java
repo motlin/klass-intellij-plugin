@@ -56,10 +56,10 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         ourMap1.put(KlassTypes.LBRACKET, KlassHighlightingColors.BRACKETS);
         ourMap1.put(KlassTypes.RBRACKET, KlassHighlightingColors.BRACKETS);
 
-        //        ourMap1.put(KlassTypes.COMMA, KlassHighlightingColors.COMMA);
+        ourMap1.put(KlassTypes.COMMA, KlassHighlightingColors.COMMA);
         ourMap1.put(KlassTypes.DOT, KlassHighlightingColors.DOT);
         ourMap1.put(KlassTypes.DOTDOT, KlassHighlightingColors.DOT);
-        //        ourMap1.put(KlassTypes.SEMICOLON, KlassHighlightingColors.KLASS_SEMICOLON);
+        ourMap1.put(KlassTypes.SEMICOLON, KlassHighlightingColors.KLASS_SEMICOLON);
         ourMap1.put(KlassTypes.SLASH, KlassHighlightingColors.DOT);
 
         ourMap1.put(KlassTokenType.C_STYLE_COMMENT, KlassHighlightingColors.KLASS_BLOCK_COMMENT);

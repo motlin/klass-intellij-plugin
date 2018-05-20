@@ -1,5 +1,7 @@
 package com.klass.intellij.psi;
 
+import java.util.List;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFileFactory;
 import com.klass.intellij.KlassFileType;
@@ -60,8 +62,8 @@ public class KlassElementFactory
                         + "\n"
                         + "association " + name + "\n"
                         + "{\n"
-                        + "    firstSide: Dummy[1..1]\n"
-                        + "    secondSide: Dummy[0..*]\n"
+                        + "    firstSide: Dummy[1..1];\n"
+                        + "    secondSide: Dummy[0..*];\n"
                         + "}");
         return file.findChildByClass(KlassAssociation.class);
     }
@@ -74,10 +76,11 @@ public class KlassElementFactory
                         + "\n"
                         + "class DummyClass\n"
                         + "{\n"
-                        + "  " + name + ": String\n"
+                        + "  " + name + ": String;\n"
                         + "}\n");
-        KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
-        return (KlassPrimitiveTypeProperty) klassKlass.getMemberList().get(0);
+        KlassKlass        klassKlass = file.findChildByClass(KlassKlass.class);
+        List<KlassMember> memberList = klassKlass.getMemberList();
+        return (KlassPrimitiveTypeProperty) memberList.get(0);
     }
 
     public static KlassEnumerationProperty createEnumerationProperty(Project project, String name)
@@ -88,7 +91,7 @@ public class KlassElementFactory
                         + "\n"
                         + "class DummyClass\n"
                         + "{\n"
-                        + "  " + name + ": Status\n"
+                        + "  " + name + ": Status;\n"
                         + "}\n");
         KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
         return (KlassEnumerationProperty) klassKlass.getMemberList().get(0);
@@ -119,8 +122,8 @@ public class KlassElementFactory
                         + "\n"
                         + "association DummyAssociation\n"
                         + "{\n"
-                        + "  " + name + ": DummyType[0..1]\n"
-                        + "  target: DummyType[0..*]\n"
+                        + "  " + name + ": DummyType[0..1];\n"
+                        + "  target: DummyType[0..*];\n"
                         + "}\n");
         KlassAssociation klassAssociation = file.findChildByClass(KlassAssociation.class);
         return klassAssociation.getAssociationEndList().get(0);
@@ -134,8 +137,8 @@ public class KlassElementFactory
                         + "\n"
                         + "association DummyAssociation\n"
                         + "{\n"
-                        + "  source: " + name + "[0..1]\n"
-                        + "  target: " + name + "[0..*]\n"
+                        + "  source: " + name + "[0..1];\n"
+                        + "  target: " + name + "[0..*];\n"
                         + "\n"
                         + "  relationship: this.id == " + name + ".sourceId\n"
                         + "}\n");
@@ -217,7 +220,7 @@ public class KlassElementFactory
                         + "\n"
                         + "class DummyClass\n"
                         + "{\n"
-                        + "  dummyProperty: " + name + "\n"
+                        + "  dummyProperty: " + name + ";\n"
                         + "}\n");
         KlassKlass               klassKlass               = file.findChildByClass(KlassKlass.class);
         KlassEnumerationProperty klassEnumerationProperty = (KlassEnumerationProperty) klassKlass.getMemberList().get(0);

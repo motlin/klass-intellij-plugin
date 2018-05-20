@@ -209,7 +209,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "}"   { return KlassTypes.RBRACE; }
   "["   { return KlassTypes.LBRACKET; }
   "]"   { return KlassTypes.RBRACKET; }
-//  ";"   { return KlassTypes.SEMICOLON; }
+  ";"   { return KlassTypes.SEMICOLON; }
   ","   { return KlassTypes.COMMA; }
 //  "..." { return KlassTypes.ELLIPSIS; }
   ".."   { return KlassTypes.DOTDOT; }
@@ -233,7 +233,6 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  "->" { return KlassTypes.ARROW; }
 
   "/" { return KlassTypes.SLASH; }
-
 }
 
 [^]  { return TokenType.BAD_CHARACTER; }

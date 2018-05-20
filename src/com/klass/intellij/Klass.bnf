@@ -47,6 +47,7 @@
     QUESTION_MARK='?'
     EQ='='
     AND='&'
+    SEMICOLON=';'
     IN_OPERATOR='in'
     CONTAINS_OPERATOR='contains'
     STARTS_WITH_OPERATOR='startsWith'
@@ -128,15 +129,19 @@ url ::= urlPart+ '/'? ('?' queryParamPart ('&' queryParamPart)*)?
 urlPart ::= ('/' urlConstant) | ('/' '{' parameterDeclaration '}') {pin='/'}
 urlConstant ::= nombre
 queryParamPart ::= '{' parameterDeclaration '}'
-service ::= verb lBrace serviceMultiplicityClause? serviceCriteriaClause? serviceAuthorizeClause? serviceValidateClause? serviceConflictClause? serviceProjectionClause orderByClause? rBrace {pin=1 methods=[getPresentation]}
+service ::= verb lBrace serviceMultiplicityClause? serviceCriteriaClause? serviceAuthorizeClause? serviceValidateClause? serviceConflictClause? serviceProjectionClause serviceOrderByClause? rBrace {pin=1 methods=[getPresentation]}
 
-serviceMultiplicityClause ::= MULTIPLICITY_KEYWORD ':' serviceMultiplicity
-serviceCriteriaClause ::= CRITERIA_KEYWORD ':' criteriaExpression
-serviceAuthorizeClause ::= 'authorize' ':' criteriaExpression
-serviceValidateClause ::= VALIDATE_KEYWORD ':' criteriaExpression
-serviceConflictClause ::= CONFLICT_KEYWORD ':' criteriaExpression
+// TODO: This order of criteria may not match antlr
+serviceMultiplicityClause ::= MULTIPLICITY_KEYWORD ':' serviceMultiplicity SEMICOLON
+serviceCriteriaClause ::= CRITERIA_KEYWORD ':' criteriaExpression SEMICOLON
+serviceAuthorizeClause ::= 'authorize' ':' criteriaExpression SEMICOLON
+serviceValidateClause ::= VALIDATE_KEYWORD ':' criteriaExpression SEMICOLON
+serviceConflictClause ::= CONFLICT_KEYWORD ':' criteriaExpression SEMICOLON
 // TODO: This only allows passing scoped variables, but expressions (literals) should work here
-serviceProjectionClause ::= PROJECTION_KEYWORD ':' projectionName ('(' parameterName (',' parameterName)* ')')?
+serviceProjectionClause ::= PROJECTION_KEYWORD ':' projectionName ('(' parameterName (',' parameterName)* ')')? SEMICOLON
+private serviceOrderByClause ::= orderByClause SEMICOLON
+
+
 orderByClause ::= ORDER_BY_KEYWORD ':' (orderByProperty) (',' orderByProperty)*
 orderByProperty ::= THIS_KEYWORD '.' propertyName orderByDirection?
 orderByDirection ::= 'ascending' | 'descending'
@@ -164,8 +169,9 @@ operator ::= EQEQ | NE | LT | GT | LE | GE | 'in' | CONTAINS_OPERATOR | STARTS_W
 relationship ::= RELATIONSHIP_KEYWORD criteriaExpression
 
 member ::= primitiveTypeProperty | enumerationProperty | parameterizedProperty
-primitiveTypeProperty ::= nombre ':' primitiveType optionalMarker? propertyModifier* {methods=[setName getPresentation]}
-enumerationProperty ::= nombre ':' enumerationType optionalMarker? propertyModifier* {methods=[setName getPresentation]}
+// TODO: Make semi-colon required
+primitiveTypeProperty ::= nombre ':' primitiveType optionalMarker? propertyModifier* SEMICOLON {methods=[setName getPresentation]}
+enumerationProperty ::= nombre ':' enumerationType optionalMarker? propertyModifier* SEMICOLON {methods=[setName getPresentation]}
 parameterizedProperty ::= nombre '(' (parameterDeclaration (',' parameterDeclaration)*)? ')' ':' klassName multiplicity orderByClause? lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
 
 classModifier ::= SYSTEM_TEMPORAL_MODIFIER | VALID_TEMPORAL_MODIFIER | BITEMPORAL_MODIFIER  | VERSIONED_MODIFIER | AUDITED_MODIFIER | OPTIMISTICALLY_LOCKED_MODIFIER
@@ -179,7 +185,7 @@ serviceCategory ::= READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWO
 
 // TODO: packages, imports, fully qualified class names
 // TODO: split property keywords and association end keywords
-associationEnd ::= nombre ':' klassName multiplicity associationEndModifier* orderByClause? {methods=[setName getPresentation]}
+associationEnd ::= nombre ':' klassName multiplicity associationEndModifier* orderByClause? SEMICOLON {methods=[setName getPresentation]}
 
 lBrace ::= '{'
 rBrace ::= '}'
