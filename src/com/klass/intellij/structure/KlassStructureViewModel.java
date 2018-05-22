@@ -27,7 +27,7 @@ public class KlassStructureViewModel
     @NotNull
     public Sorter[] getSorters()
     {
-        return new Sorter[]{Sorter.ALPHA_SORTER};
+        return new Sorter[]{};
     }
 
     @Override

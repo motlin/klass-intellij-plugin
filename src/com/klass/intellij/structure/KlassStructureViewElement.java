@@ -1,18 +1,21 @@
 package com.klass.intellij.structure;
 
+import java.util.Arrays;
+
 import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.util.treeView.smartTree.SortableTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.klass.intellij.psi.*;
+import com.klass.intellij.psi.KlassAssociation;
+import com.klass.intellij.psi.KlassFile;
+import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassServiceGroup;
+import com.klass.intellij.psi.KlassTopLevelItem;
+import com.klass.intellij.psi.KlassUrlGroup;
 
-import java.util.Arrays;
-
-public class KlassStructureViewElement implements StructureViewTreeElement, SortableTreeElement
+public class KlassStructureViewElement implements StructureViewTreeElement
 {
     private final PsiElement element;
 
@@ -48,14 +51,6 @@ public class KlassStructureViewElement implements StructureViewTreeElement, Sort
     {
         return this.element instanceof NavigationItem
                 && ((NavigationItem) this.element).canNavigateToSource();
-    }
-
-    @Override
-    public String getAlphaSortKey()
-    {
-        return this.element instanceof PsiNamedElement
-                ? ((PsiNamedElement) this.element).getName()
-                : null;
     }
 
     @Override
