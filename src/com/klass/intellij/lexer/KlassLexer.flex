@@ -77,6 +77,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "versioned" { return KlassTypes.VERSIONED_MODIFIER; }
   "audited" { return KlassTypes.AUDITED_MODIFIER; }
   "optimisticallyLocked" { return KlassTypes.OPTIMISTICALLY_LOCKED_MODIFIER; }
+  "transient" { return KlassTypes.TRANSIENT_MODIFIER; }
 
   "read" { return KlassTypes.READ_KEYWORD; }
   "write" { return KlassTypes.WRITE_KEYWORD; }

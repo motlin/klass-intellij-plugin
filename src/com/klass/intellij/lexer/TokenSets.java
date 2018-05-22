@@ -11,7 +11,7 @@ import static com.klass.intellij.psi.KlassTypes.ASSOCIATION;
 import static com.klass.intellij.psi.KlassTypes.ASSOCIATION_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.AUDITED_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.AUTHORIZE_KEYWORD;
-import static com.klass.intellij.psi.KlassTypes.BITEMPORAL_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.BITEMPORAL_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.BOOLEAN_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.CLASS_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.COLON;
@@ -66,6 +66,7 @@ import static com.klass.intellij.psi.KlassTypes.SYSTEM_TO_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.TEMPORAL_INSTANT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.TEMPORAL_RANGE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.THIS_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.TRANSIENT_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.TRUE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.UPDATE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.USER_ID_MODIFIER;
@@ -96,13 +97,14 @@ public interface TokenSets
             PROJECTION_KEYWORD,
             SERVICE_KEYWORD,
             USER_KEYWORD,
-            VALID_TEMPORAL_MODIFIER,
             SYSTEM_TEMPORAL_MODIFIER,
-            BITEMPORAL_KEYWORD,
+            VALID_TEMPORAL_MODIFIER,
+            BITEMPORAL_MODIFIER,
             VERSIONED_MODIFIER,
-            VERSIONS_KEYWORD,
             AUDITED_MODIFIER,
             OPTIMISTICALLY_LOCKED_MODIFIER,
+            TRANSIENT_MODIFIER,
+            VERSIONS_KEYWORD,
             READ_KEYWORD,
             WRITE_KEYWORD,
             CREATE_KEYWORD,
