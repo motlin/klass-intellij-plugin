@@ -77,6 +77,8 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
             }
         }
 
+        // TODO: Handle inferred associationEnd 'version'
+
         return new ResolveResult[]{};
     }
 

@@ -20,6 +20,7 @@ import com.klass.intellij.psi.KlassExpressionNativeValue;
 import com.klass.intellij.psi.KlassExpressionVariableName;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
+import com.klass.intellij.psi.KlassMemberName;
 import com.klass.intellij.psi.KlassOptionalMarker;
 import com.klass.intellij.psi.KlassParameterDeclaration;
 import com.klass.intellij.psi.KlassParameterName;
@@ -29,7 +30,6 @@ import com.klass.intellij.psi.KlassPrimitiveType;
 import com.klass.intellij.psi.KlassPrimitiveTypeProperty;
 import com.klass.intellij.psi.KlassProjection;
 import com.klass.intellij.psi.KlassProjectionName;
-import com.klass.intellij.psi.KlassPropertyName;
 import com.klass.intellij.psi.KlassService;
 import com.klass.intellij.psi.KlassServiceCriteriaClause;
 import com.klass.intellij.psi.KlassServiceGroup;
@@ -191,15 +191,15 @@ public class KlassPsiImplUtil
         return new KlassKlassReference(klassKlassName, className);
     }
 
-    public static PsiReference getReference(KlassPropertyName klassPropertyName)
+    public static PsiReference getReference(KlassMemberName klassMemberName)
     {
-        String associationEndType = klassPropertyName.getText();
+        String associationEndType = klassMemberName.getText();
         if (associationEndType == null)
         {
             return null;
         }
 
-        return new KlassMemberReference(klassPropertyName, associationEndType);
+        return new KlassMemberReference(klassMemberName, associationEndType);
     }
 
     public static PsiReference getReference(KlassAssociationEndName klassAssociationEndName)

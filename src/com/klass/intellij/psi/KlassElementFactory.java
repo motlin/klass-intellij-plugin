@@ -179,7 +179,7 @@ public class KlassElementFactory
         return klassEnumeration.getEnumerationLiteralList().get(0);
     }
 
-    public static KlassPropertyName createPropertyName(Project project, String newElementName)
+    public static KlassMemberName createPropertyName(Project project, String newElementName)
     {
         KlassFile file = KlassElementFactory.createFile(
                 project,
@@ -192,7 +192,7 @@ public class KlassElementFactory
         KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
         KlassProjectionLeafNode projectionLeafNode = (KlassProjectionLeafNode) klassProjection.getProjectionNodeList().get(
                 0);
-        return projectionLeafNode.getPropertyName();
+        return projectionLeafNode.getMemberName();
     }
 
     public static KlassProjectionName createProjectionName(Project project, String newElementName)
@@ -309,10 +309,10 @@ public class KlassElementFactory
         KlassKlass                 klassKlass            = file.findChildByClass(KlassKlass.class);
         KlassParameterizedProperty parameterizedProperty = (KlassParameterizedProperty) klassKlass.getMemberList().get(0);
         KlassCriteriaOr            criteriaOr            = (KlassCriteriaOr) parameterizedProperty.getCriteriaExpression();
-        return criteriaOr.getAtomicCriteriaList().get(0)
-                .getCriteriaOperator()
+        KlassCriteriaOperator      criteriaOperator      = (KlassCriteriaOperator) criteriaOr.getAtomicCriteriaList().get(
+                0);
+        return (KlassExpressionVariableName) criteriaOperator
                 .getTargetExpressionValue()
-                .getExpressionValue()
-                .getExpressionVariableName();
+                .getExpressionValue();
     }
 }

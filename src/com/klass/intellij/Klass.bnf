@@ -18,6 +18,7 @@
   mixin("projectionAssociationEndNode|projectionParameterizedPropertyNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
   implements("klass|association|enumeration|projection|member|primitiveTypeProperty|enumerationProperty|parameterizedProperty|associationEnd|parameterDeclaration|enumerationLiteral") = "com.klass.intellij.psi.KlassNamedElement"
   implements("projection|projectionInnerNode")="com.klass.intellij.psi.KlassTypedElement"
+  implements("expressionMemberName")="com.klass.intellij.psi.AbstractKlassExpressionMemberName"
 
   tokens = [
     LBRACE='{'
@@ -89,6 +90,7 @@
     ONE_KEYWORD='one'
     MANY_KEYWORD='many'
     THIS_KEYWORD='this'
+    EQUALS_EDGEPOINT_KEYWORD='equalsEdgePoint'
 
     TRUE_KEYWORD='true'
     FALSE_KEYWORD='false'
@@ -98,7 +100,9 @@
   extends("klass|association|enumeration|projection|serviceGroup")=topLevelItem
   extends("primitiveTypeProperty|enumerationProperty|parameterizedProperty")=member
   extends("projectionAssociationEndNode|projectionParameterizedPropertyNode|projectionLeafNode")=projectionNode
-  extends("criteriaAnd|criteriaOr|criteriaOperator")=criteriaExpression
+  extends("expressionThisMember|expressionTypeMember")=expressionMemberName
+  extends("criteriaGroup|criteriaOperator|criteriaEdgePoint|criteriaNative")=atomicCriteria
+  extends("expressionLiteral|expressionLiteralList|expressionMemberName|expressionNativeValue|expressionVariableName")=expressionValue
 }
 
 compilationUnit ::= package topLevelItem*
@@ -121,7 +125,7 @@ projectionNode ::= projectionAssociationEndNode | projectionParameterizedPropert
 projectionAssociationEndNode ::= associationEndName ':' '{' (projectionNode ',')* '}'
 // TODO: This only allows passing scoped variables, but expressions (literals) should work here
 projectionParameterizedPropertyNode ::= parameterizedPropertyName '(' (parameterName (',' parameterName)*)? ')' ':' '{' (projectionNode ',')* '}'
-projectionLeafNode ::= propertyName ':'? header?
+projectionLeafNode ::= memberName ':'? header?
 header ::= STRING_LITERAL
 
 urlGroup ::= url service+ {methods=[getPresentation]}
@@ -141,9 +145,8 @@ serviceConflictClause ::= CONFLICT_KEYWORD ':' criteriaExpression SEMICOLON
 serviceProjectionClause ::= PROJECTION_KEYWORD ':' projectionName ('(' parameterName (',' parameterName)* ')')? SEMICOLON
 private serviceOrderByClause ::= orderByClause SEMICOLON
 
-
 orderByClause ::= ORDER_BY_KEYWORD ':' (orderByProperty) (',' orderByProperty)*
-orderByProperty ::= THIS_KEYWORD '.' propertyName orderByDirection?
+orderByProperty ::= THIS_KEYWORD '.' memberName orderByDirection?
 orderByDirection ::= 'ascending' | 'descending'
 serviceMultiplicity ::= 'one' | 'many'
 verb ::= 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
@@ -152,18 +155,24 @@ verb ::= 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 criteriaExpression ::= criteriaAnd
 criteriaAnd ::= (criteriaOr '&&' criteriaOr) | criteriaOr
 criteriaOr ::= (atomicCriteria '||' atomicCriteria) | atomicCriteria
-atomicCriteria ::= criteriaGroup | criteriaOperator | criteriaNative
+atomicCriteria ::= criteriaGroup | criteriaOperator | criteriaEdgePoint | criteriaNative
+
 criteriaGroup ::= '(' criteriaExpression ')'
 // Overly generic, since clauses like 1 == 2 and 2 == $id don't make sense
 criteriaOperator ::= sourceExpressionValue operator targetExpressionValue
+criteriaEdgePoint ::= expressionMemberName EQUALS_EDGEPOINT_KEYWORD
 criteriaNative ::= 'native' '(' nombre ')'
 sourceExpressionValue ::= expressionValue
 targetExpressionValue ::= expressionValue
-expressionValue ::= expressionLiteral | expressionLiteralList | expressionProperty | expressionNativeValue | expressionVariableName
+
+expressionValue ::= expressionLiteral | expressionLiteralList | expressionThisMember | expressionTypeMember | expressionNativeValue | expressionVariableName
 expressionLiteral ::= integerLiteralNode | floatLiteralNode | stringLiteralNode | booleanLiteral
 expressionLiteralList ::= '(' expressionLiteral (',' expressionLiteral)* ')'
-expressionProperty ::= criteriaType '.' propertyName
-criteriaType ::= THIS_KEYWORD | klassName
+
+expressionMemberName ::= expressionThisMember | expressionTypeMember
+expressionThisMember ::= THIS_KEYWORD '.' (associationEndName '.')* memberName
+expressionTypeMember ::= klassName '.' (associationEndName '.')* memberName
+
 operator ::= EQEQ | NE | LT | GT | LE | GE | 'in' | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR
 
 relationship ::= RELATIONSHIP_KEYWORD criteriaExpression
@@ -201,7 +210,7 @@ primitiveType ::= BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYW
 enumerationType ::= nombre {methods=[getReference]}
 enumerationPrettyName ::= STRING_LITERAL
 klassName ::= nombre {methods=[getReference]}
-propertyName ::= nombre {methods=[getReference]}
+memberName ::= nombre {methods=[getReference]}
 associationEndName ::= nombre {methods=[getReference]}
 parameterizedPropertyName ::= nombre {methods=[getReference]}
 projectionName ::= nombre {methods=[getReference]}
