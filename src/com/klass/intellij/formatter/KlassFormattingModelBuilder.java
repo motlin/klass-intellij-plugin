@@ -31,7 +31,8 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.RBRACKET,
             KlassTypes.RPAREN,
             KlassTypes.MULTIPLICITY,
-            KlassTypes.COLON);
+            KlassTypes.COLON,
+            KlassTypes.SEMICOLON);
     public static final TokenSet NONE_AROUND = TokenSet.create(
             KlassTypes.URL_CONSTANT,
             KlassTypes.URL_PART,
@@ -64,14 +65,14 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
 
     public static final TokenSet ONE_SPACE_BEFORE = TokenSet.create(
             KlassTypes.NOMBRE,
-            KlassTypes.ORDER_BY_DIRECTION);
+            KlassTypes.ORDER_BY_DIRECTION,
+            KlassTypes.PROPERTY_MODIFIER);
     public static final TokenSet ONE_SPACE_AFTER = TokenSet.create(
             KlassTypes.COLON,
             KlassTypes.ANDAND,
             KlassTypes.OROR,
             KlassTypes.RELATIONSHIP_KEYWORD,
-            KlassTypes.SERVICE_KEYWORD,
-            KlassTypes.PROPERTY_MODIFIER);
+            KlassTypes.SERVICE_KEYWORD);
     public static final TokenSet ONE_SPACE_AROUND = TokenSet.create(
             KlassTypes.OPERATOR,
             KlassTypes.ON_KEYWORD);

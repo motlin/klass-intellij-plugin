@@ -51,7 +51,7 @@ public class KlassBlock extends AbstractBlock
             KlassTypes.CLASS_MODIFIER,
             KlassTypes.RELATIONSHIP);
 
-    public static final TokenSet NORMAL_INDENT_CHILDREN = TokenSet.create(
+    private static final TokenSet NORMAL_INDENT_CHILDREN = TokenSet.create(
             KlassTypes.KLASS,
             KlassTypes.ASSOCIATION,
             KlassTypes.ENUMERATION,
@@ -64,15 +64,16 @@ public class KlassBlock extends AbstractBlock
             KlassTypes.PARAMETERIZED_PROPERTY,
             KlassTypes.CRITERIA_AND,
             KlassTypes.CRITERIA_OR);
-    public static final Wrap WRAP = Wrap.createWrap(WrapType.NONE, false);
 
-    private final SpacingBuilder spacingBuilder;
-    private final CodeStyleSettings settings;
+    private static final Wrap WRAP = Wrap.createWrap(WrapType.NONE, false);
+
+    private final SpacingBuilder          spacingBuilder;
+    private final CodeStyleSettings       settings;
     private final CommonCodeStyleSettings commonSettings;
-    private final Indent childIndent;
-    private final Alignment serviceColonAlignment;
-    private final Alignment parentProjectionColonAlignment;
-    private final Alignment projectionColonAlignment;
+    private final Indent                  childIndent;
+    private final Alignment               serviceColonAlignment;
+    private final Alignment               parentProjectionColonAlignment;
+    private final Alignment               projectionColonAlignment;
 
     protected KlassBlock(
             @NotNull ASTNode node,
@@ -99,49 +100,27 @@ public class KlassBlock extends AbstractBlock
     protected List<Block> buildChildren()
     {
         List<Block> blocks = new ArrayList<>();
-        ASTNode child = this.myNode.getFirstChildNode();
+        ASTNode     child  = this.myNode.getFirstChildNode();
         while (child != null)
         {
             IElementType elementType = child.getElementType();
             if (elementType != TokenType.WHITE_SPACE)
             {
-                Block block =
-                        new KlassBlock(
-                                child,
-                                WRAP,
-                                this.getAlignment(elementType),
-                                this.spacingBuilder,
-                                this.settings,
-                                this.getIndentForChildren(child),
-                                this.getChildColonAlignment(elementType),
-                                this.getProjectionColonAlignment(elementType),
-                                this.parentProjectionColonAlignment);
+                Block block = new KlassBlock(
+                        child,
+                        WRAP,
+                        this.getAlignment(elementType),
+                        this.spacingBuilder,
+                        this.settings,
+                        this.getIndentForChildren(child),
+                        this.getChildColonAlignment(elementType),
+                        this.getProjectionColonAlignment(elementType),
+                        this.parentProjectionColonAlignment);
                 blocks.add(block);
             }
             child = child.getTreeNext();
         }
         return blocks;
-    }
-
-    private Alignment getChildColonAlignment(IElementType elementType)
-    {
-        if (elementType == KlassTypes.SERVICE_GROUP)
-        {
-            return Alignment.createAlignment(true);
-        }
-        return this.serviceColonAlignment;
-    }
-
-    private Alignment getProjectionColonAlignment(IElementType elementType)
-    {
-        if (elementType == KlassTypes.PROJECTION
-                || elementType == KlassTypes.PROJECTION_ASSOCIATION_END_NODE
-                || elementType == KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE
-                || elementType == KlassTypes.PROJECTION_LEAF_NODE)
-        {
-            return Alignment.createAlignment(true);
-        }
-        return null;
     }
 
     private Alignment getAlignment(IElementType elementType)
@@ -181,6 +160,37 @@ public class KlassBlock extends AbstractBlock
         return null;
     }
 
+    private Indent getIndentForChildren(ASTNode astNode)
+    {
+        IElementType elementType = astNode.getElementType();
+        if (NORMAL_INDENT_CHILDREN.contains(elementType))
+        {
+            return Indent.getNormalIndent();
+        }
+        return Indent.getNoneIndent();
+    }
+
+    private Alignment getChildColonAlignment(IElementType elementType)
+    {
+        if (elementType == KlassTypes.SERVICE_GROUP)
+        {
+            return Alignment.createAlignment(true);
+        }
+        return this.serviceColonAlignment;
+    }
+
+    private Alignment getProjectionColonAlignment(IElementType elementType)
+    {
+        if (elementType == KlassTypes.PROJECTION
+                || elementType == KlassTypes.PROJECTION_ASSOCIATION_END_NODE
+                || elementType == KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE
+                || elementType == KlassTypes.PROJECTION_LEAF_NODE)
+        {
+            return Alignment.createAlignment(true);
+        }
+        return null;
+    }
+
     @Override
     public Indent getIndent()
     {
@@ -202,14 +212,11 @@ public class KlassBlock extends AbstractBlock
         return Indent.getNoneIndent();
     }
 
-    private Indent getIndentForChildren(ASTNode astNode)
+    @NotNull
+    @Override
+    public ChildAttributes getChildAttributes(int newChildIndex)
     {
-        IElementType elementType = astNode.getElementType();
-        if (NORMAL_INDENT_CHILDREN.contains(elementType))
-        {
-            return Indent.getNormalIndent();
-        }
-        return Indent.getNoneIndent();
+        return new ChildAttributes(this.childIndent, null);
     }
 
     @Nullable
@@ -217,13 +224,6 @@ public class KlassBlock extends AbstractBlock
     public Indent getChildIndent()
     {
         return this.childIndent;
-    }
-
-    @NotNull
-    @Override
-    public ChildAttributes getChildAttributes(int newChildIndex)
-    {
-        return new ChildAttributes(this.childIndent, null);
     }
 
     @Nullable
