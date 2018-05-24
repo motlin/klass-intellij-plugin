@@ -11,5 +11,6 @@ public class KlassAnnotator implements Annotator
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder)
     {
         element.accept(new AnnotatorKlassVisitor(holder));
+        element.accept(new ReservedNameVisitor(holder));
     }
 }
