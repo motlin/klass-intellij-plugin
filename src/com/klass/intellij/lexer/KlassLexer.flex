@@ -97,6 +97,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "userId" { return KlassTypes.USER_ID_MODIFIER; }
   "on" { return KlassTypes.ON_KEYWORD; }
   "relationship" { return KlassTypes.RELATIONSHIP_KEYWORD; }
+  "all" { return KlassTypes.ALL_KEYWORD; }
   "equalsEdgePoint" { return KlassTypes.EQUALS_EDGEPOINT_KEYWORD; }
 
   "valid" { return KlassTypes.VALID_MODIFIER; }

@@ -35,53 +35,6 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
         this.associationEndName = associationEndName;
     }
 
-    @NotNull
-    @Override
-    public ResolveResult[] multiResolve(boolean incompleteCode)
-    {
-        PsiElement innerNode = this.myElement.getParent();
-        KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent();
-        PsiElement type = klassTypedElement.getType();
-        PsiReference reference = type.getReference();
-        KlassKlass klassKlass = (KlassKlass) reference.resolve();
-
-        if (klassKlass == null)
-        {
-            return new ResolveResult[]{};
-        }
-
-        List<KlassAssociation> associations = KlassUtil.findAssociations(klassKlass.getProject());
-        for (KlassAssociation association : associations)
-        {
-            List<KlassAssociationEnd> associationEndList = association.getAssociationEndList();
-            KlassAssociationEnd sourceEnd = associationEndList.get(0);
-            KlassAssociationEnd targetEnd = associationEndList.get(1);
-
-            String sourceName = sourceEnd.getName();
-            String targetName = targetEnd.getName();
-
-            KlassKlassName sourceTypeName = sourceEnd.getKlassName();
-            KlassKlassName targetTypeName = targetEnd.getKlassName();
-
-            KlassKlass sourceKlass = (KlassKlass) sourceTypeName.getReference().resolve();
-            KlassKlass targetKlass = (KlassKlass) targetTypeName.getReference().resolve();
-
-            if (sourceKlass == klassKlass && targetName.equals(this.associationEndName))
-            {
-                return new ResolveResult[]{new PsiElementResolveResult(targetEnd)};
-            }
-
-            if (targetKlass == klassKlass && sourceName.equals(this.associationEndName))
-            {
-                return new ResolveResult[]{new PsiElementResolveResult(sourceEnd)};
-            }
-        }
-
-        // TODO: Handle inferred associationEnd 'version'
-
-        return new ResolveResult[]{};
-    }
-
     @Nullable
     @Override
     public PsiElement resolve()
@@ -92,11 +45,96 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 
     @NotNull
     @Override
+    public ResolveResult[] multiResolve(boolean incompleteCode)
+    {
+        PsiElement        innerNode         = this.myElement.getParent();
+        KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent();
+        PsiElement        type              = klassTypedElement.getType();
+        PsiReference      reference         = type.getReference();
+        PsiElement        resolve           = reference.resolve();
+        if (resolve == null)
+        {
+            return new ResolveResult[]{};
+        }
+
+        if (resolve instanceof KlassKlass)
+        {
+            KlassKlass klassKlass = (KlassKlass) resolve;
+
+            List<KlassAssociation> associations = KlassUtil.findAssociations(klassKlass.getProject());
+            for (KlassAssociation association : associations)
+            {
+                List<KlassAssociationEnd> associationEndList = association.getAssociationEndList();
+                KlassAssociationEnd       sourceEnd          = associationEndList.get(0);
+                KlassAssociationEnd       targetEnd          = associationEndList.get(1);
+
+                String sourceName = sourceEnd.getName();
+                String targetName = targetEnd.getName();
+
+                KlassKlassName sourceTypeName = sourceEnd.getKlassName();
+                KlassKlassName targetTypeName = targetEnd.getKlassName();
+
+                KlassKlass sourceKlass = (KlassKlass) sourceTypeName.getReference().resolve();
+                KlassKlass targetKlass = (KlassKlass) targetTypeName.getReference().resolve();
+
+                if (sourceKlass == klassKlass && targetName.equals(this.associationEndName))
+                {
+                    return new ResolveResult[]{new PsiElementResolveResult(targetEnd)};
+                }
+
+                if (targetKlass == klassKlass && sourceName.equals(this.associationEndName))
+                {
+                    return new ResolveResult[]{new PsiElementResolveResult(sourceEnd)};
+                }
+            }
+        }
+        else if (resolve instanceof KlassAssociationEnd)
+        {
+            KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
+            PsiReference        klassReference      = klassAssociationEnd.getKlassName().getReference();
+            PsiElement          klassResolved       = klassReference.resolve();
+            KlassKlass          klassKlass          = (KlassKlass) klassResolved;
+
+            List<KlassAssociation> associations = KlassUtil.findAssociations(klassKlass.getProject());
+            for (KlassAssociation association : associations)
+            {
+                List<KlassAssociationEnd> associationEndList = association.getAssociationEndList();
+                KlassAssociationEnd       sourceEnd          = associationEndList.get(0);
+                KlassAssociationEnd       targetEnd          = associationEndList.get(1);
+
+                String sourceName = sourceEnd.getName();
+                String targetName = targetEnd.getName();
+
+                KlassKlassName sourceTypeName = sourceEnd.getKlassName();
+                KlassKlassName targetTypeName = targetEnd.getKlassName();
+
+                KlassKlass sourceKlass = (KlassKlass) sourceTypeName.getReference().resolve();
+                KlassKlass targetKlass = (KlassKlass) targetTypeName.getReference().resolve();
+
+                if (sourceKlass == klassKlass && targetName.equals(this.associationEndName))
+                {
+                    return new ResolveResult[]{new PsiElementResolveResult(targetEnd)};
+                }
+
+                if (targetKlass == klassKlass && sourceName.equals(this.associationEndName))
+                {
+                    return new ResolveResult[]{new PsiElementResolveResult(sourceEnd)};
+                }
+            }
+        }
+
+        // TODO: Handle inferred associationEnd 'version'
+
+        return new ResolveResult[]{};
+    }
+
+    @NotNull
+    @Override
     public Object[] getVariants()
     {
-        Project project = this.myElement.getProject();
-        List<KlassKlass> klassKlasses = KlassUtil.findClasses(project);
-        List<LookupElement> variants = new ArrayList<>();
+        Project             project      = this.myElement.getProject();
+        List<KlassKlass>    klassKlasses = KlassUtil.findClasses(project);
+        List<LookupElement> variants     = new ArrayList<>();
         for (KlassKlass klassKlass : klassKlasses)
         {
             if (klassKlass.getName() != null && !klassKlass.getName().isEmpty())

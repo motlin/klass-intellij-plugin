@@ -22,7 +22,7 @@ public abstract class AbstractKlassProjectionNode extends KlassNamedElementImpl 
         {
             return ((KlassProjection) this).getKlassName();
         }
-        System.out.println("AbstractKlassProjectionNode.getType");
-        return null;
+
+        throw new AssertionError(this);
     }
 }

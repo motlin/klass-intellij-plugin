@@ -90,6 +90,7 @@
     ONE_KEYWORD='one'
     MANY_KEYWORD='many'
     THIS_KEYWORD='this'
+    ALL_KEYWORD='all'
     EQUALS_EDGEPOINT_KEYWORD='equalsEdgePoint'
 
     TRUE_KEYWORD='true'
@@ -101,7 +102,7 @@
   extends("primitiveTypeProperty|enumerationProperty|parameterizedProperty")=member
   extends("projectionAssociationEndNode|projectionParameterizedPropertyNode|projectionLeafNode")=projectionNode
   extends("expressionThisMember|expressionTypeMember")=expressionMemberName
-  extends("criteriaGroup|criteriaOperator|criteriaEdgePoint|criteriaNative")=atomicCriteria
+  extends("criteriaGroup|criteriaAll|criteriaOperator|criteriaEdgePoint|criteriaNative")=atomicCriteria
   extends("expressionLiteral|expressionLiteralList|expressionMemberName|expressionNativeValue|expressionVariableName")=expressionValue
 }
 
@@ -147,7 +148,7 @@ private serviceOrderByClause ::= orderByClause SEMICOLON
 
 orderByClause ::= ORDER_BY_KEYWORD ':' (orderByProperty) (',' orderByProperty)*
 orderByProperty ::= THIS_KEYWORD '.' memberName orderByDirection?
-orderByDirection ::= 'ascending' | 'descending'
+orderByDirection ::= ASCENDING_KEYWORD | DESCENDING_KEYWORD
 serviceMultiplicity ::= 'one' | 'many'
 verb ::= 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
@@ -155,9 +156,10 @@ verb ::= 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 criteriaExpression ::= criteriaAnd
 criteriaAnd ::= (criteriaOr '&&' criteriaOr) | criteriaOr
 criteriaOr ::= (atomicCriteria '||' atomicCriteria) | atomicCriteria
-atomicCriteria ::= criteriaGroup | criteriaOperator | criteriaEdgePoint | criteriaNative
+atomicCriteria ::= criteriaGroup | criteriaAll | criteriaOperator | criteriaEdgePoint | criteriaNative
 
 criteriaGroup ::= '(' criteriaExpression ')'
+criteriaAll ::= ALL_KEYWORD;
 // Overly generic, since clauses like 1 == 2 and 2 == $id don't make sense
 criteriaOperator ::= sourceExpressionValue operator targetExpressionValue
 criteriaEdgePoint ::= expressionMemberName EQUALS_EDGEPOINT_KEYWORD
@@ -201,7 +203,8 @@ rBrace ::= '}'
 
 // Just can't be called name, because the getName method would clash
 nombre ::= nombreText // TODO: Inline
-nombreText ::= IDENTIFIER | PACKAGE_KEYWORD | CLASS_KEYWORD | ASSOCIATION_KEYWORD | ENUMERATION_KEYWORD | PROJECTION_KEYWORD | SERVICE_KEYWORD | USER_KEYWORD | KEY_MODIFIER | PRIVATE_MODIFIER | OWNED_MODIFIER | SYSTEM_TEMPORAL_MODIFIER | VALID_TEMPORAL_MODIFIER | BITEMPORAL_MODIFIER  | VERSIONED_MODIFIER | AUDITED_MODIFIER | OPTIMISTICALLY_LOCKED_MODIFIER | TRANSIENT_MODIFIER | VERSIONS_KEYWORD | USER_ID_MODIFIER | ID_MODIFIER | VALID_MODIFIER | VALID_FROM_MODIFIER | VALID_TO_MODIFIER | SYSTEM_MODIFIER | SYSTEM_FROM_MODIFIER | SYSTEM_TO_MODIFIER | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | TEMPORAL_INSTANT_KEYWORD | TEMPORAL_RANGE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR
+nombreText ::= IDENTIFIER | PACKAGE_KEYWORD | CLASS_KEYWORD | ASSOCIATION_KEYWORD | ENUMERATION_KEYWORD | PROJECTION_KEYWORD | SERVICE_KEYWORD | USER_KEYWORD | KEY_MODIFIER | PRIVATE_MODIFIER | OWNED_MODIFIER | SYSTEM_TEMPORAL_MODIFIER | VALID_TEMPORAL_MODIFIER | BITEMPORAL_MODIFIER  | VERSIONED_MODIFIER | AUDITED_MODIFIER | OPTIMISTICALLY_LOCKED_MODIFIER | TRANSIENT_MODIFIER | VERSIONS_KEYWORD | USER_ID_MODIFIER | ID_MODIFIER | VALID_MODIFIER | VALID_FROM_MODIFIER | VALID_TO_MODIFIER | SYSTEM_MODIFIER | SYSTEM_FROM_MODIFIER | SYSTEM_TO_MODIFIER | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | TEMPORAL_INSTANT_KEYWORD | TEMPORAL_RANGE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR | ALL_KEYWORD | EQUALS_EDGEPOINT_KEYWORD
+
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')? {methods=[setName getPresentation]}
 
 parameterDeclaration ::= nombre (':' dataTypeDeclaration)? parameterModifier* {methods=[setName]}
