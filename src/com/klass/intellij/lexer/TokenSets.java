@@ -5,6 +5,7 @@ import com.intellij.psi.tree.TokenSet;
 import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static com.klass.intellij.psi.KlassTokenType.C_STYLE_COMMENT;
 import static com.klass.intellij.psi.KlassTokenType.END_OF_LINE_COMMENT;
+import static com.klass.intellij.psi.KlassTypes.ALL_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.ANDAND;
 import static com.klass.intellij.psi.KlassTypes.ASCENDING_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.ASSOCIATION;
@@ -25,6 +26,7 @@ import static com.klass.intellij.psi.KlassTypes.DOUBLE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.ENDS_WITH_OPERATOR;
 import static com.klass.intellij.psi.KlassTypes.ENUMERATION_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.EQEQ;
+import static com.klass.intellij.psi.KlassTypes.EQUALS_EDGEPOINT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.FALSE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.FLOAT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.GE;
@@ -124,6 +126,7 @@ public interface TokenSets
             ONE_KEYWORD,
             MANY_KEYWORD,
             THIS_KEYWORD,
+            ALL_KEYWORD,
             ON_KEYWORD,
             RELATIONSHIP_KEYWORD,
             USER_ID_MODIFIER,
@@ -142,7 +145,7 @@ public interface TokenSets
             /*EQ, GT, LT, EXCL, TILDE,*/ QUESTION_MARK, COLON, /*, PLUS, MINUS, ASTERISK, DIV, AND, OR, XOR,
                PERC, EQEQ, LE, GE, NE, ANDAND, OROR, PLUSPLUS, MINUSMINUS, LTLT, GTGT, GTGTGT,
                PLUSEQ, MINUSEQ, ASTERISKEQ, DIVEQ, ANDEQ, OREQ, XOREQ, PERCEQ, LTLTEQ, GTGTEQ, GTGTGTEQ*/
-            CONTAINS_OPERATOR, STARTS_WITH_OPERATOR, ENDS_WITH_OPERATOR, IN_OPERATOR);
+            CONTAINS_OPERATOR, STARTS_WITH_OPERATOR, ENDS_WITH_OPERATOR, IN_OPERATOR, EQUALS_EDGEPOINT_KEYWORD);
     //
     //    TokenSet MODIFIER_BIT_SET = TokenSet.create(
     //            PUBLIC_KEYWORD, PROTECTED_KEYWORD, PRIVATE_KEYWORD, STATIC_KEYWORD, ABSTRACT_KEYWORD, FINAL_KEYWORD, NATIVE_KEYWORD,
