@@ -49,7 +49,7 @@ public class KlassProjectionReference extends PsiPolyVariantReferenceBase<PsiEle
                 .collect(Collectors.toList());
         if (projections.size() == 2)
         {
-            throw new AssertionError();
+            return new ResolveResult[]{};
         }
         if (projections.size() == 1)
         {
