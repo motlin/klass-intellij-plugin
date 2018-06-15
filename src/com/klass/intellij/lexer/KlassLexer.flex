@@ -93,6 +93,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 
   "key" { return KlassTypes.KEY_MODIFIER; }
   "owned" { return KlassTypes.OWNED_MODIFIER; }
+  "final" { return KlassTypes.FINAL_MODIFIER; }
   "id" { return KlassTypes.ID_MODIFIER; }
   "userId" { return KlassTypes.USER_ID_MODIFIER; }
   "on" { return KlassTypes.ON_KEYWORD; }
@@ -101,11 +102,12 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "equalsEdgePoint" { return KlassTypes.EQUALS_EDGEPOINT_KEYWORD; }
 
   "valid" { return KlassTypes.VALID_MODIFIER; }
-  "validFrom" { return KlassTypes.VALID_FROM_MODIFIER; }
-  "validTo" { return KlassTypes.VALID_TO_MODIFIER; }
   "system" { return KlassTypes.SYSTEM_MODIFIER; }
-  "systemFrom" { return KlassTypes.SYSTEM_FROM_MODIFIER; }
-  "systemTo" { return KlassTypes.SYSTEM_TO_MODIFIER; }
+  "from" { return KlassTypes.FROM_MODIFIER; }
+  "to" { return KlassTypes.TO_MODIFIER; }
+  "createdBy" { return KlassTypes.CREATED_BY_MODIFIER; }
+  "createdOn" { return KlassTypes.CREATED_ON_MODIFIER; }
+  "lastUpdatedBy" { return KlassTypes.LAST_UPDATED_BY_MODIFIER; }
 
   "multiplicity" { return KlassTypes.MULTIPLICITY_KEYWORD; }
   "criteria" { return KlassTypes.CRITERIA_KEYWORD; }

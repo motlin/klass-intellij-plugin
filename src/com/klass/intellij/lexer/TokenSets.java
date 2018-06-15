@@ -18,6 +18,8 @@ import static com.klass.intellij.psi.KlassTypes.CLASS_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.COLON;
 import static com.klass.intellij.psi.KlassTypes.CONFLICT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.CONTAINS_OPERATOR;
+import static com.klass.intellij.psi.KlassTypes.CREATED_BY_MODIFIER;
+import static com.klass.intellij.psi.KlassTypes.CREATED_ON_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.CREATE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.CRITERIA_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.DELETE_KEYWORD;
@@ -28,7 +30,9 @@ import static com.klass.intellij.psi.KlassTypes.ENUMERATION_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.EQEQ;
 import static com.klass.intellij.psi.KlassTypes.EQUALS_EDGEPOINT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.FALSE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.FINAL_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.FLOAT_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.FROM_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.GE;
 import static com.klass.intellij.psi.KlassTypes.GT;
 import static com.klass.intellij.psi.KlassTypes.ID_MODIFIER;
@@ -37,6 +41,7 @@ import static com.klass.intellij.psi.KlassTypes.INTEGER_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.IN_OPERATOR;
 import static com.klass.intellij.psi.KlassTypes.KEY_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.KLASS;
+import static com.klass.intellij.psi.KlassTypes.LAST_UPDATED_BY_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.LE;
 import static com.klass.intellij.psi.KlassTypes.LOCAL_DATE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.LONG_KEYWORD;
@@ -61,23 +66,20 @@ import static com.klass.intellij.psi.KlassTypes.RELATIONSHIP_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.SERVICE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.STARTS_WITH_OPERATOR;
 import static com.klass.intellij.psi.KlassTypes.STRING_KEYWORD;
-import static com.klass.intellij.psi.KlassTypes.SYSTEM_FROM_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.SYSTEM_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.SYSTEM_TEMPORAL_MODIFIER;
-import static com.klass.intellij.psi.KlassTypes.SYSTEM_TO_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.TEMPORAL_INSTANT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.TEMPORAL_RANGE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.THIS_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.TO_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.TRANSIENT_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.TRUE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.UPDATE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.USER_ID_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.USER_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.VALIDATE_KEYWORD;
-import static com.klass.intellij.psi.KlassTypes.VALID_FROM_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.VALID_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.VALID_TEMPORAL_MODIFIER;
-import static com.klass.intellij.psi.KlassTypes.VALID_TO_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.VERSIONED_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.VERSIONS_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.WRITE_KEYWORD;
@@ -115,6 +117,7 @@ public interface TokenSets
             KEY_MODIFIER,
             PRIVATE_MODIFIER,
             OWNED_MODIFIER,
+            FINAL_MODIFIER,
             CRITERIA_KEYWORD,
             VALIDATE_KEYWORD,
             AUTHORIZE_KEYWORD,
@@ -132,11 +135,12 @@ public interface TokenSets
             USER_ID_MODIFIER,
             ID_MODIFIER,
             VALID_MODIFIER,
-            VALID_FROM_MODIFIER,
-            VALID_TO_MODIFIER,
             SYSTEM_MODIFIER,
-            SYSTEM_FROM_MODIFIER,
-            SYSTEM_TO_MODIFIER);
+            FROM_MODIFIER,
+            TO_MODIFIER,
+            CREATED_BY_MODIFIER,
+            CREATED_ON_MODIFIER,
+            LAST_UPDATED_BY_MODIFIER);
 
     TokenSet LITERAL_BIT_SET = TokenSet.create(TRUE_KEYWORD, FALSE_KEYWORD, NULL_KEYWORD);
 
