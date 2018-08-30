@@ -1,8 +1,7 @@
 package com.klass.intellij.highlighter;
 
-import java.util.List;
-
 import com.intellij.psi.PsiElement;
+import com.klass.intellij.psi.KlassAtomicCriteria;
 import com.klass.intellij.psi.KlassCriteriaAnd;
 import com.klass.intellij.psi.KlassCriteriaEdgePoint;
 import com.klass.intellij.psi.KlassCriteriaExpression;
@@ -25,9 +24,30 @@ public class DetectExpressionThisMember extends KlassVisitor
     }
 
     @Override
+    public void visitAtomicCriteria(@NotNull KlassAtomicCriteria atomicCriteria)
+    {
+        atomicCriteria.accept(this);
+    }
+
+    @Override
     public void visitCriteriaAnd(@NotNull KlassCriteriaAnd criteriaAnd)
     {
-        this.visitList(criteriaAnd.getCriteriaOrList());
+        if (this.hasThisMember)
+        {
+            return;
+        }
+
+        this.visitCriteriaOr(criteriaAnd.getCriteriaOr());
+
+        if (this.hasThisMember)
+        {
+            return;
+        }
+
+        if (criteriaAnd.getCriteriaAnd() != null)
+        {
+            this.visitCriteriaAnd(criteriaAnd.getCriteriaAnd());
+        };
     }
 
     @Override
@@ -64,7 +84,22 @@ public class DetectExpressionThisMember extends KlassVisitor
     @Override
     public void visitCriteriaOr(@NotNull KlassCriteriaOr criteriaOr)
     {
-        this.visitList(criteriaOr.getAtomicCriteriaList());
+        if (this.hasThisMember)
+        {
+            return;
+        }
+
+        criteriaOr.getAtomicCriteria().accept(this);
+
+        if (this.hasThisMember)
+        {
+            return;
+        }
+
+        if (criteriaOr.getCriteriaOr() != null)
+        {
+            this.visitCriteriaOr(criteriaOr.getCriteriaOr());
+        }
     }
 
     @Override
@@ -84,17 +119,5 @@ public class DetectExpressionThisMember extends KlassVisitor
     {
         throw new UnsupportedOperationException(this.getClass().getSimpleName()
                 + ".visitPsiElement() not implemented yet");
-    }
-
-    private void visitList(@NotNull List<? extends PsiElement> elements)
-    {
-        for (PsiElement element : elements)
-        {
-            if (this.hasThisMember)
-            {
-                return;
-            }
-            element.accept(this);
-        }
     }
 }

@@ -117,8 +117,8 @@ topLevelItem ::= klass | association | enumeration | projection | serviceGroup {
 // TODO: Recovery rule isn't working
 private topLevelItem_recover ::= !('}' | CLASS_KEYWORD | USER_KEYWORD | ASSOCIATION_KEYWORD | ENUMERATION_KEYWORD | PROJECTION_KEYWORD | SERVICE_KEYWORD)
 
-klass ::= (CLASS_KEYWORD | USER_KEYWORD) nombre serviceProjection* classModifier* versions? lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
-association ::= ASSOCIATION_KEYWORD nombre versions? '{' associationEnd* relationship? '}' {pin="{" methods=[setName getPresentation]}
+klass ::= (CLASS_KEYWORD | USER_KEYWORD) nombre serviceProjection* classModifier* lBrace member* rBrace {pin="{" methods=[setName getPresentation]}
+association ::= ASSOCIATION_KEYWORD nombre '{' associationEnd* relationship? '}' {pin="{" methods=[setName getPresentation]}
 enumeration ::= ENUMERATION_KEYWORD nombre lBrace (enumerationLiteral COMMA)* rBrace {pin="{" methods=[setName getPresentation]}
 projection ::= PROJECTION_KEYWORD nombre ('(' parameterDeclaration (',' parameterDeclaration)* ')')? 'on' klassName lBrace (projectionNode ',')* rBrace {pin="{" methods=[setName getPresentation]}
 // TODO: Consider moving serviceGroup inside class
@@ -156,8 +156,8 @@ verb ::= GET_VERB | POST_VERB | PUT_VERB | PATCH_VERB | DELETE_VERB
 
 // Left recursion isn't well supported in Grammar-Kit
 criteriaExpression ::= criteriaAnd
-criteriaAnd ::= (criteriaOr '&&' criteriaOr) | criteriaOr
-criteriaOr ::= (atomicCriteria '||' atomicCriteria) | atomicCriteria
+criteriaAnd ::= (criteriaOr '&&' criteriaAnd) | criteriaOr
+criteriaOr ::= (atomicCriteria '||' criteriaOr) | atomicCriteria
 atomicCriteria ::= criteriaGroup | criteriaAll | criteriaOperator | criteriaEdgePoint | criteriaNative
 
 criteriaGroup ::= '(' criteriaExpression ')'
@@ -188,12 +188,11 @@ enumerationProperty ::= nombre ':' enumerationType optionalMarker? propertyModif
 parameterizedProperty ::= nombre '(' (parameterDeclaration (',' parameterDeclaration)*)? ')' ':' klassName multiplicity parameterizedPropertyModifier* orderByClause? lBrace criteriaExpression rBrace {methods=[setName getPresentation]}
 
 classModifier ::= SYSTEM_TEMPORAL_MODIFIER | VALID_TEMPORAL_MODIFIER | BITEMPORAL_MODIFIER  | VERSIONED_MODIFIER | AUDITED_MODIFIER | OPTIMISTICALLY_LOCKED_MODIFIER | TRANSIENT_MODIFIER
-propertyModifier ::= KEY_MODIFIER | PRIVATE_MODIFIER | ID_MODIFIER | USER_ID_MODIFIER | VALID_MODIFIER | SYSTEM_MODIFIER | FROM_MODIFIER | TO_MODIFIER | CREATED_BY_MODIFIER | CREATED_ON_MODIFIER | LAST_UPDATED_BY_MODIFIER
+propertyModifier ::= KEY_MODIFIER | PRIVATE_MODIFIER | ID_MODIFIER | USER_ID_MODIFIER | VALID_MODIFIER | SYSTEM_MODIFIER | FROM_MODIFIER | TO_MODIFIER | CREATED_BY_MODIFIER | CREATED_ON_MODIFIER | LAST_UPDATED_BY_MODIFIER | VERSION_MODIFIER
 parameterizedPropertyModifier ::= CREATED_BY_MODIFIER | LAST_UPDATED_BY_MODIFIER
 associationEndModifier ::= OWNED_MODIFIER | FINAL_MODIFIER | VERSION_MODIFIER
 parameterModifier::= VERSION_MODIFIER  | ID_MODIFIER | USER_ID_MODIFIER
 
-versions ::= VERSIONS_KEYWORD '(' klassName ')'
 serviceProjection ::= serviceCategory ('(' projectionName ')')?
 serviceCategory ::= READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD
 
@@ -206,7 +205,7 @@ rBrace ::= '}'
 
 // Just can't be called name, because the getName method would clash
 nombre ::= nombreText // TODO: Inline
-nombreText ::= IDENTIFIER | PACKAGE_KEYWORD | CLASS_KEYWORD | ASSOCIATION_KEYWORD | ENUMERATION_KEYWORD | PROJECTION_KEYWORD | SERVICE_KEYWORD | USER_KEYWORD | KEY_MODIFIER | PRIVATE_MODIFIER | OWNED_MODIFIER | FINAL_MODIFIER | SYSTEM_TEMPORAL_MODIFIER | VALID_TEMPORAL_MODIFIER | BITEMPORAL_MODIFIER  | VERSIONED_MODIFIER | AUDITED_MODIFIER | OPTIMISTICALLY_LOCKED_MODIFIER | TRANSIENT_MODIFIER | VERSIONS_KEYWORD | USER_ID_MODIFIER | ID_MODIFIER | VALID_MODIFIER | SYSTEM_MODIFIER | FROM_MODIFIER | TO_MODIFIER | CREATED_BY_MODIFIER | CREATED_ON_MODIFIER | LAST_UPDATED_BY_MODIFIER | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | TEMPORAL_INSTANT_KEYWORD | TEMPORAL_RANGE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR | ALL_KEYWORD | EQUALS_EDGEPOINT_KEYWORD | GET_VERB | POST_VERB | PUT_VERB | PATCH_VERB | DELETE_VERB
+nombreText ::= IDENTIFIER | PACKAGE_KEYWORD | CLASS_KEYWORD | ASSOCIATION_KEYWORD | ENUMERATION_KEYWORD | PROJECTION_KEYWORD | SERVICE_KEYWORD | USER_KEYWORD | KEY_MODIFIER | PRIVATE_MODIFIER | OWNED_MODIFIER | FINAL_MODIFIER | SYSTEM_TEMPORAL_MODIFIER | VALID_TEMPORAL_MODIFIER | BITEMPORAL_MODIFIER  | VERSIONED_MODIFIER | AUDITED_MODIFIER | OPTIMISTICALLY_LOCKED_MODIFIER | TRANSIENT_MODIFIER | VERSION_MODIFIER | USER_ID_MODIFIER | ID_MODIFIER | VALID_MODIFIER | SYSTEM_MODIFIER | FROM_MODIFIER | TO_MODIFIER | CREATED_BY_MODIFIER | CREATED_ON_MODIFIER | LAST_UPDATED_BY_MODIFIER | BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | TEMPORAL_INSTANT_KEYWORD | TEMPORAL_RANGE_KEYWORD | READ_KEYWORD | WRITE_KEYWORD | CREATE_KEYWORD | UPDATE_KEYWORD | DELETE_KEYWORD | MULTIPLICITY_KEYWORD | ORDER_BY_KEYWORD | CONTAINS_OPERATOR | STARTS_WITH_OPERATOR | ENDS_WITH_OPERATOR | IN_OPERATOR | ALL_KEYWORD | EQUALS_EDGEPOINT_KEYWORD | GET_VERB | POST_VERB | PUT_VERB | PATCH_VERB | DELETE_VERB
 
 enumerationLiteral ::= nombre ('(' enumerationPrettyName ')')? {methods=[setName getPresentation]}
 

@@ -309,8 +309,7 @@ public class KlassElementFactory
         KlassKlass                 klassKlass            = file.findChildByClass(KlassKlass.class);
         KlassParameterizedProperty parameterizedProperty = (KlassParameterizedProperty) klassKlass.getMemberList().get(0);
         KlassCriteriaOr            criteriaOr            = (KlassCriteriaOr) parameterizedProperty.getCriteriaExpression();
-        KlassCriteriaOperator      criteriaOperator      = (KlassCriteriaOperator) criteriaOr.getAtomicCriteriaList().get(
-                0);
+        KlassCriteriaOperator      criteriaOperator      = (KlassCriteriaOperator) criteriaOr.getAtomicCriteria();
         return (KlassExpressionVariableName) criteriaOperator
                 .getTargetExpressionValue()
                 .getExpressionValue();

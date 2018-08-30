@@ -81,7 +81,7 @@ import static com.klass.intellij.psi.KlassTypes.VALIDATE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.VALID_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.VALID_TEMPORAL_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.VERSIONED_MODIFIER;
-import static com.klass.intellij.psi.KlassTypes.VERSIONS_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.VERSION_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.WRITE_KEYWORD;
 
 public interface TokenSets
@@ -108,7 +108,7 @@ public interface TokenSets
             AUDITED_MODIFIER,
             OPTIMISTICALLY_LOCKED_MODIFIER,
             TRANSIENT_MODIFIER,
-            VERSIONS_KEYWORD,
+            VERSION_MODIFIER,
             READ_KEYWORD,
             WRITE_KEYWORD,
             CREATE_KEYWORD,

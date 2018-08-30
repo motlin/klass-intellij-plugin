@@ -84,7 +84,6 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "create" { return KlassTypes.CREATE_KEYWORD; }
   "update" { return KlassTypes.UPDATE_KEYWORD; }
   "delete" { return KlassTypes.DELETE_KEYWORD; }
-  "versions" { return KlassTypes.VERSIONS_KEYWORD; }
 
   "in" { return KlassTypes.IN_OPERATOR; }
   "contains" { return KlassTypes.CONTAINS_OPERATOR; }
@@ -94,6 +93,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "key" { return KlassTypes.KEY_MODIFIER; }
   "owned" { return KlassTypes.OWNED_MODIFIER; }
   "final" { return KlassTypes.FINAL_MODIFIER; }
+  "version" { return KlassTypes.VERSION_MODIFIER; }
   "id" { return KlassTypes.ID_MODIFIER; }
   "userId" { return KlassTypes.USER_ID_MODIFIER; }
   "on" { return KlassTypes.ON_KEYWORD; }
