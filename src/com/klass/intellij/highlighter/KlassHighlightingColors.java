@@ -3,7 +3,19 @@ package com.klass.intellij.highlighter;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 
-import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.*;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.BLOCK_COMMENT;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.CLASS_NAME;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.CONSTANT;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.FUNCTION_CALL;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.FUNCTION_DECLARATION;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.INSTANCE_FIELD;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.INTERFACE_NAME;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.LOCAL_VARIABLE;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.METADATA;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.PARAMETER;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.SEMICOLON;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.STATIC_FIELD;
+import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.STATIC_METHOD;
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
 public class KlassHighlightingColors
@@ -54,10 +66,6 @@ public class KlassHighlightingColors
 
     public static final TextAttributesKey LAMBDA_PARAMETER_ATTRIBUTES =
             createTextAttributesKey("LAMBDA_PARAMETER_ATTRIBUTES", PARAMETER_ATTRIBUTES);
-    public static final TextAttributesKey REASSIGNED_LOCAL_VARIABLE_ATTRIBUTES =
-            createTextAttributesKey("REASSIGNED_LOCAL_VARIABLE_ATTRIBUTES", LOCAL_VARIABLE_ATTRIBUTES);
-    public static final TextAttributesKey REASSIGNED_PARAMETER_ATTRIBUTES =
-            createTextAttributesKey("REASSIGNED_PARAMETER_ATTRIBUTES", PARAMETER_ATTRIBUTES);
     public static final TextAttributesKey INSTANCE_FIELD_ATTRIBUTES =
             createTextAttributesKey("INSTANCE_FIELD_ATTRIBUTES", INSTANCE_FIELD);
     public static final TextAttributesKey INSTANCE_FINAL_FIELD_ATTRIBUTES =
