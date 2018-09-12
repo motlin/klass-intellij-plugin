@@ -308,10 +308,9 @@ public class KlassElementFactory
                         + "}\n");
         KlassKlass                 klassKlass            = file.findChildByClass(KlassKlass.class);
         KlassParameterizedProperty parameterizedProperty = (KlassParameterizedProperty) klassKlass.getMemberList().get(0);
-        KlassCriteriaOr            criteriaOr            = (KlassCriteriaOr) parameterizedProperty.getCriteriaExpression();
+        KlassCriteriaExpression    criteriaExpression    = parameterizedProperty.getCriteriaExpression();
+        KlassCriteriaOr            criteriaOr            = criteriaExpression.getCriteriaAnd().getCriteriaOr();
         KlassCriteriaOperator      criteriaOperator      = (KlassCriteriaOperator) criteriaOr.getAtomicCriteria();
-        return (KlassExpressionVariableName) criteriaOperator
-                .getTargetExpressionValue()
-                .getExpressionValue();
+        return (KlassExpressionVariableName) criteriaOperator.getTargetExpressionValue().getExpressionValue();
     }
 }
