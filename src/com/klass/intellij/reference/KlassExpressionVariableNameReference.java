@@ -1,6 +1,7 @@
 package com.klass.intellij.reference;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ import com.klass.intellij.psi.KlassExpressionVariableName;
 import com.klass.intellij.psi.KlassParameterDeclaration;
 import com.klass.intellij.psi.KlassParameterizedProperty;
 import com.klass.intellij.psi.KlassQueryParamPart;
+import com.klass.intellij.psi.KlassQueryParams;
 import com.klass.intellij.psi.KlassUrl;
 import com.klass.intellij.psi.KlassUrlGroup;
 import com.klass.intellij.psi.KlassUrlPart;
@@ -46,13 +48,18 @@ public class KlassExpressionVariableNameReference extends PsiPolyVariantReferenc
         if (klassUrlGroup != null)
         {
             KlassUrl url = klassUrlGroup.getUrl();
-            List<PsiElementResolveResult> queryParamResults = url.getQueryParamPartList()
-                    .stream()
-                    .map(KlassQueryParamPart::getParameterDeclaration)
-                    .filter(queryParameter -> queryParameter.getName().equals(this.expressionVariableName))
-                    .map(PsiElementResolveResult::new)
-                    .collect(Collectors.toList());
-            List<PsiElementResolveResult> pathParameterResults = url.getUrlPartList()
+            KlassQueryParams queryParams = url.getQueryParams();
+            List<PsiElementResolveResult> queryParamResults = queryParams == null
+                    ? Arrays.asList()
+                    : queryParams
+                            .getQueryParamPartList()
+                            .stream()
+                            .map(KlassQueryParamPart::getParameterDeclaration)
+                            .filter(queryParameter -> queryParameter.getName().equals(this.expressionVariableName))
+                            .map(PsiElementResolveResult::new)
+                            .collect(Collectors.toList());
+            List<PsiElementResolveResult> pathParameterResults = url
+                    .getUrlPartList()
                     .stream()
                     .map(KlassUrlPart::getParameterDeclaration)
                     .filter(Objects::nonNull)
@@ -71,7 +78,7 @@ public class KlassExpressionVariableNameReference extends PsiPolyVariantReferenc
         if (parameterizedProperty != null)
         {
             List<KlassParameterDeclaration> parameterDeclarationList =
-                    parameterizedProperty.getParameterDeclarationList();
+                    parameterizedProperty.getPropertyParameterDeclarationsParens().getParameterDeclarations().getParameterDeclarationList();
             ResolveResult[] resolveResults = parameterDeclarationList.stream()
                     .filter(parameterDeclaration -> parameterDeclaration.getName().equals(this.expressionVariableName))
                     .map(PsiElementResolveResult::new)
@@ -112,6 +119,7 @@ public class KlassExpressionVariableNameReference extends PsiPolyVariantReferenc
                 .forEach(variants::add);
 
         klassUrlGroup.getUrl()
+                .getQueryParams()
                 .getQueryParamPartList()
                 .stream()
                 .map(KlassQueryParamPart::getParameterDeclaration)

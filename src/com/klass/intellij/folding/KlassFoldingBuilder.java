@@ -1,5 +1,8 @@
 package com.klass.intellij.folding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
@@ -10,12 +13,14 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import com.klass.intellij.psi.*;
+import com.klass.intellij.psi.KlassEnumeration;
+import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassLBrace;
+import com.klass.intellij.psi.KlassRBrace;
+import com.klass.intellij.psi.KlassTokenType;
+import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class KlassFoldingBuilder implements FoldingBuilder, DumbAware
 {
@@ -37,15 +42,15 @@ public class KlassFoldingBuilder implements FoldingBuilder, DumbAware
 
         if (element instanceof KlassKlass && KlassFoldingBuilder.spanMultipleLines(node, document))
         {
-            KlassLBrace lBrace = ((KlassKlass) element).getLBrace();
-            KlassRBrace rBrace = ((KlassKlass) element).getRBrace();
+            KlassLBrace lBrace = ((KlassKlass) element).getClassBlock().getLBrace();
+            KlassRBrace rBrace = ((KlassKlass) element).getClassBlock().getRBrace();
             TextRange textRange = new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
             descriptors.add(new FoldingDescriptor(node, textRange));
         }
         else if (element instanceof KlassEnumeration && KlassFoldingBuilder.spanMultipleLines(node, document))
         {
-            KlassLBrace lBrace = ((KlassEnumeration) element).getLBrace();
-            KlassRBrace rBrace = ((KlassEnumeration) element).getRBrace();
+            KlassLBrace lBrace = ((KlassEnumeration) element).getEnumerationBlock().getLBrace();
+            KlassRBrace rBrace = ((KlassEnumeration) element).getEnumerationBlock().getRBrace();
             TextRange textRange = new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
             descriptors.add(new FoldingDescriptor(node, textRange));
         }

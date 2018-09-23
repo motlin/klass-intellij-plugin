@@ -50,7 +50,7 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
     public ResolveResult[] multiResolve(boolean incompleteCode)
     {
         PsiElement        innerNode         = this.myElement.getParent();
-        KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent();
+        KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
         PsiElement        type              = klassTypedElement.getType();
         PsiReference      reference         = type.getReference();
         PsiElement        resolve           = reference.resolve();
@@ -62,7 +62,6 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
         if (resolve instanceof KlassKlass)
         {
             KlassKlass klassKlass = (KlassKlass) resolve;
-
             return this.getAssociationEndResolveResults(klassKlass);
         }
 
@@ -87,7 +86,7 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
         List<KlassAssociation> associations = KlassUtil.findAssociations(klassKlass.getProject());
         for (KlassAssociation association : associations)
         {
-            List<KlassAssociationEnd> associationEndList = association.getAssociationEndList();
+            List<KlassAssociationEnd> associationEndList = association.getAssociationBlock().getAssociationBody().getAssociationEndList();
             if (associationEndList.size() < 2)
             {
                 return new ResolveResult[]{};
@@ -113,6 +112,17 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
                 return new ResolveResult[]{new PsiElementResolveResult(sourceEnd)};
             }
         }
+
+        if (this.associationEndName.equals("version"))
+        {
+            return klassKlass
+                    .getClassModifierList()
+                    .stream()
+                    .filter(classModifier -> classModifier.getText().equals("versioned"))
+                    .map(classModifier -> new PsiElementResolveResult(classModifier))
+                    .toArray(ResolveResult[]::new);
+        }
+
         return new ResolveResult[]{};
     }
 

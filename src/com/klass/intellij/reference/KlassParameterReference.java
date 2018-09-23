@@ -44,7 +44,7 @@ public class KlassParameterReference extends PsiPolyVariantReferenceBase<PsiElem
         KlassUrlGroup urlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
         if (klassProjection != null)
         {
-            ResolveResult[] resolveResults = klassProjection.getParameterDeclarationList()
+            ResolveResult[] resolveResults = klassProjection.getParameterDeclarationsParens().getParameterDeclarations().getParameterDeclarationList()
                     .stream()
                     .filter(parameterDeclaration -> parameterDeclaration.getName().equals(this.parameterName))
                     .map(PsiElementResolveResult::new)

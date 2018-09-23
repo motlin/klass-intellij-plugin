@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import com.klass.intellij.psi.KlassAssociationEndName;
 import com.klass.intellij.psi.KlassBooleanLiteral;
 import com.klass.intellij.psi.KlassClassModifier;
 import com.klass.intellij.psi.KlassCriteriaOperator;
+import com.klass.intellij.psi.KlassDataType;
 import com.klass.intellij.psi.KlassDataTypeDeclaration;
 import com.klass.intellij.psi.KlassDummyMultiplicity;
 import com.klass.intellij.psi.KlassEnumeration;
@@ -29,13 +31,15 @@ import com.klass.intellij.psi.KlassEnumerationLiteral;
 import com.klass.intellij.psi.KlassEnumerationProperty;
 import com.klass.intellij.psi.KlassEnumerationType;
 import com.klass.intellij.psi.KlassExpressionLiteral;
-import com.klass.intellij.psi.KlassExpressionLiteralList;
+import com.klass.intellij.psi.KlassExpressionLiterals;
+import com.klass.intellij.psi.KlassExpressionLiteralsParens;
 import com.klass.intellij.psi.KlassExpressionMemberName;
 import com.klass.intellij.psi.KlassExpressionNativeValue;
 import com.klass.intellij.psi.KlassExpressionValue;
 import com.klass.intellij.psi.KlassExpressionVariableName;
 import com.klass.intellij.psi.KlassFloatLiteralNode;
 import com.klass.intellij.psi.KlassIntegerLiteralNode;
+import com.klass.intellij.psi.KlassInterface;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
 import com.klass.intellij.psi.KlassLowerBound;
@@ -46,7 +50,10 @@ import com.klass.intellij.psi.KlassNombreText;
 import com.klass.intellij.psi.KlassOperator;
 import com.klass.intellij.psi.KlassOptionalMarker;
 import com.klass.intellij.psi.KlassParameterDeclaration;
+import com.klass.intellij.psi.KlassParameterDeclarations;
+import com.klass.intellij.psi.KlassParameterDeclarationsParens;
 import com.klass.intellij.psi.KlassParameterName;
+import com.klass.intellij.psi.KlassParameterNames;
 import com.klass.intellij.psi.KlassParameterizedProperty;
 import com.klass.intellij.psi.KlassParameterizedPropertyName;
 import com.klass.intellij.psi.KlassPrimitiveType;
@@ -87,7 +94,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor
     @Override
     public void visitAssociation(@NotNull KlassAssociation klassAssociation)
     {
-        List<KlassAssociationEnd> associationEndList = klassAssociation.getAssociationEndList();
+        List<KlassAssociationEnd> associationEndList = klassAssociation.getAssociationBlock().getAssociationBody().getAssociationEndList();
         int                       size               = associationEndList.size();
         if (size == 0)
         {
@@ -192,9 +199,29 @@ public class AnnotatorKlassVisitor extends KlassVisitor
     }
 
     @Override
+    public void visitInterface(@NotNull KlassInterface klassInterface)
+    {
+        List<KlassMember> propertyList = klassInterface.getInterfaceBlock().getInterfaceBody().getMemberList();
+        Map<String, Long> propertyCountByName = propertyList.stream()
+                .map(PsiNamedElement::getName)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        for (KlassMember klassMember : propertyList)
+        {
+            String propertyName = klassMember.getName();
+            Long   occurrences  = propertyCountByName.get(propertyName);
+            if (occurrences > 1)
+            {
+                String message = String.format("Duplicate property '%s'", propertyName);
+                this.annotationHolder.createErrorAnnotation(klassMember.getNombre(), message);
+            }
+        }
+    }
+
+    @Override
     public void visitKlass(@NotNull KlassKlass klassKlass)
     {
-        List<KlassMember> propertyList = klassKlass.getMemberList();
+        List<KlassMember> propertyList = klassKlass.getClassBlock().getClassBody().getMemberList();
         Map<String, Long> propertyCountByName = propertyList.stream()
                 .map(PsiNamedElement::getName)
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
@@ -342,13 +369,13 @@ public class AnnotatorKlassVisitor extends KlassVisitor
         {
             return;
         }
-        List<KlassParameterName> parameterNameList = projectionParameterizedPropertyNode.getParameterNameList();
+        List<KlassParameterName> parameterNameList = projectionParameterizedPropertyNode.getParameterNamesParens().getParameterNames().getParameterNameList();
 
         KlassProjection projection =
                 PsiTreeUtil.getParentOfType(projectionParameterizedPropertyNode, KlassProjection.class);
 
         MutableList<KlassParameterDeclaration> propertyParameterDeclarations =
-                ListAdapter.adapt(parameterizedProperty.getParameterDeclarationList());
+                ListAdapter.adapt(parameterizedProperty.getPropertyParameterDeclarationsParens().getParameterDeclarations().getParameterDeclarationList());
 
         MutableList<KlassParameterDeclaration> projectionParameterDeclarations =
                 ListAdapter.adapt(parameterNameList)
@@ -398,15 +425,16 @@ public class AnnotatorKlassVisitor extends KlassVisitor
     @Override
     public void visitServiceProjectionClause(@NotNull KlassServiceProjectionClause projectionClause)
     {
-        List<KlassParameterName> parameterNameList   = projectionClause.getParameterNameList();
+        KlassParameterNames parameterNames = projectionClause.getParameterNames();
+        List<KlassParameterName> parameterNameList = parameterNames == null
+                ? Arrays.asList()
+                : parameterNames.getParameterNameList();
+
         KlassProjectionName      projectionName      = projectionClause.getProjectionName();
         KlassProjectionReference projectionReference = (KlassProjectionReference) projectionName.getReference();
         KlassProjection          projection          = (KlassProjection) projectionReference.resolve();
         if (projection != null)
         {
-            MutableList<KlassParameterDeclaration> projectionParameterDeclarations =
-                    ListAdapter.adapt(projection.getParameterDeclarationList());
-
             MutableList<KlassParameterDeclaration> serviceParameterDeclarations =
                     ListAdapter.adapt(parameterNameList)
                             .collect(KlassParameterName::getReference)
@@ -418,6 +446,13 @@ public class AnnotatorKlassVisitor extends KlassVisitor
             {
                 return;
             }
+
+            MutableList<KlassParameterDeclaration> projectionParameterDeclarations =
+                    Optional.ofNullable(projection.getParameterDeclarationsParens())
+                            .map(KlassParameterDeclarationsParens::getParameterDeclarations)
+                            .map(KlassParameterDeclarations::getParameterDeclarationList)
+                            .map(ListAdapter::adapt)
+                            .orElse(Lists.mutable.empty());
 
             if (parameterNameList.size() == projectionParameterDeclarations.size())
             {
@@ -522,9 +557,10 @@ public class AnnotatorKlassVisitor extends KlassVisitor
             return AnnotatorKlassVisitor.getExpressionLiteralTypes(expressionLiteral, Multiplicity.ONE_TO_ONE);
         }
 
-        if (expressionValue instanceof KlassExpressionLiteralList)
+        if (expressionValue instanceof KlassExpressionLiteralsParens
+                || expressionValue instanceof KlassExpressionLiterals)
         {
-            KlassExpressionLiteralList   expressionLiteralListNode = (KlassExpressionLiteralList) expressionValue;
+            KlassExpressionLiterals      expressionLiteralListNode = ((KlassExpressionLiteralsParens) expressionValue).getExpressionLiterals();
             List<KlassExpressionLiteral> expressionLiteralList     = expressionLiteralListNode.getExpressionLiteralList();
             int                          size                      = expressionLiteralList.size();
             // TODO: Test empty literal list
@@ -678,21 +714,29 @@ public class AnnotatorKlassVisitor extends KlassVisitor
     {
         KlassDataTypeDeclaration dataTypeDeclaration = parameterDeclaration.getDataTypeDeclaration();
         KlassMultiplicity        multiplicity        = dataTypeDeclaration.getMultiplicity();
-        KlassPrimitiveType       primitiveType       = dataTypeDeclaration.getPrimitiveType();
-        if (primitiveType != null)
+        KlassDataType            dataType            = dataTypeDeclaration.getDataType();
+        DataTypeType             dataTypeType        = this.getDataTypeType(dataType);
+
+        if (dataTypeType == null)
         {
-            return Collections.singletonList(new Type(
-                    DataTypeType.PRIMITIVE_TYPE,
-                    primitiveType.getText(),
-                    this.getMultiplicity(multiplicity)));
+            return null;
         }
-        KlassEnumerationType enumerationType = dataTypeDeclaration.getEnumerationType();
-        if (enumerationType != null)
+
+        return Collections.singletonList(new Type(
+                dataTypeType,
+                dataType.getText(),
+                this.getMultiplicity(multiplicity)));
+    }
+
+    private DataTypeType getDataTypeType(KlassDataType dataType)
+    {
+        if (dataType instanceof KlassPrimitiveType)
         {
-            return Collections.singletonList(new Type(
-                    DataTypeType.ENUMERATION,
-                    enumerationType.getText(),
-                    this.getMultiplicity(multiplicity)));
+            return DataTypeType.PRIMITIVE_TYPE;
+        }
+        if (dataType instanceof KlassEnumerationType)
+        {
+            return DataTypeType.ENUMERATION;
         }
         return null;
     }

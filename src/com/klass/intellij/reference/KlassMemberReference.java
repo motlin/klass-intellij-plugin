@@ -26,6 +26,7 @@ import com.intellij.util.text.CharArrayUtil;
 import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassAssociationEndName;
+import com.klass.intellij.psi.KlassClassModifier;
 import com.klass.intellij.psi.KlassElementFactory;
 import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassExpressionThisMember;
@@ -99,7 +100,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 
             if (association != null)
             {
-                KlassAssociationEnd associationEnd = association.getAssociationEndList().get(0);
+                KlassAssociationEnd associationEnd = association.getAssociationBlock().getAssociationBody().getAssociationEndList().get(0);
                 KlassKlassReference klassReference =
                         (KlassKlassReference) associationEnd.getKlassName().getReference();
                 KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
@@ -109,7 +110,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                     return new ResolveResult[]{};
                 }
 
-                ResolveResult[] resolveResults = klassKlass.getMemberList()
+                ResolveResult[] resolveResults = klassKlass.getClassBlock().getClassBody().getMemberList()
                         .stream()
                         .filter(klassMember -> klassMember.getName().equals(this.propertyName))
                         .map(PsiElementResolveResult::new)
@@ -185,7 +186,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
         else if (parent instanceof KlassProjectionLeafNode)
         {
             KlassProjectionLeafNode projectionLeafNode   = (KlassProjectionLeafNode) parent;
-            PsiElement              projectionNodeParent = projectionLeafNode.getParent();
+            PsiElement              projectionNodeParent = projectionLeafNode.getParent().getParent().getParent();
             if (projectionNodeParent instanceof KlassProjection)
             {
                 KlassProjection projection     = (KlassProjection) projectionNodeParent;
@@ -205,10 +206,12 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                         associationEndNode.getAssociationEndName();
 
                 PsiReference        associationEndReference = associationEndName.getReference();
-                KlassAssociationEnd klassAssociationEnd     = (KlassAssociationEnd) associationEndReference.resolve();
+                PsiElement          resolve                 = associationEndReference.resolve();
 
-                if (klassAssociationEnd != null)
+                if (resolve instanceof KlassAssociationEnd)
                 {
+                    KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
+
                     KlassKlassName klassName          = klassAssociationEnd.getKlassName();
                     PsiReference   klassNameReference = klassName.getReference();
                     KlassKlass     klassKlass         = (KlassKlass) klassNameReference.resolve();
@@ -217,6 +220,14 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                     {
                         return this.getKlassResolveResults(klassKlass);
                     }
+                }
+                else if (resolve instanceof KlassClassModifier)
+                {
+                    return new PsiElementResolveResult[]{new PsiElementResolveResult(resolve)};
+                }
+                else
+                {
+                    throw new AssertionError(resolve);
                 }
             }
             else if (projectionNodeParent instanceof KlassProjectionParameterizedPropertyNode)
@@ -253,7 +264,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 
     private ResolveResult[] getEnumerationResolveResults(KlassEnumeration enumeration)
     {
-        return enumeration.getEnumerationLiteralList()
+        return enumeration.getEnumerationBlock().getEnumerationBody().getEnumerationLiteralList()
                 .stream()
                 .filter(enumerationLiteral -> enumerationLiteral.getName().equals(this.propertyName))
                 .map(PsiElementResolveResult::new)
@@ -291,7 +302,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                 KlassKlass     klass              = (KlassKlass) klassNameReference.resolve();
                 if (klass != null)
                 {
-                    List<KlassMember> propertyList = klass.getMemberList();
+                    List<KlassMember> propertyList = klass.getClassBlock().getClassBody().getMemberList();
                     return propertyList.stream()
                             .map(member -> LookupElementBuilder.create(member.getName())
                                     .withIcon(AllIcons.Nodes.Property)
@@ -318,7 +329,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                 KlassKlass     klass              = (KlassKlass) klassNameReference.resolve();
                 if (klass != null)
                 {
-                    List<KlassMember> propertyList = klass.getMemberList();
+                    List<KlassMember> propertyList = klass.getClassBlock().getClassBody().getMemberList();
                     return propertyList.stream()
                             .map(klassMember -> LookupElementBuilder.create(klassMember.getName())
                                     .withIcon(AllIcons.Nodes.Property)
@@ -387,7 +398,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                 KlassKlass     klass              = (KlassKlass) klassNameReference.resolve();
                 if (klass != null)
                 {
-                    List<KlassMember> propertyList = klass.getMemberList();
+                    List<KlassMember> propertyList = klass.getClassBlock().getClassBody().getMemberList();
                     return propertyList.stream()
                             .map(member -> LookupElementBuilder.create(member.getName())
                                     .withIcon(AllIcons.Nodes.Property)
@@ -406,7 +417,10 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 
     private ResolveResult[] getKlassResolveResults(KlassKlass klass)
     {
-        ResolveResult[] resolveResults = klass.getMemberList()
+        ResolveResult[] resolveResults = klass
+                .getClassBlock()
+                .getClassBody()
+                .getMemberList()
                 .stream()
                 .filter(klassMember -> klassMember.getName().equals(this.propertyName))
                 .map(PsiElementResolveResult::new)
@@ -421,6 +435,8 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
             return new Object[]{};
         }
         return Objects.requireNonNull(klassKlass)
+                .getClassBlock()
+                .getClassBody()
                 .getMemberList()
                 .stream()
                 .map(PsiNamedElement::getName)
@@ -432,6 +448,8 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
     public Object[] getEnumerationLiteralLookups(KlassEnumeration enumeration)
     {
         return Objects.requireNonNull(enumeration)
+                .getEnumerationBlock()
+                .getEnumerationBody()
                 .getEnumerationLiteralList()
                 .stream()
                 .map(PsiNamedElement::getName)

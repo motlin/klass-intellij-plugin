@@ -3,6 +3,7 @@ package com.klass.intellij.psi.impl;
 import javax.swing.*;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.icons.AllIcons.Nodes;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
@@ -10,6 +11,7 @@ import com.intellij.psi.PsiReference;
 import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassAssociationEndName;
+import com.klass.intellij.psi.KlassAssociationEndSignature;
 import com.klass.intellij.psi.KlassDummyMultiplicity;
 import com.klass.intellij.psi.KlassElementFactory;
 import com.klass.intellij.psi.KlassEnumeration;
@@ -18,6 +20,8 @@ import com.klass.intellij.psi.KlassEnumerationProperty;
 import com.klass.intellij.psi.KlassEnumerationType;
 import com.klass.intellij.psi.KlassExpressionNativeValue;
 import com.klass.intellij.psi.KlassExpressionVariableName;
+import com.klass.intellij.psi.KlassInterface;
+import com.klass.intellij.psi.KlassInterfaceName;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
 import com.klass.intellij.psi.KlassMemberName;
@@ -26,6 +30,7 @@ import com.klass.intellij.psi.KlassParameterDeclaration;
 import com.klass.intellij.psi.KlassParameterName;
 import com.klass.intellij.psi.KlassParameterizedProperty;
 import com.klass.intellij.psi.KlassParameterizedPropertyName;
+import com.klass.intellij.psi.KlassParameterizedPropertySignature;
 import com.klass.intellij.psi.KlassPrimitiveType;
 import com.klass.intellij.psi.KlassPrimitiveTypeProperty;
 import com.klass.intellij.psi.KlassProjection;
@@ -40,6 +45,7 @@ import com.klass.intellij.reference.KlassDummyMultiplicityReference;
 import com.klass.intellij.reference.KlassEnumerationReference;
 import com.klass.intellij.reference.KlassExpressionNativeValueReference;
 import com.klass.intellij.reference.KlassExpressionVariableNameReference;
+import com.klass.intellij.reference.KlassInterfaceReference;
 import com.klass.intellij.reference.KlassKlassReference;
 import com.klass.intellij.reference.KlassMemberReference;
 import com.klass.intellij.reference.KlassParameterReference;
@@ -49,6 +55,18 @@ import org.jetbrains.annotations.Nullable;
 
 public class KlassPsiImplUtil
 {
+    public static PsiElement setName(KlassInterface element, String newName)
+    {
+        ASTNode classNameNode = element.getNombre().getNode();
+        if (classNameNode != null)
+        {
+            KlassInterface klassInterface   = KlassElementFactory.createInterface(element.getProject(), newName);
+            ASTNode        newInterfaceNameNode = klassInterface.getNombre().getNode();
+            element.getNode().replaceChild(classNameNode, newInterfaceNameNode);
+        }
+        return element;
+    }
+
     public static PsiElement setName(KlassKlass element, String newName)
     {
         ASTNode classNameNode = element.getNombre().getNode();
@@ -141,6 +159,19 @@ public class KlassPsiImplUtil
         return element;
     }
 
+    public static PsiElement setName(KlassParameterizedPropertySignature element, String newName)
+    {
+        ASTNode primitivePropertyNameNode = element.getNombre().getNode();
+        if (primitivePropertyNameNode != null)
+        {
+            KlassParameterizedPropertySignature parameterizedPropertySignature =
+                    KlassElementFactory.createParameterizedPropertySignature(element.getProject(), newName);
+            ASTNode newPrimitivePropertyNameNode = parameterizedPropertySignature.getNombre().getNode();
+            element.getNode().replaceChild(primitivePropertyNameNode, newPrimitivePropertyNameNode);
+        }
+        return element;
+    }
+
     public static PsiElement setName(KlassAssociationEnd element, String newName)
     {
         ASTNode associationEndNameNode = element.getNombre().getNode();
@@ -150,6 +181,19 @@ public class KlassPsiImplUtil
                     KlassElementFactory.createAssociationEnd(element.getProject(), newName);
             ASTNode newAssociationEndNameNode = associationEnd.getNombre().getNode();
             element.getNode().replaceChild(associationEndNameNode, newAssociationEndNameNode);
+        }
+        return element;
+    }
+
+    public static PsiElement setName(KlassAssociationEndSignature element, String newName)
+    {
+        ASTNode associationEndNameNode = element.getNombre().getNode();
+        if (associationEndNameNode != null)
+        {
+            KlassAssociationEndSignature associationEndSignature =
+                    KlassElementFactory.createAssociationEndSignature(element.getProject(), newName);
+            ASTNode newAssociationEndSignatureNameNode = associationEndSignature.getNombre().getNode();
+            element.getNode().replaceChild(associationEndNameNode, newAssociationEndSignatureNameNode);
         }
         return element;
     }
@@ -178,6 +222,17 @@ public class KlassPsiImplUtil
             element.getNode().replaceChild(primitiveLiteralNameNode, newPrimitiveLiteralNameNode);
         }
         return element;
+    }
+
+    public static PsiReference getReference(KlassInterfaceName klassInterfaceName)
+    {
+        String interfaceName = klassInterfaceName.getText();
+        if (interfaceName == null)
+        {
+            return null;
+        }
+
+        return new KlassInterfaceReference(klassInterfaceName, interfaceName);
     }
 
     public static PsiReference getReference(KlassKlassName klassKlassName)
@@ -295,6 +350,11 @@ public class KlassPsiImplUtil
         return new KlassExpressionVariableNameReference(klassExpressionVariableName, expressionVariableName);
     }
 
+    public static ItemPresentation getPresentation(KlassInterface element)
+    {
+        return new KlassNamedElementItemPresentation(element, null, Nodes.Interface);
+    }
+
     public static ItemPresentation getPresentation(KlassKlass element)
     {
         return new KlassNamedElementItemPresentation(element, null, AllIcons.Nodes.Class);
@@ -406,6 +466,13 @@ public class KlassPsiImplUtil
         return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
     }
 
+    public static ItemPresentation getPresentation(KlassParameterizedPropertySignature element)
+    {
+        String locationString = element.getClassifierName().getText()
+                + element.getMultiplicity().getText();
+        return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
+    }
+
     public static ItemPresentation getPresentation(KlassService element)
     {
         return new ItemPresentation()
@@ -421,7 +488,7 @@ public class KlassPsiImplUtil
             @Override
             public String getLocationString()
             {
-                KlassServiceCriteriaClause serviceCriteriaClause = element.getServiceCriteriaClause();
+                KlassServiceCriteriaClause serviceCriteriaClause = element.getServiceBlock().getServiceBody().getServiceCriteriaClause();
                 if (serviceCriteriaClause == null)
                 {
                     return null;

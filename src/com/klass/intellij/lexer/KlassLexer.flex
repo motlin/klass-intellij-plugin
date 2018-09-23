@@ -70,6 +70,8 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "projection" { return KlassTypes.PROJECTION_KEYWORD; }
   "service" { return KlassTypes.SERVICE_KEYWORD; }
   "user" { return KlassTypes.USER_KEYWORD; }
+  "extends" { return KlassTypes.EXTENDS_KEYWORD; }
+  "implements" { return KlassTypes.IMPLEMENTS_KEYWORD; }
 
   "systemTemporal" { return KlassTypes.SYSTEM_TEMPORAL_MODIFIER; }
   "validTemporal" { return KlassTypes.VALID_TEMPORAL_MODIFIER; }
@@ -139,7 +141,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "PATCH" { return KlassTypes.PATCH_VERB; }
   "DELETE" { return KlassTypes.DELETE_VERB; }
 
-//  "abstract" { return KlassTypes.ABSTRACT_KEYWORD; }
+  "abstract" { return KlassTypes.ABSTRACT_MODIFIER; }
 //  "break" { return KlassTypes.BREAK_KEYWORD; }
 //  "byte" { return KlassTypes.BYTE_KEYWORD; }
 //  "case" { return KlassTypes.CASE_KEYWORD; }
@@ -159,7 +161,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
 //  "implements" { return KlassTypes.IMPLEMENTS_KEYWORD; }
 //  "import" { return KlassTypes.IMPORT_KEYWORD; }
 //  "instanceof" { return KlassTypes.INSTANCEOF_KEYWORD; }
-//  "interface" { return KlassTypes.INTERFACE_KEYWORD; }
+  "interface" { return KlassTypes.INTERFACE_KEYWORD; }
 //  "native" { return KlassTypes.NATIVE_KEYWORD; }
 //  "new" { return KlassTypes.NEW_KEYWORD; }
   "package" { return KlassTypes.PACKAGE_KEYWORD; }

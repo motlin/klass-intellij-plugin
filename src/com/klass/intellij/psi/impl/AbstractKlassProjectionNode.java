@@ -7,7 +7,7 @@ import com.klass.intellij.psi.KlassProjectionNode;
 import com.klass.intellij.psi.KlassTypedElement;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractKlassProjectionNode extends KlassNamedElementImpl implements KlassTypedElement, KlassProjectionNode
+public abstract class AbstractKlassProjectionNode extends KlassNombredImpl implements KlassTypedElement, KlassProjectionNode
 {
     public AbstractKlassProjectionNode(@NotNull ASTNode node)
     {

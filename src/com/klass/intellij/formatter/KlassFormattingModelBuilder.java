@@ -58,7 +58,8 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
 
     public static final TokenSet LINE_BREAK_BEFORE = TokenSet.create(
             KlassTypes.ANDAND,
-            KlassTypes.OROR);
+            KlassTypes.OROR,
+            KlassTypes.PROJECTION_BLOCK);
     public static final TokenSet LINE_BREAK_AFTER = TokenSet.create(
             KlassTypes.COMMA,
             KlassTokenType.END_OF_LINE_COMMENT);
@@ -84,8 +85,9 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
     public static final TokenSet LINE_BREAK_AROUND_HIGH_PRIORITY = TokenSet.create(
             KlassTypes.CLASS_MODIFIER,
             KlassTypes.SERVICE_PROJECTION,
-            KlassTypes.SERVICE_CATEGORY,
-            KlassTypes.VERB);
+            KlassTypes.VERB,
+            KlassTypes.IMPLEMENTS_CLAUSE,
+            KlassTypes.EXTENDS_CLAUSE);
     public static final TokenSet LINE_BREAK_AROUND = TokenSet.create(
             KlassTypes.RELATIONSHIP,
             KlassTypes.ORDER_BY_CLAUSE,
@@ -108,10 +110,25 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.ASSOCIATION,
             KlassTypes.ENUMERATION,
             KlassTypes.PROJECTION,
-            KlassTypes.PROJECTION_ASSOCIATION_END_NODE,
-            KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE,
             KlassTypes.SERVICE,
             KlassTypes.SERVICE_GROUP,
+
+            KlassTypes.CLASS_BLOCK,
+            KlassTypes.ASSOCIATION_BLOCK,
+            KlassTypes.ENUMERATION_BLOCK,
+            KlassTypes.PROJECTION_BLOCK,
+            KlassTypes.SERVICE_BLOCK,
+            KlassTypes.SERVICE_GROUP_BLOCK,
+
+            KlassTypes.CLASS_BODY,
+            KlassTypes.ASSOCIATION_BODY,
+            KlassTypes.ENUMERATION_BODY,
+            KlassTypes.PROJECTION_BODY,
+            KlassTypes.SERVICE_BODY,
+            KlassTypes.SERVICE_GROUP_BODY,
+
+            KlassTypes.PROJECTION_ASSOCIATION_END_NODE,
+            KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE,
             KlassTypes.URL_GROUP,
             KlassTypes.PARAMETERIZED_PROPERTY);
 
@@ -166,7 +183,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
                 .before(BLANK_LINE_BEFORE).blankLines(1)
 
                 .before(LINE_BREAK_BEFORE).lineBreakInCode()
-                .afterInside(KlassTypes.COMMA, KlassTypes.EXPRESSION_LITERAL_LIST).spaces(1)
+                .afterInside(KlassTypes.COMMA, KlassTypes.EXPRESSION_LITERALS).spaces(1)
                 .after(LINE_BREAK_AFTER).lineBreakInCode()
                 .around(BRACES).lineBreakInCode()
                 .around(LINE_BREAK_AROUND_HIGH_PRIORITY).lineBreakInCode()

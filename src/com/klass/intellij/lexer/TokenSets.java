@@ -5,6 +5,7 @@ import com.intellij.psi.tree.TokenSet;
 import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static com.klass.intellij.psi.KlassTokenType.C_STYLE_COMMENT;
 import static com.klass.intellij.psi.KlassTokenType.END_OF_LINE_COMMENT;
+import static com.klass.intellij.psi.KlassTypes.ABSTRACT_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.ALL_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.ANDAND;
 import static com.klass.intellij.psi.KlassTypes.ASCENDING_KEYWORD;
@@ -29,6 +30,7 @@ import static com.klass.intellij.psi.KlassTypes.ENDS_WITH_OPERATOR;
 import static com.klass.intellij.psi.KlassTypes.ENUMERATION_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.EQEQ;
 import static com.klass.intellij.psi.KlassTypes.EQUALS_EDGEPOINT_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.EXTENDS_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.FALSE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.FINAL_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.FLOAT_KEYWORD;
@@ -36,8 +38,10 @@ import static com.klass.intellij.psi.KlassTypes.FROM_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.GE;
 import static com.klass.intellij.psi.KlassTypes.GT;
 import static com.klass.intellij.psi.KlassTypes.ID_MODIFIER;
+import static com.klass.intellij.psi.KlassTypes.IMPLEMENTS_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.INSTANT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.INTEGER_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.INTERFACE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.IN_OPERATOR;
 import static com.klass.intellij.psi.KlassTypes.KEY_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.KLASS;
@@ -95,12 +99,16 @@ public interface TokenSets
 
     TokenSet KEYWORD_BIT_SET = TokenSet.create(
             PACKAGE_KEYWORD,
+            INTERFACE_KEYWORD,
             CLASS_KEYWORD,
             ENUMERATION_KEYWORD,
             ASSOCIATION_KEYWORD,
             PROJECTION_KEYWORD,
             SERVICE_KEYWORD,
             USER_KEYWORD,
+            EXTENDS_KEYWORD,
+            IMPLEMENTS_KEYWORD,
+            ABSTRACT_MODIFIER,
             SYSTEM_TEMPORAL_MODIFIER,
             VALID_TEMPORAL_MODIFIER,
             BITEMPORAL_MODIFIER,

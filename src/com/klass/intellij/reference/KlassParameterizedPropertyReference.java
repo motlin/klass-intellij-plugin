@@ -48,7 +48,10 @@ public class KlassParameterizedPropertyReference extends PsiPolyVariantReference
             return new ResolveResult[]{};
         }
 
-        ResolveResult[] resolveResults = klassKlass.getMemberList()
+        ResolveResult[] resolveResults = klassKlass
+                .getClassBlock()
+                .getClassBody()
+                .getMemberList()
                 .stream()
                 .filter(KlassParameterizedProperty.class::isInstance)
                 .map(KlassParameterizedProperty.class::cast)

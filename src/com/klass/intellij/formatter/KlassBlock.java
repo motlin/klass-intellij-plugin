@@ -32,7 +32,9 @@ public class KlassBlock extends AbstractBlock
             KlassTypes.PRIMITIVE_TYPE_PROPERTY,
             KlassTypes.ENUMERATION_PROPERTY,
             KlassTypes.PARAMETERIZED_PROPERTY,
+            KlassTypes.PARAMETERIZED_PROPERTY_SIGNATURE,
             KlassTypes.ASSOCIATION_END,
+            KlassTypes.ASSOCIATION_END_SIGNATURE,
             KlassTypes.ENUMERATION_LITERAL,
             KlassTypes.PROJECTION_ASSOCIATION_END_NODE,
             KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE,
@@ -49,18 +51,35 @@ public class KlassBlock extends AbstractBlock
             KlassTypes.SERVICE_PROJECTION,
             KlassTypes.ORDER_BY_CLAUSE,
             KlassTypes.CLASS_MODIFIER,
-            KlassTypes.RELATIONSHIP);
+            KlassTypes.RELATIONSHIP,
+            KlassTypes.IMPLEMENTS_CLAUSE,
+            KlassTypes.EXTENDS_CLAUSE);
 
     private static final TokenSet NORMAL_INDENT_CHILDREN = TokenSet.create(
             KlassTypes.KLASS,
             KlassTypes.ASSOCIATION,
             KlassTypes.ENUMERATION,
             KlassTypes.PROJECTION,
+            KlassTypes.SERVICE,
+            KlassTypes.SERVICE_GROUP,
+
+            KlassTypes.CLASS_BLOCK,
+            KlassTypes.ASSOCIATION_BLOCK,
+            KlassTypes.ENUMERATION_BLOCK,
+            KlassTypes.PROJECTION_BLOCK,
+            KlassTypes.SERVICE_BLOCK,
+            KlassTypes.SERVICE_GROUP_BLOCK,
+
+            KlassTypes.CLASS_BODY,
+            KlassTypes.ASSOCIATION_BODY,
+            KlassTypes.ENUMERATION_BODY,
+            KlassTypes.PROJECTION_BODY,
+            KlassTypes.SERVICE_BODY,
+            KlassTypes.SERVICE_GROUP_BODY,
+
             KlassTypes.PROJECTION_ASSOCIATION_END_NODE,
             KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE,
-            KlassTypes.SERVICE_GROUP,
             KlassTypes.URL_GROUP,
-            KlassTypes.SERVICE,
             KlassTypes.PARAMETERIZED_PROPERTY,
             KlassTypes.CRITERIA_AND,
             KlassTypes.CRITERIA_OR);
@@ -132,7 +151,10 @@ public class KlassBlock extends AbstractBlock
 
         IElementType parentElementType = this.myNode.getElementType();
         if (parentElementType == KlassTypes.PRIMITIVE_TYPE_PROPERTY
-                || parentElementType == KlassTypes.ENUMERATION_PROPERTY)
+                || parentElementType == KlassTypes.ENUMERATION_PROPERTY
+                || parentElementType == KlassTypes.ASSOCIATION_END_SIGNATURE
+                || parentElementType == KlassTypes.PARAMETERIZED_PROPERTY_SIGNATURE
+                || parentElementType==KlassTypes.ASSOCIATION_END)
         {
             return this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS ? COLON_ALIGNMENT : null;
         }
@@ -144,7 +166,7 @@ public class KlassBlock extends AbstractBlock
         }
 
         IElementType grandparentElementType = treeParent.getElementType();
-        if (grandparentElementType == KlassTypes.SERVICE)
+        if (grandparentElementType == KlassTypes.SERVICE_BODY)
         {
             return this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS ? this.serviceColonAlignment : null;
         }
@@ -172,7 +194,7 @@ public class KlassBlock extends AbstractBlock
 
     private Alignment getChildColonAlignment(IElementType elementType)
     {
-        if (elementType == KlassTypes.SERVICE_GROUP)
+        if (elementType == KlassTypes.SERVICE_BODY)
         {
             return Alignment.createAlignment(true);
         }
@@ -181,10 +203,7 @@ public class KlassBlock extends AbstractBlock
 
     private Alignment getProjectionColonAlignment(IElementType elementType)
     {
-        if (elementType == KlassTypes.PROJECTION
-                || elementType == KlassTypes.PROJECTION_ASSOCIATION_END_NODE
-                || elementType == KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE
-                || elementType == KlassTypes.PROJECTION_LEAF_NODE)
+        if (elementType == KlassTypes.PROJECTION_BODY)
         {
             return Alignment.createAlignment(true);
         }

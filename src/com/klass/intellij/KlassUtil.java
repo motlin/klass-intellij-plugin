@@ -1,5 +1,11 @@
 package com.klass.intellij;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -8,12 +14,21 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.klass.intellij.psi.*;
-
-import java.util.*;
+import com.klass.intellij.psi.KlassAssociation;
+import com.klass.intellij.psi.KlassAssociationEnd;
+import com.klass.intellij.psi.KlassEnumeration;
+import com.klass.intellij.psi.KlassFile;
+import com.klass.intellij.psi.KlassInterface;
+import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassProjection;
 
 public class KlassUtil
 {
+    public static List<KlassInterface> findInterfaces(Project project)
+    {
+        return KlassUtil.findElementsOfType(project, KlassInterface.class);
+    }
+
     public static List<KlassKlass> findClasses(Project project)
     {
         return KlassUtil.findElementsOfType(project, KlassKlass.class);

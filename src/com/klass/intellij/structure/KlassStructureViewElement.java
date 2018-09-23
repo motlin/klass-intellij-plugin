@@ -10,6 +10,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassFile;
+import com.klass.intellij.psi.KlassInterface;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassServiceGroup;
 import com.klass.intellij.psi.KlassTopLevelItem;
@@ -76,9 +77,23 @@ public class KlassStructureViewElement implements StructureViewTreeElement
                     .toArray(TreeElement[]::new);
         }
 
+        if (this.element instanceof KlassInterface)
+        {
+            return ((KlassInterface) this.element)
+                    .getInterfaceBlock()
+                    .getInterfaceBody()
+                    .getMemberList()
+                    .stream()
+                    .map(KlassStructureViewElement::new)
+                    .toArray(TreeElement[]::new);
+        }
+
         if (this.element instanceof KlassKlass)
         {
-            return ((KlassKlass) this.element).getMemberList()
+            return ((KlassKlass) this.element)
+                    .getClassBlock()
+                    .getClassBody()
+                    .getMemberList()
                     .stream()
                     .map(KlassStructureViewElement::new)
                     .toArray(TreeElement[]::new);
@@ -86,7 +101,10 @@ public class KlassStructureViewElement implements StructureViewTreeElement
 
         if (this.element instanceof KlassAssociation)
         {
-            return ((KlassAssociation) this.element).getAssociationEndList()
+            return ((KlassAssociation) this.element)
+                    .getAssociationBlock()
+                    .getAssociationBody()
+                    .getAssociationEndList()
                     .stream()
                     .map(KlassStructureViewElement::new)
                     .toArray(TreeElement[]::new);
@@ -94,7 +112,10 @@ public class KlassStructureViewElement implements StructureViewTreeElement
 
         if (this.element instanceof KlassServiceGroup)
         {
-            return ((KlassServiceGroup) this.element).getUrlGroupList()
+            return ((KlassServiceGroup) this.element)
+                    .getServiceGroupBlock()
+                    .getServiceGroupBody()
+                    .getUrlGroupList()
                     .stream()
                     .map(KlassStructureViewElement::new)
                     .toArray(TreeElement[]::new);
