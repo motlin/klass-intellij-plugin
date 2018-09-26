@@ -141,7 +141,11 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "PATCH" { return KlassTypes.PATCH_VERB; }
   "DELETE" { return KlassTypes.DELETE_VERB; }
 
-  "abstract" { return KlassTypes.ABSTRACT_MODIFIER; }
+  "abstract" { return KlassTypes.ABSTRACT_KEYWORD; }
+  "table-per-subclass" { return KlassTypes.TABLE_PER_SUBCLASS_KEYWORD; }
+  "table-for-all-subclasses" { return KlassTypes.TABLE_FOR_ALL_KEYWORD; }
+  "table-per-class" { return KlassTypes.TABLE_PER_CLASS_KEYWORD; }
+
 //  "break" { return KlassTypes.BREAK_KEYWORD; }
 //  "byte" { return KlassTypes.BYTE_KEYWORD; }
 //  "case" { return KlassTypes.CASE_KEYWORD; }

@@ -50,6 +50,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.RELATIONSHIP,
             KlassTokenType.END_OF_LINE_COMMENT);
     public static final TokenSet BLANK_LINE_AROUND = TokenSet.create(
+            KlassTypes.INTERFACE,
             KlassTypes.KLASS,
             KlassTypes.ENUMERATION,
             KlassTypes.ASSOCIATION,
@@ -86,6 +87,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.CLASS_MODIFIER,
             KlassTypes.SERVICE_PROJECTION,
             KlassTypes.VERB,
+            KlassTypes.ABSTRACT_CLAUSE,
             KlassTypes.IMPLEMENTS_CLAUSE,
             KlassTypes.EXTENDS_CLAUSE);
     public static final TokenSet LINE_BREAK_AROUND = TokenSet.create(
@@ -106,6 +108,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.URL_GROUP);
 
     public static final TokenSet INDENT_CHILDREN = TokenSet.create(
+            KlassTypes.INTERFACE,
             KlassTypes.KLASS,
             KlassTypes.ASSOCIATION,
             KlassTypes.ENUMERATION,
@@ -113,6 +116,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.SERVICE,
             KlassTypes.SERVICE_GROUP,
 
+            KlassTypes.INTERFACE_BLOCK,
             KlassTypes.CLASS_BLOCK,
             KlassTypes.ASSOCIATION_BLOCK,
             KlassTypes.ENUMERATION_BLOCK,
@@ -120,6 +124,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.SERVICE_BLOCK,
             KlassTypes.SERVICE_GROUP_BLOCK,
 
+            KlassTypes.INTERFACE_BODY,
             KlassTypes.CLASS_BODY,
             KlassTypes.ASSOCIATION_BODY,
             KlassTypes.ENUMERATION_BODY,

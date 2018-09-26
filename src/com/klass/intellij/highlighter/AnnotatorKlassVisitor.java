@@ -622,7 +622,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor
             if (resolve instanceof KlassEnumerationLiteral)
             {
                 KlassEnumerationLiteral enumerationLiteral = (KlassEnumerationLiteral) resolve;
-                KlassEnumeration        enumeration        = (KlassEnumeration) enumerationLiteral.getParent();
+                KlassEnumeration enumeration = PsiTreeUtil.getParentOfType(enumerationLiteral, KlassEnumeration.class);
 
                 return Collections.singletonList(new Type(
                         DataTypeType.PRIMITIVE_TYPE,

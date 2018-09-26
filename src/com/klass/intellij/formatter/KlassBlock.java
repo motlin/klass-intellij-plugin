@@ -52,10 +52,12 @@ public class KlassBlock extends AbstractBlock
             KlassTypes.ORDER_BY_CLAUSE,
             KlassTypes.CLASS_MODIFIER,
             KlassTypes.RELATIONSHIP,
+            KlassTypes.ABSTRACT_CLAUSE,
             KlassTypes.IMPLEMENTS_CLAUSE,
             KlassTypes.EXTENDS_CLAUSE);
 
     private static final TokenSet NORMAL_INDENT_CHILDREN = TokenSet.create(
+            KlassTypes.INTERFACE,
             KlassTypes.KLASS,
             KlassTypes.ASSOCIATION,
             KlassTypes.ENUMERATION,
@@ -63,6 +65,7 @@ public class KlassBlock extends AbstractBlock
             KlassTypes.SERVICE,
             KlassTypes.SERVICE_GROUP,
 
+            KlassTypes.INTERFACE_BLOCK,
             KlassTypes.CLASS_BLOCK,
             KlassTypes.ASSOCIATION_BLOCK,
             KlassTypes.ENUMERATION_BLOCK,
@@ -70,6 +73,7 @@ public class KlassBlock extends AbstractBlock
             KlassTypes.SERVICE_BLOCK,
             KlassTypes.SERVICE_GROUP_BLOCK,
 
+            KlassTypes.INTERFACE_BODY,
             KlassTypes.CLASS_BODY,
             KlassTypes.ASSOCIATION_BODY,
             KlassTypes.ENUMERATION_BODY,

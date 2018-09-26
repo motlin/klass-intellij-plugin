@@ -5,7 +5,7 @@ import com.intellij.psi.tree.TokenSet;
 import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static com.klass.intellij.psi.KlassTokenType.C_STYLE_COMMENT;
 import static com.klass.intellij.psi.KlassTokenType.END_OF_LINE_COMMENT;
-import static com.klass.intellij.psi.KlassTypes.ABSTRACT_MODIFIER;
+import static com.klass.intellij.psi.KlassTypes.ABSTRACT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.ALL_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.ANDAND;
 import static com.klass.intellij.psi.KlassTypes.ASCENDING_KEYWORD;
@@ -72,6 +72,9 @@ import static com.klass.intellij.psi.KlassTypes.STARTS_WITH_OPERATOR;
 import static com.klass.intellij.psi.KlassTypes.STRING_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.SYSTEM_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.SYSTEM_TEMPORAL_MODIFIER;
+import static com.klass.intellij.psi.KlassTypes.TABLE_FOR_ALL_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.TABLE_PER_CLASS_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.TABLE_PER_SUBCLASS_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.TEMPORAL_INSTANT_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.TEMPORAL_RANGE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.THIS_KEYWORD;
@@ -108,7 +111,10 @@ public interface TokenSets
             USER_KEYWORD,
             EXTENDS_KEYWORD,
             IMPLEMENTS_KEYWORD,
-            ABSTRACT_MODIFIER,
+            ABSTRACT_KEYWORD,
+            TABLE_PER_SUBCLASS_KEYWORD,
+            TABLE_PER_CLASS_KEYWORD,
+            TABLE_FOR_ALL_KEYWORD,
             SYSTEM_TEMPORAL_MODIFIER,
             VALID_TEMPORAL_MODIFIER,
             BITEMPORAL_MODIFIER,
