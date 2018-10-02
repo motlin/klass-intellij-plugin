@@ -225,7 +225,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                 {
                     return new PsiElementResolveResult[]{new PsiElementResolveResult(resolve)};
                 }
-                else
+                else if (resolve != null)
                 {
                     throw new AssertionError(resolve);
                 }
