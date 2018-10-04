@@ -1,5 +1,6 @@
 package com.klass.intellij.reference;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,6 +32,11 @@ import com.klass.intellij.psi.KlassElementFactory;
 import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassExpressionThisMember;
 import com.klass.intellij.psi.KlassExpressionTypeMember;
+import com.klass.intellij.psi.KlassExtendsClause;
+import com.klass.intellij.psi.KlassImplementsClause;
+import com.klass.intellij.psi.KlassImplementsList;
+import com.klass.intellij.psi.KlassInterface;
+import com.klass.intellij.psi.KlassInterfaceName;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
 import com.klass.intellij.psi.KlassMember;
@@ -74,16 +80,13 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 
         if (parent instanceof KlassExpressionThisMember)
         {
-            KlassKlass klass =
-                    PsiTreeUtil.getParentOfType(this.myElement, KlassKlass.class);
-
+            KlassKlass klass = PsiTreeUtil.getParentOfType(this.myElement, KlassKlass.class);
             if (klass != null)
             {
                 return this.getKlassResolveResults(klass);
             }
 
-            KlassServiceGroup serviceGroup =
-                    PsiTreeUtil.getParentOfType(this.myElement, KlassServiceGroup.class);
+            KlassServiceGroup serviceGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassServiceGroup.class);
             if (serviceGroup != null)
             {
                 PsiReference reference    = serviceGroup.getKlassName().getReference();
@@ -95,27 +98,23 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                 return this.getKlassResolveResults(serviceKlass);
             }
 
-            KlassAssociation association =
-                    PsiTreeUtil.getParentOfType(this.myElement, KlassAssociation.class);
+            KlassAssociation association = PsiTreeUtil.getParentOfType(this.myElement, KlassAssociation.class);
 
             if (association != null)
             {
-                KlassAssociationEnd associationEnd = association.getAssociationBlock().getAssociationBody().getAssociationEndList().get(0);
-                KlassKlassReference klassReference =
-                        (KlassKlassReference) associationEnd.getKlassName().getReference();
+                KlassAssociationEnd associationEnd = association
+                        .getAssociationBlock()
+                        .getAssociationBody()
+                        .getAssociationEndList()
+                        .get(0);
+                KlassKlassReference klassReference = (KlassKlassReference) associationEnd.getKlassName().getReference();
                 KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
-
                 if (klassKlass == null)
                 {
                     return new ResolveResult[]{};
                 }
 
-                ResolveResult[] resolveResults = klassKlass.getClassBlock().getClassBody().getMemberList()
-                        .stream()
-                        .filter(klassMember -> klassMember.getName().equals(this.propertyName))
-                        .map(PsiElementResolveResult::new)
-                        .toArray(ResolveResult[]::new);
-                return this.getTemporalResolveResults(klass, resolveResults);
+                return this.getKlassResolveResults(klassKlass);
             }
         }
         else if (parent instanceof KlassExpressionTypeMember)
@@ -142,8 +141,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
         }
         else if (parent instanceof KlassOrderByProperty)
         {
-            KlassServiceGroup klassServiceGroup =
-                    PsiTreeUtil.getParentOfType(this.myElement, KlassServiceGroup.class);
+            KlassServiceGroup klassServiceGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassServiceGroup.class);
             if (klassServiceGroup != null)
             {
                 PsiReference reference    = klassServiceGroup.getKlassName().getReference();
@@ -205,8 +203,8 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                 KlassAssociationEndName associationEndName =
                         associationEndNode.getAssociationEndName();
 
-                PsiReference        associationEndReference = associationEndName.getReference();
-                PsiElement          resolve                 = associationEndReference.resolve();
+                PsiReference associationEndReference = associationEndName.getReference();
+                PsiElement   resolve                 = associationEndReference.resolve();
 
                 if (resolve instanceof KlassAssociationEnd)
                 {
@@ -276,7 +274,14 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
     public PsiElement resolve()
     {
         ResolveResult[] resolveResults = this.multiResolve(false);
-        return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+        if (resolveResults.length == 1)
+        {
+            return resolveResults[0].getElement();
+        }
+        else
+        {
+            return null;
+        }
     }
 
     @NotNull
@@ -392,10 +397,10 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
         {
             if (greatGrandparent instanceof KlassAssociationEnd)
             {
-                KlassAssociationEnd associationEnd = (KlassAssociationEnd) greatGrandparent;
-                KlassKlassName klassName          = associationEnd.getKlassName();
-                PsiReference   klassNameReference = klassName.getReference();
-                KlassKlass     klass              = (KlassKlass) klassNameReference.resolve();
+                KlassAssociationEnd associationEnd     = (KlassAssociationEnd) greatGrandparent;
+                KlassKlassName      klassName          = associationEnd.getKlassName();
+                PsiReference        klassNameReference = klassName.getReference();
+                KlassKlass          klass              = (KlassKlass) klassNameReference.resolve();
                 if (klass != null)
                 {
                     List<KlassMember> propertyList = klass.getClassBlock().getClassBody().getMemberList();
@@ -425,9 +430,80 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                 .filter(klassMember -> klassMember.getName().equals(this.propertyName))
                 .map(PsiElementResolveResult::new)
                 .toArray(ResolveResult[]::new);
-        return this.getTemporalResolveResults(klass, resolveResults);
+        ResolveResult[] temporalResolveResults = this.getTemporalResolveResults(
+                resolveResults,
+                klass.getClassModifierList());
+        if (temporalResolveResults.length != 0)
+        {
+            return temporalResolveResults;
+        }
+
+        KlassExtendsClause extendsClause = klass.getExtendsClause();
+        if (extendsClause != null)
+        {
+            PsiElement resolvedSuperClass = extendsClause.getKlassName().getReference().resolve();
+            if (resolvedSuperClass != null)
+            {
+                ResolveResult[] superClassResolvedResults = this.getKlassResolveResults((KlassKlass) resolvedSuperClass);
+
+                if (superClassResolvedResults.length > 0)
+                {
+                    return superClassResolvedResults;
+                }
+            }
+        }
+
+        KlassImplementsClause implementsClause = klass.getImplementsClause();
+        if (implementsClause == null)
+        {
+            return temporalResolveResults;
+        }
+
+        return this.getImplementsListResolveResults(implementsClause.getImplementsList());
     }
 
+    private ResolveResult[] getInterfaceResolveResults(KlassInterface klassInterface)
+    {
+        ResolveResult[] resolveResults = klassInterface
+                .getInterfaceBlock()
+                .getInterfaceBody()
+                .getMemberList()
+                .stream()
+                .filter(klassMember -> klassMember.getName().equals(this.propertyName))
+                .map(PsiElementResolveResult::new)
+                .toArray(ResolveResult[]::new);
+        ResolveResult[] temporalResolveResults = this.getTemporalResolveResults(
+                resolveResults,
+                klassInterface.getClassModifierList());
+        if (temporalResolveResults.length != 0)
+        {
+            return temporalResolveResults;
+        }
+
+        KlassImplementsClause implementsClause = klassInterface.getImplementsClause();
+        if (implementsClause == null)
+        {
+            return temporalResolveResults;
+        }
+
+        return this.getImplementsListResolveResults(implementsClause.getImplementsList());
+    }
+
+    @NotNull
+    private ResolveResult[] getImplementsListResolveResults(KlassImplementsList implementsList)
+    {
+        return implementsList
+                .getInterfaceNameList()
+                .stream()
+                .map(KlassInterfaceName::getReference)
+                .map(PsiReference::resolve)
+                .filter(Objects::nonNull)
+                .map(KlassInterface.class::cast)
+                .flatMap(superInterface -> Arrays.stream(this.getInterfaceResolveResults(superInterface)))
+                .toArray(ResolveResult[]::new);
+    }
+
+    // TODO: superclasses and interfaces
     private Object[] getKlassMemberLookups(KlassKlass klassKlass)
     {
         if (klassKlass == null)
@@ -458,7 +534,10 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                 .toArray();
     }
 
-    public ResolveResult[] getTemporalResolveResults(KlassKlass klass, ResolveResult[] resolveResults)
+    @NotNull
+    public ResolveResult[] getTemporalResolveResults(
+            ResolveResult[] resolveResults,
+            List<KlassClassModifier> classModifierList)
     {
         if (resolveResults.length != 0)
         {
@@ -466,19 +545,19 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
         }
         if (VALID_PROPERTIES.contains(this.propertyName))
         {
-            return this.getTemporalReference(klass, "validTemporal");
+            return this.getTemporalReference("validTemporal", classModifierList);
         }
         if (SYSTEM_PROPERTIES.contains(this.propertyName))
         {
-            return this.getTemporalReference(klass, "systemTemporal");
+            return this.getTemporalReference("systemTemporal", classModifierList);
         }
         return resolveResults;
     }
 
-    private ResolveResult[] getTemporalReference(KlassKlass klass, String temporalKeyword)
+    @NotNull
+    private ResolveResult[] getTemporalReference(String temporalKeyword, List<KlassClassModifier> classModifierList)
     {
-        return klass
-                .getClassModifierList()
+        return classModifierList
                 .stream()
                 .filter(classModifier ->
                         classModifier.getText().equals(temporalKeyword)

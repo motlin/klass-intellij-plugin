@@ -248,24 +248,24 @@ public class KlassPsiImplUtil
 
     public static PsiReference getReference(KlassMemberName klassMemberName)
     {
-        String associationEndType = klassMemberName.getText();
-        if (associationEndType == null)
+        String memberName = klassMemberName.getText();
+        if (memberName == null)
         {
             return null;
         }
 
-        return new KlassMemberReference(klassMemberName, associationEndType);
+        return new KlassMemberReference(klassMemberName, memberName);
     }
 
     public static PsiReference getReference(KlassAssociationEndName klassAssociationEndName)
     {
-        String associationEndType = klassAssociationEndName.getText();
-        if (associationEndType == null)
+        String associationEndName = klassAssociationEndName.getText();
+        if (associationEndName == null)
         {
             return null;
         }
 
-        return new KlassAssociationEndReference(klassAssociationEndName, associationEndType);
+        return new KlassAssociationEndReference(klassAssociationEndName, associationEndName);
     }
 
     public static PsiReference getReference(KlassParameterizedPropertyName klassParameterizedPropertyName)
