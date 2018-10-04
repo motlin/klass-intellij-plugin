@@ -260,13 +260,13 @@ dataTypeProperty ::= primitiveTypeProperty | enumerationProperty
     extends=member
 }
 
-primitiveTypeProperty ::= nombre ':' primitiveType optionalMarker? propertyModifier* SEMICOLON
+primitiveTypeProperty ::= nombre ':' primitiveType optionalMarker? propertyModifier* dataTypePropertyValidation* SEMICOLON
 {
     methods=[setName getPresentation]
     extends=dataTypeProperty
 }
 
-enumerationProperty ::= nombre ':' enumerationType optionalMarker? propertyModifier* SEMICOLON
+enumerationProperty ::= nombre ':' enumerationType optionalMarker? propertyModifier* dataTypePropertyValidation* SEMICOLON
 {
     methods=[setName getPresentation]
     extends=dataTypeProperty
@@ -290,7 +290,15 @@ classModifier ::= SYSTEM_TEMPORAL_MODIFIER | VALID_TEMPORAL_MODIFIER | BITEMPORA
 propertyModifier ::= KEY_MODIFIER | PRIVATE_MODIFIER | ID_MODIFIER | USER_ID_MODIFIER | VALID_MODIFIER | SYSTEM_MODIFIER | FROM_MODIFIER | TO_MODIFIER | CREATED_BY_MODIFIER | CREATED_ON_MODIFIER | LAST_UPDATED_BY_MODIFIER | VERSION_MODIFIER
 parameterizedPropertyModifier ::= CREATED_BY_MODIFIER | LAST_UPDATED_BY_MODIFIER
 associationEndModifier ::= OWNED_MODIFIER | FINAL_MODIFIER | VERSION_MODIFIER
-parameterModifier::= VERSION_MODIFIER  | ID_MODIFIER | USER_ID_MODIFIER
+parameterModifier ::= VERSION_MODIFIER  | ID_MODIFIER | USER_ID_MODIFIER
+
+dataTypePropertyValidation ::= minLengthValidation | maxLengthValidation | minValidation | maxValidation
+
+minLengthValidation ::= (MIN_LENGTH_KEYWORD | MINIMUM_LENGTH_KEYWORD) integerParens
+maxLengthValidation ::= (MAX_LENGTH_KEYWORD | MAXIMUM_LENGTH_KEYWORD) integerParens
+minValidation ::= (MIN_KEYWORD | MINIMUM_KEYWORD) integerParens
+maxValidation ::= (MAX_KEYWORD | MAXIMUM_KEYWORD) integerParens
+integerParens ::= '(' INTEGER_LITERAL ')'
 
 serviceProjection ::= serviceCategory (projectNameParens)?
 projectNameParens ::= '(' projectionName ')'

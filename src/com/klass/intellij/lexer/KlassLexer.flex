@@ -146,6 +146,15 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "table-for-all-subclasses" { return KlassTypes.TABLE_FOR_ALL_KEYWORD; }
   "table-per-class" { return KlassTypes.TABLE_PER_CLASS_KEYWORD; }
 
+  "minLength" { return KlassTypes.MIN_LENGTH_KEYWORD; }
+  "maxLength" { return KlassTypes.MAX_LENGTH_KEYWORD; }
+  "minimumLength" { return KlassTypes.MINIMUM_LENGTH_KEYWORD; }
+  "maximumLength" { return KlassTypes.MAXIMUM_LENGTH_KEYWORD; }
+  "min" { return KlassTypes.MIN_KEYWORD; }
+  "max" { return KlassTypes.MAX_KEYWORD; }
+  "minimum" { return KlassTypes.MINIMUM_KEYWORD; }
+  "maximum" { return KlassTypes.MAXIMUM_KEYWORD; }
+
 //  "break" { return KlassTypes.BREAK_KEYWORD; }
 //  "byte" { return KlassTypes.BYTE_KEYWORD; }
 //  "case" { return KlassTypes.CASE_KEYWORD; }

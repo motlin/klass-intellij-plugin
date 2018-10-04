@@ -51,6 +51,14 @@ import static com.klass.intellij.psi.KlassTypes.LOCAL_DATE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.LONG_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.LT;
 import static com.klass.intellij.psi.KlassTypes.MANY_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.MAXIMUM_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.MAXIMUM_LENGTH_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.MAX_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.MAX_LENGTH_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.MINIMUM_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.MINIMUM_LENGTH_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.MIN_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.MIN_LENGTH_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.MULTIPLICITY_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.NE;
 import static com.klass.intellij.psi.KlassTypes.NULL_KEYWORD;
@@ -115,6 +123,14 @@ public interface TokenSets
             TABLE_PER_SUBCLASS_KEYWORD,
             TABLE_PER_CLASS_KEYWORD,
             TABLE_FOR_ALL_KEYWORD,
+            MIN_LENGTH_KEYWORD,
+            MAX_LENGTH_KEYWORD,
+            MINIMUM_LENGTH_KEYWORD,
+            MAXIMUM_LENGTH_KEYWORD,
+            MIN_KEYWORD,
+            MAX_KEYWORD,
+            MINIMUM_KEYWORD,
+            MAXIMUM_KEYWORD,
             SYSTEM_TEMPORAL_MODIFIER,
             VALID_TEMPORAL_MODIFIER,
             BITEMPORAL_MODIFIER,
