@@ -21,6 +21,7 @@ import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassAssociationEndName;
 import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassExtendsClause;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
 import com.klass.intellij.psi.KlassTypedElement;
@@ -102,12 +103,12 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
             KlassKlass sourceKlass = (KlassKlass) sourceTypeName.getReference().resolve();
             KlassKlass targetKlass = (KlassKlass) targetTypeName.getReference().resolve();
 
-            if (sourceKlass == klassKlass && targetName.equals(this.associationEndName))
+            if (isInstanceOf(klassKlass, sourceKlass) && targetName.equals(this.associationEndName))
             {
                 return new ResolveResult[]{new PsiElementResolveResult(targetEnd)};
             }
 
-            if (targetKlass == klassKlass && sourceName.equals(this.associationEndName))
+            if (isInstanceOf(klassKlass, targetKlass) && sourceName.equals(this.associationEndName))
             {
                 return new ResolveResult[]{new PsiElementResolveResult(sourceEnd)};
             }
@@ -124,6 +125,28 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
         }
 
         return new ResolveResult[]{};
+    }
+
+    public boolean isInstanceOf(KlassKlass subClass, KlassKlass superClass)
+    {
+        if (subClass == superClass)
+        {
+            return true;
+        }
+
+        KlassExtendsClause extendsClause = subClass.getExtendsClause();
+        if (extendsClause == null)
+        {
+            return false;
+        }
+
+        PsiElement resolvedSuperClass = extendsClause.getKlassName().getReference().resolve();
+        if (resolvedSuperClass == null)
+        {
+            return false;
+        }
+
+        return this.isInstanceOf((KlassKlass) resolvedSuperClass, superClass);
     }
 
     @NotNull
