@@ -32,7 +32,15 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.RPAREN,
             KlassTypes.MULTIPLICITY,
             KlassTypes.COLON,
-            KlassTypes.SEMICOLON);
+            KlassTypes.SEMICOLON,
+            KlassTypes.EXPRESSION_LITERALS_PARENS,
+            KlassTypes.INHERITANCE_PARENS,
+            KlassTypes.INTEGER_PARENS,
+            KlassTypes.PARAMETER_DECLARATIONS_PARENS,
+            KlassTypes.PARAMETER_NAMES_PARENS,
+            KlassTypes.PROJECT_NAME_PARENS,
+            KlassTypes.PROPERTY_PARAMETER_DECLARATIONS_PARENS);
+
     public static final TokenSet NONE_AROUND = TokenSet.create(
             KlassTypes.URL_CONSTANT,
             KlassTypes.URL_PART,
@@ -60,7 +68,13 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
     public static final TokenSet LINE_BREAK_BEFORE = TokenSet.create(
             KlassTypes.ANDAND,
             KlassTypes.OROR,
-            KlassTypes.PROJECTION_BLOCK);
+            KlassTypes.PROJECTION_BLOCK,
+            KlassTypes.ENUMERATION_BLOCK,
+            KlassTypes.INTERFACE_BLOCK,
+            KlassTypes.CLASS_BLOCK,
+            KlassTypes.ASSOCIATION_BLOCK,
+            KlassTypes.SERVICE_GROUP_BLOCK);
+
     public static final TokenSet LINE_BREAK_AFTER = TokenSet.create(
             KlassTypes.COMMA,
             KlassTokenType.END_OF_LINE_COMMENT);
@@ -68,13 +82,18 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
     public static final TokenSet ONE_SPACE_BEFORE = TokenSet.create(
             KlassTypes.NOMBRE,
             KlassTypes.ORDER_BY_DIRECTION,
-            KlassTypes.PROPERTY_MODIFIER);
+            KlassTypes.PROPERTY_MODIFIER,
+            KlassTypes.ASSOCIATION_END_MODIFIER,
+            KlassTypes.DATA_TYPE_PROPERTY_VALIDATION);
     public static final TokenSet ONE_SPACE_AFTER = TokenSet.create(
             KlassTypes.COLON,
             KlassTypes.ANDAND,
             KlassTypes.OROR,
+            KlassTypes.PACKAGE_KEYWORD,
             KlassTypes.RELATIONSHIP_KEYWORD,
-            KlassTypes.SERVICE_KEYWORD);
+            KlassTypes.SERVICE_KEYWORD,
+            KlassTypes.IMPLEMENTS_KEYWORD,
+            KlassTypes.EXTENDS_KEYWORD);
     public static final TokenSet ONE_SPACE_AROUND = TokenSet.create(
             KlassTypes.OPERATOR,
             KlassTypes.ON_KEYWORD);
