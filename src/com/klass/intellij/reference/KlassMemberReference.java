@@ -46,6 +46,7 @@ import com.klass.intellij.psi.KlassParameterizedProperty;
 import com.klass.intellij.psi.KlassParameterizedPropertyName;
 import com.klass.intellij.psi.KlassProjection;
 import com.klass.intellij.psi.KlassProjectionAssociationEndNode;
+import com.klass.intellij.psi.KlassProjectionCastNode;
 import com.klass.intellij.psi.KlassProjectionLeafNode;
 import com.klass.intellij.psi.KlassProjectionParameterizedPropertyNode;
 import com.klass.intellij.psi.KlassServiceGroup;
@@ -108,7 +109,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                         .getAssociationEndList()
                         .get(0);
                 KlassKlassReference klassReference = (KlassKlassReference) associationEnd.getKlassName().getReference();
-                KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
+                KlassKlass          klassKlass     = (KlassKlass) klassReference.resolve();
                 if (klassKlass == null)
                 {
                     return new ResolveResult[]{};
@@ -254,6 +255,17 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
             else
             {
                 throw new AssertionError(projectionNodeParent.getClass());
+            }
+        }
+        else if (parent instanceof KlassProjectionCastNode)
+        {
+            KlassProjectionCastNode projectionCastNode = (KlassProjectionCastNode) parent;
+            KlassKlassName          klassName          = projectionCastNode.getKlassName();
+            PsiReference            klassReference     = klassName.getReference();
+            KlassKlass              klassKlass         = (KlassKlass) klassReference.resolve();
+            if (klassKlass != null)
+            {
+                return this.getKlassResolveResults(klassKlass);
             }
         }
 
@@ -410,6 +422,81 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
                                     .withTypeText(member.getContainingFile().getName()))
                             .toArray();
                 }
+            }
+        }
+        else if (grandparent instanceof KlassProjectionLeafNode)
+        {
+            KlassProjectionLeafNode projectionLeafNode   = (KlassProjectionLeafNode) parent;
+            PsiElement              projectionNodeParent = projectionLeafNode.getParent().getParent().getParent();
+            if (projectionNodeParent instanceof KlassProjection)
+            {
+                KlassProjection projection     = (KlassProjection) projectionNodeParent;
+                PsiReference    klassReference = projection.getKlassName().getReference();
+                KlassKlass      klassKlass     = (KlassKlass) klassReference.resolve();
+
+                if (klassKlass != null)
+                {
+                    return this.getKlassMemberLookups(klassKlass);
+                }
+            }
+            else if (projectionNodeParent instanceof KlassProjectionAssociationEndNode)
+            {
+                KlassProjectionAssociationEndNode associationEndNode =
+                        (KlassProjectionAssociationEndNode) projectionNodeParent;
+                KlassAssociationEndName associationEndName =
+                        associationEndNode.getAssociationEndName();
+
+                PsiReference associationEndReference = associationEndName.getReference();
+                PsiElement   resolve                 = associationEndReference.resolve();
+
+                if (resolve instanceof KlassAssociationEnd)
+                {
+                    KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
+
+                    KlassKlassName klassName          = klassAssociationEnd.getKlassName();
+                    PsiReference   klassNameReference = klassName.getReference();
+                    KlassKlass     klassKlass         = (KlassKlass) klassNameReference.resolve();
+
+                    if (klassKlass != null)
+                    {
+                        return this.getKlassMemberLookups(klassKlass);
+                    }
+                }
+                else if (resolve instanceof KlassClassModifier)
+                {
+                    return new PsiElementResolveResult[]{new PsiElementResolveResult(resolve)};
+                }
+                else if (resolve != null)
+                {
+                    throw new AssertionError(resolve);
+                }
+            }
+            else if (projectionNodeParent instanceof KlassProjectionParameterizedPropertyNode)
+            {
+                KlassProjectionParameterizedPropertyNode parameterizedPropertyNode =
+                        (KlassProjectionParameterizedPropertyNode) projectionNodeParent;
+                KlassParameterizedPropertyName parameterizedPropertyName =
+                        parameterizedPropertyNode.getParameterizedPropertyName();
+
+                PsiReference parameterizedPropertyNameReference = parameterizedPropertyName.getReference();
+                KlassParameterizedProperty klassParameterizedProperty =
+                        (KlassParameterizedProperty) parameterizedPropertyNameReference.resolve();
+
+                if (klassParameterizedProperty != null)
+                {
+                    KlassKlassName klassName          = klassParameterizedProperty.getKlassName();
+                    PsiReference   klassNameReference = klassName.getReference();
+                    KlassKlass     klassKlass         = (KlassKlass) klassNameReference.resolve();
+
+                    if (klassKlass != null)
+                    {
+                        return this.getKlassMemberLookups(klassKlass);
+                    }
+                }
+            }
+            else
+            {
+                throw new AssertionError(projectionNodeParent.getClass());
             }
         }
         else

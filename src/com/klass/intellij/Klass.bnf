@@ -91,11 +91,11 @@
   ]
 
   mixin("projection")="com.klass.intellij.psi.impl.AbstractKlassProjectionNode"
-  mixin("projectionAssociationEndNode|projectionParameterizedPropertyNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
-  implements("projection|projectionInnerNode")="com.klass.intellij.psi.KlassTypedElement"
+  mixin("projectionAssociationEndNode|projectionParameterizedPropertyNode|projectionProjectionNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
+  implements("projection")="com.klass.intellij.psi.KlassTypedElement"
   implements("expressionMemberName")="com.klass.intellij.psi.AbstractKlassExpressionMemberName"
 
-  extends("projectionAssociationEndNode|projectionParameterizedPropertyNode|projectionLeafNode")=projectionNode
+  extends("projectionAssociationEndNode|projectionParameterizedPropertyNode|projectionLeafNode|projectionCastNode|projectionProjectionNode")=projectionNode
   extends("expressionThisMember|expressionTypeMember")=expressionMemberName
   extends("criteriaGroup|criteriaAll|criteriaOperator|criteriaEdgePoint|criteriaNative")=atomicCriteria
   extends("expressionLiteral|expressionLiteralList|expressionMemberName|expressionNativeValue|expressionVariableName")=expressionValue
@@ -179,14 +179,16 @@ serviceGroup ::= SERVICE_KEYWORD klassName serviceGroupBlock
 serviceGroupBlock ::= lBrace serviceGroupBody rBrace
 serviceGroupBody ::= urlGroup*
 
-projectionNode ::= projectionAssociationEndNode | projectionParameterizedPropertyNode | projectionLeafNode
+projectionNode ::= projectionAssociationEndNode | projectionParameterizedPropertyNode | projectionLeafNode | projectionCastNode | projectionProjectionNode
 projectionAssociationEndNode ::= associationEndName ':' projectionBlock
 // TODO: This only allows passing scoped variables, but expressions (literals) should work here
 projectionParameterizedPropertyNode ::= parameterizedPropertyName parameterNamesParens ':' projectionBlock
 parameterNamesParens ::= '(' parameterNames? ')'
 parameterNames ::= parameterName (',' parameterName)*
+projectionProjectionNode ::= associationEndName ':' projectionName
 
-projectionLeafNode ::= memberName ':'? header?
+projectionLeafNode ::= memberName ':' header
+projectionCastNode ::= klassName '.' memberName ':' header
 header ::= STRING_LITERAL
 
 urlGroup ::= url service+ {methods=[getPresentation]}
