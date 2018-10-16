@@ -17,16 +17,16 @@ import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.klass.intellij.KlassUtil;
 import com.klass.intellij.psi.KlassElementFactory;
-import com.klass.intellij.psi.KlassInterfaceName;
 import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassKlassName;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class KlassInterfaceReference extends PsiPolyVariantReferenceBase<PsiElement>
+public class KlassClassifierReference extends PsiPolyVariantReferenceBase<PsiElement>
 {
     private final String name;
 
-    public KlassInterfaceReference(@NotNull PsiElement element, String name)
+    public KlassClassifierReference(@NotNull PsiElement element, String name)
     {
         super(element, new TextRange(0, name.length()));
         this.name = name;
@@ -45,6 +45,7 @@ public class KlassInterfaceReference extends PsiPolyVariantReferenceBase<PsiElem
     public ResolveResult[] multiResolve(boolean incompleteCode)
     {
         Project project = this.myElement.getProject();
+        // TODO: Combine
         ResolveResult[] interfaceResolveResults = KlassUtil.findInterfaces(project)
                 .stream()
                 .filter(klassInterface -> klassInterface.getName().equals(this.name))
@@ -53,6 +54,16 @@ public class KlassInterfaceReference extends PsiPolyVariantReferenceBase<PsiElem
         if (interfaceResolveResults.length > 0)
         {
             return interfaceResolveResults;
+        }
+
+        ResolveResult[] klassResolveResults = KlassUtil.findClasses(project)
+                .stream()
+                .filter(klass -> klass.getName().equals(this.name))
+                .map(PsiElementResolveResult::new)
+                .toArray(ResolveResult[]::new);
+        if (klassResolveResults.length > 0)
+        {
+            return klassResolveResults;
         }
 
         return new ResolveResult[]{};
@@ -101,11 +112,11 @@ public class KlassInterfaceReference extends PsiPolyVariantReferenceBase<PsiElem
         ASTNode node = this.myElement.getNode();
         if (node != null)
         {
-            KlassInterfaceName interfaceName = KlassElementFactory.createInterfaceName(
+            KlassKlassName klassName = KlassElementFactory.createKlassName(
                     this.myElement.getProject(),
                     newElementName);
 
-            ASTNode newNode = interfaceName.getNode();
+            ASTNode newNode = klassName.getNode();
             node.getTreeParent().replaceChild(node, newNode);
         }
         return this.myElement;

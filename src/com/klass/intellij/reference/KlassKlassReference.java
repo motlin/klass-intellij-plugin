@@ -45,6 +45,7 @@ public class KlassKlassReference extends PsiPolyVariantReferenceBase<PsiElement>
     public ResolveResult[] multiResolve(boolean incompleteCode)
     {
         Project project = this.myElement.getProject();
+        // TODO: Combine
         ResolveResult[] klassResolveResults = KlassUtil.findClasses(project)
                 .stream()
                 .filter(klass -> klass.getName().equals(this.name))

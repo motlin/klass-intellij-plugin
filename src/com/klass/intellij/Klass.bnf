@@ -91,11 +91,9 @@
   ]
 
   mixin("projection")="com.klass.intellij.psi.impl.AbstractKlassProjectionNode"
-  mixin("projectionAssociationEndNode|projectionParameterizedPropertyNode|projectionProjectionNode")="com.klass.intellij.psi.impl.AbstractKlassInnerProjectionNode"
   implements("projection")="com.klass.intellij.psi.KlassTypedElement"
   implements("expressionMemberName")="com.klass.intellij.psi.AbstractKlassExpressionMemberName"
 
-  extends("projectionAssociationEndNode|projectionParameterizedPropertyNode|projectionLeafNode|projectionCastNode|projectionProjectionNode")=projectionNode
   extends("expressionThisMember|expressionTypeMember")=expressionMemberName
   extends("criteriaGroup|criteriaAll|criteriaOperator|criteriaEdgePoint|criteriaNative")=atomicCriteria
   extends("expressionLiteral|expressionLiteralList|expressionMemberName|expressionNativeValue|expressionVariableName")=expressionValue
@@ -111,12 +109,17 @@ topLevelItem ::= interface | klass | association | enumeration | projection | se
 // TODO: Recovery rule isn't working
 private topLevelItem_recover ::= !(rBrace | INTERFACE_KEYWORD | CLASS_KEYWORD | USER_KEYWORD | ASSOCIATION_KEYWORD | ENUMERATION_KEYWORD | PROJECTION_KEYWORD | SERVICE_KEYWORD)
 
+fake classifier ::= nombre implementsClause? classModifier
+{
+    extends=topLevelItem
+    mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl"
+}
+
 interface ::= INTERFACE_KEYWORD nombre implementsClause? classModifier* interfaceBlock
 {
     pin="{" methods=[setName getPresentation]
-    extends=topLevelItem
+    extends=classifier
     implements="com.klass.intellij.psi.KlassNamedElement"
-    mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl"
 }
 interfaceBlock ::= lBrace interfaceBody rBrace
 interfaceBody ::= member*
@@ -124,9 +127,8 @@ interfaceBody ::= member*
 klass ::= (CLASS_KEYWORD | USER_KEYWORD) nombre abstractClause? extendsClause? implementsClause? serviceProjection* classModifier* classBlock
 {
     pin="{" methods=[setName getPresentation]
-    extends=topLevelItem
+    extends=classifier
     implements="com.klass.intellij.psi.KlassNamedElement"
-    mixin="com.klass.intellij.psi.impl.KlassNamedElementImpl"
 }
 classBlock ::= lBrace classBody rBrace
 classBody ::= member*
@@ -179,16 +181,31 @@ serviceGroup ::= SERVICE_KEYWORD klassName serviceGroupBlock
 serviceGroupBlock ::= lBrace serviceGroupBody rBrace
 serviceGroupBody ::= urlGroup*
 
-projectionNode ::= projectionAssociationEndNode | projectionParameterizedPropertyNode | projectionLeafNode | projectionCastNode | projectionProjectionNode
-projectionAssociationEndNode ::= associationEndName ':' projectionBlock
+projectionNode ::=  projectionLeafNode | projectionParameterizedPropertyNode | projectionAssociationEndNode | projectionProjectionNode
 // TODO: This only allows passing scoped variables, but expressions (literals) should work here
-projectionParameterizedPropertyNode ::= parameterizedPropertyName parameterNamesParens ':' projectionBlock
+projectionLeafNode ::= (classifierName '.')? memberName ':' header
+{
+    extends=projectionNode
+}
+projectionParameterizedPropertyNode ::= (classifierName '.')? parameterizedPropertyName parameterNamesParens ':' projectionBlock
+{
+    extends=projectionNode
+}
 parameterNamesParens ::= '(' parameterNames? ')'
 parameterNames ::= parameterName (',' parameterName)*
-projectionProjectionNode ::= associationEndName ':' projectionName
-
-projectionLeafNode ::= memberName ':' header
-projectionCastNode ::= klassName '.' memberName ':' header
+fake projectionWithAssociationEnd ::= (classifierName '.')? associationEndName
+{
+    extends=projectionNode
+    implements="com.klass.intellij.psi.KlassTypedElement"
+}
+projectionAssociationEndNode ::= (classifierName '.')? associationEndName ':' projectionBlock
+{
+    extends=projectionWithAssociationEnd
+}
+projectionProjectionNode ::= (classifierName '.')? associationEndName ':' projectionName
+{
+    extends=projectionWithAssociationEnd
+}
 header ::= STRING_LITERAL
 
 urlGroup ::= url service+ {methods=[getPresentation]}

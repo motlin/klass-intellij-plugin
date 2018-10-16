@@ -12,6 +12,7 @@ import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassAssociationEndName;
 import com.klass.intellij.psi.KlassAssociationEndSignature;
+import com.klass.intellij.psi.KlassClassifierName;
 import com.klass.intellij.psi.KlassDummyMultiplicity;
 import com.klass.intellij.psi.KlassElementFactory;
 import com.klass.intellij.psi.KlassEnumeration;
@@ -40,6 +41,7 @@ import com.klass.intellij.psi.KlassServiceCriteriaClause;
 import com.klass.intellij.psi.KlassServiceGroup;
 import com.klass.intellij.psi.KlassUrlGroup;
 import com.klass.intellij.reference.KlassAssociationEndReference;
+import com.klass.intellij.reference.KlassClassifierReference;
 import com.klass.intellij.reference.KlassDataTypeReference;
 import com.klass.intellij.reference.KlassDummyMultiplicityReference;
 import com.klass.intellij.reference.KlassEnumerationReference;
@@ -60,7 +62,7 @@ public class KlassPsiImplUtil
         ASTNode classNameNode = element.getNombre().getNode();
         if (classNameNode != null)
         {
-            KlassInterface klassInterface   = KlassElementFactory.createInterface(element.getProject(), newName);
+            KlassInterface klassInterface       = KlassElementFactory.createInterface(element.getProject(), newName);
             ASTNode        newInterfaceNameNode = klassInterface.getNombre().getNode();
             element.getNode().replaceChild(classNameNode, newInterfaceNameNode);
         }
@@ -222,6 +224,17 @@ public class KlassPsiImplUtil
             element.getNode().replaceChild(primitiveLiteralNameNode, newPrimitiveLiteralNameNode);
         }
         return element;
+    }
+
+    public static PsiReference getReference(KlassClassifierName klassClassifierName)
+    {
+        String classifierName = klassClassifierName.getText();
+        if (classifierName == null)
+        {
+            return null;
+        }
+
+        return new KlassClassifierReference(klassClassifierName, classifierName);
     }
 
     public static PsiReference getReference(KlassInterfaceName klassInterfaceName)

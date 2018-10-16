@@ -6,5 +6,13 @@ import org.jetbrains.annotations.NotNull;
 public interface KlassTypedElement extends PsiElement
 {
     @NotNull
-    PsiElement getType();
+    default PsiElement getType()
+    {
+        if (this instanceof KlassProjectionWithAssociationEnd)
+        {
+            return ((KlassProjectionWithAssociationEnd) this).getAssociationEndName();
+        }
+
+        throw new AssertionError();
+    }
 }

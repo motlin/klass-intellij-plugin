@@ -119,6 +119,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
             KlassTypes.PROJECTION_LEAF_NODE,
             KlassTypes.PROJECTION_ASSOCIATION_END_NODE,
             KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE,
+            KlassTypes.PROJECTION_PROJECTION_NODE,
             KlassTypes.SERVICE_MULTIPLICITY_CLAUSE,
             KlassTypes.SERVICE_CRITERIA_CLAUSE,
             KlassTypes.SERVICE_PROJECTION_CLAUSE,

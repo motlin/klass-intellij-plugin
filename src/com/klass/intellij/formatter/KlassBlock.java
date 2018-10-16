@@ -39,6 +39,7 @@ public class KlassBlock extends AbstractBlock
             KlassTypes.PROJECTION_ASSOCIATION_END_NODE,
             KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE,
             KlassTypes.PROJECTION_LEAF_NODE,
+            KlassTypes.PROJECTION_PROJECTION_NODE,
             KlassTypes.URL_GROUP,
             KlassTypes.SERVICE,
             KlassTypes.SERVICE_MULTIPLICITY_CLAUSE,
@@ -178,7 +179,8 @@ public class KlassBlock extends AbstractBlock
         if (parentElementType == KlassTypes.PROJECTION
                 || parentElementType == KlassTypes.PROJECTION_ASSOCIATION_END_NODE
                 || parentElementType == KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE
-                || parentElementType == KlassTypes.PROJECTION_LEAF_NODE)
+                || parentElementType == KlassTypes.PROJECTION_LEAF_NODE
+                || parentElementType == KlassTypes.PROJECTION_PROJECTION_NODE)
         {
             return this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS ? this.projectionColonAlignment : null;
         }
