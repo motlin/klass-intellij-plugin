@@ -2,6 +2,7 @@ package com.klass.intellij.reference;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
@@ -104,6 +105,7 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
     @Nonnull
     public ResolveResult[] getAssociationEndResolveResults(KlassKlass klassKlass)
     {
+        Objects.requireNonNull(klassKlass);
         List<KlassAssociation> associations = KlassUtil.findAssociations(klassKlass.getProject());
         for (KlassAssociation association : associations)
         {

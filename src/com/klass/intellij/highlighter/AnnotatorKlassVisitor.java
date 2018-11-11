@@ -40,6 +40,7 @@ import com.klass.intellij.psi.KlassExpressionVariableName;
 import com.klass.intellij.psi.KlassFloatLiteralNode;
 import com.klass.intellij.psi.KlassIntegerLiteralNode;
 import com.klass.intellij.psi.KlassInterface;
+import com.klass.intellij.psi.KlassInterfaceName;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
 import com.klass.intellij.psi.KlassLowerBound;
@@ -177,13 +178,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor
     @Override
     public void visitEnumerationType(@NotNull KlassEnumerationType klassEnumerationType)
     {
-        PsiReference reference = klassEnumerationType.getReference();
-        if (reference != null && reference.resolve() == null)
-        {
-            String message = String.format("Cannot resolve symbol '%s'", klassEnumerationType.getText());
-            this.annotationHolder.createErrorAnnotation(klassEnumerationType, message);
-        }
-        this.applyClassName(klassEnumerationType);
+        this.annotateUnresolvableReference(klassEnumerationType);
     }
 
     private void applyClassName(PsiElement psiElement)
@@ -239,15 +234,32 @@ public class AnnotatorKlassVisitor extends KlassVisitor
     }
 
     @Override
+    public void visitInterfaceName(@NotNull KlassInterfaceName klassInterfaceName)
+    {
+        this.annotateUnresolvableReference(klassInterfaceName);
+    }
+
+    @Override
     public void visitKlassName(@NotNull KlassKlassName klassKlassName)
     {
-        PsiReference reference = klassKlassName.getReference();
+        this.annotateUnresolvableReference(klassKlassName);
+    }
+
+    @Override
+    public void visitProjectionName(@NotNull KlassProjectionName klassProjectionName)
+    {
+        this.annotateUnresolvableReference(klassProjectionName);
+    }
+
+    private void annotateUnresolvableReference(PsiElement elementWithReference)
+    {
+        PsiReference reference = elementWithReference.getReference();
         if (reference != null && reference.resolve() == null)
         {
-            String message = String.format("Cannot resolve symbol '%s'", klassKlassName.getText());
-            this.annotationHolder.createErrorAnnotation(klassKlassName, message);
+            String message = String.format("Cannot resolve symbol '%s'", elementWithReference.getText());
+            this.annotationHolder.createErrorAnnotation(elementWithReference, message);
         }
-        this.applyClassName(klassKlassName);
+        this.applyClassName(elementWithReference);
     }
 
     @Override
