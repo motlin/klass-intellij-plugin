@@ -47,7 +47,7 @@ public class KlassExpressionVariableNameReference extends PsiPolyVariantReferenc
         KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
         if (klassUrlGroup != null)
         {
-            KlassUrl url = klassUrlGroup.getUrl();
+            KlassUrl         url         = klassUrlGroup.getUrl();
             KlassQueryParams queryParams = url.getQueryParams();
             List<PsiElementResolveResult> queryParamResults = queryParams == null
                     ? Arrays.asList()
@@ -100,33 +100,39 @@ public class KlassExpressionVariableNameReference extends PsiPolyVariantReferenc
     @Override
     public Object[] getVariants()
     {
-        List<LookupElement> variants = new ArrayList<>();
-        KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
+        List<LookupElement> variants      = new ArrayList<>();
+        KlassUrlGroup       klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
 
         if (klassUrlGroup == null)
         {
             return new Object[]{};
         }
 
-        klassUrlGroup.getUrl()
-                .getUrlPartList()
-                .stream()
-                .map(KlassUrlPart::getParameterDeclaration)
-                .filter(Objects::nonNull)
-                .map(PsiNamedElement::getName)
-                .map(LookupElementBuilder::create)
-                .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Variable))
-                .forEach(variants::add);
+        List<KlassUrlPart> urlPartList = klassUrlGroup.getUrl().getUrlPartList();
+        if (urlPartList != null)
+        {
+            urlPartList
+                    .stream()
+                    .map(KlassUrlPart::getParameterDeclaration)
+                    .filter(Objects::nonNull)
+                    .map(PsiNamedElement::getName)
+                    .map(LookupElementBuilder::create)
+                    .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Variable))
+                    .forEach(variants::add);
+        }
 
-        klassUrlGroup.getUrl()
-                .getQueryParams()
-                .getQueryParamPartList()
-                .stream()
-                .map(KlassQueryParamPart::getParameterDeclaration)
-                .map(PsiNamedElement::getName)
-                .map(LookupElementBuilder::create)
-                .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Variable))
-                .forEach(variants::add);
+        KlassQueryParams queryParams = klassUrlGroup.getUrl().getQueryParams();
+        if (queryParams != null)
+        {
+            queryParams
+                    .getQueryParamPartList()
+                    .stream()
+                    .map(KlassQueryParamPart::getParameterDeclaration)
+                    .map(PsiNamedElement::getName)
+                    .map(LookupElementBuilder::create)
+                    .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Variable))
+                    .forEach(variants::add);
+        }
 
         return variants.toArray();
     }
