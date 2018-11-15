@@ -1,6 +1,9 @@
 package com.klass.intellij.completion;
 
-import com.intellij.codeInsight.completion.*;
+import com.intellij.codeInsight.completion.CompletionContributor;
+import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.codeInsight.completion.CompletionProvider;
+import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.patterns.PsiElementPattern.Capture;
 import com.intellij.psi.PsiElement;
@@ -54,9 +57,11 @@ public class KlassCompletionContributor extends CompletionContributor
                     }
                 };
 
-        this.extend(CompletionType.BASIC, MULTIPLICITY, multiplicityCompletionProvider);
+        // TODO: These oversimplified forms of completion don't seem to work well at all.
 
-        this.extend(CompletionType.BASIC, KEYWORD, keywordCompletionProvider);
+        // this.extend(CompletionType.BASIC, MULTIPLICITY, multiplicityCompletionProvider);
+
+        // this.extend(CompletionType.BASIC, KEYWORD, keywordCompletionProvider);
     }
 
     @Override
