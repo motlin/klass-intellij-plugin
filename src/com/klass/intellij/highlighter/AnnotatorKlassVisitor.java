@@ -350,7 +350,8 @@ public class AnnotatorKlassVisitor extends KlassVisitor
     @Override
     public void visitParameterDeclaration(@NotNull KlassParameterDeclaration parameterDeclaration)
     {
-        if (parameterDeclaration.getDataTypeDeclaration().getMultiplicity() == null)
+        KlassDataTypeDeclaration dataTypeDeclaration = parameterDeclaration.getDataTypeDeclaration();
+        if (dataTypeDeclaration == null || dataTypeDeclaration.getMultiplicity() == null)
         {
             String message = String.format(
                     "Expected a type declaration on parameter: '%s'.",
