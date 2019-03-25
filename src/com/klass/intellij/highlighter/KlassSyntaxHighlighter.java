@@ -1,5 +1,8 @@
 package com.klass.intellij.highlighter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -13,9 +16,6 @@ import com.klass.intellij.lexer.TokenSets;
 import com.klass.intellij.psi.KlassTokenType;
 import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
 {
@@ -31,6 +31,7 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         // TODO: Separate color for primitive types?
         SyntaxHighlighterBase.fillMap(ourMap1, TokenSets.PRIMITIVE_TYPE_BIT_SET, KlassHighlightingColors.KEYWORD);
         SyntaxHighlighterBase.fillMap(ourMap1, TokenSets.LITERAL_BIT_SET, KlassHighlightingColors.KEYWORD);
+        SyntaxHighlighterBase.fillMap(ourMap1, TokenSets.KEYWORD_OPERATION_BIT_SET, KlassHighlightingColors.KEYWORD);
         SyntaxHighlighterBase.fillMap(ourMap1, TokenSets.OPERATION_BIT_SET, KlassHighlightingColors.OPERATION_SIGN);
 
         ourMap1.put(XmlTokenType.XML_DATA_CHARACTERS, KlassHighlightingColors.DOC_COMMENT);
