@@ -7,8 +7,6 @@ import com.intellij.psi.tree.IElementType;
 import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-
 public class KlassBraceMatcher implements PairedBraceMatcher
 {
     private static final BracePair[] PAIRS = {
@@ -25,7 +23,7 @@ public class KlassBraceMatcher implements PairedBraceMatcher
     }
 
     @Override
-    public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType lbraceType, @Nullable IElementType contextType)
+    public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType lbraceType, IElementType contextType)
     {
         return true;
     }

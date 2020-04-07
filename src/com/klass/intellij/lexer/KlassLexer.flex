@@ -98,6 +98,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   "version" { return KlassTypes.VERSION_MODIFIER; }
   "id" { return KlassTypes.ID_MODIFIER; }
   "userId" { return KlassTypes.USER_ID_MODIFIER; }
+  "derived" { return KlassTypes.DERIVED_MODIFIER; }
   "on" { return KlassTypes.ON_KEYWORD; }
   "relationship" { return KlassTypes.RELATIONSHIP_KEYWORD; }
   "all" { return KlassTypes.ALL_KEYWORD; }

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
@@ -23,6 +21,7 @@ import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassAssociationEndName;
 import com.klass.intellij.psi.KlassClassifierName;
 import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassExpressionMemberName;
 import com.klass.intellij.psi.KlassExtendsClause;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
@@ -54,13 +53,51 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
     public ResolveResult[] multiResolve(boolean incompleteCode)
     {
         PsiElement        innerNode         = this.myElement.getParent();
-        if (!(innerNode instanceof KlassProjectionWithAssociationEnd))
+        if (innerNode instanceof KlassProjectionWithAssociationEnd)
         {
-            throw new AssertionError(innerNode.getClass().getSimpleName());
-        }
+            KlassClassifierName classifierName = ((KlassProjectionWithAssociationEnd) innerNode).getClassifierName();
+            if (classifierName == null)
+            {
+                KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
+                PsiElement        type              = klassTypedElement.getType();
+                PsiReference      reference         = type.getReference();
+                PsiElement        resolve           = reference.resolve();
+                if (resolve == null)
+                {
+                    return new ResolveResult[]{};
+                }
 
-        KlassClassifierName classifierName = ((KlassProjectionWithAssociationEnd) innerNode).getClassifierName();
-        if (classifierName == null)
+                if (resolve instanceof KlassKlass)
+                {
+                    KlassKlass klassKlass = (KlassKlass) resolve;
+                    return this.getAssociationEndResolveResults(klassKlass);
+                }
+
+                if (resolve instanceof KlassAssociationEnd)
+                {
+                    KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
+                    PsiReference        klassReference      = klassAssociationEnd.getKlassName().getReference();
+                    PsiElement          klassResolved       = klassReference.resolve();
+                    KlassKlass          klassKlass          = (KlassKlass) klassResolved;
+
+                    return this.getAssociationEndResolveResults(klassKlass);
+                }
+
+                return new ResolveResult[]{};
+            }
+
+            // Polymorphic projection
+            PsiReference reference = classifierName.getReference();
+            PsiElement   resolve   = reference.resolve();
+            if (resolve instanceof KlassKlass)
+            {
+                KlassKlass klassKlass = (KlassKlass) resolve;
+                return this.getAssociationEndResolveResults(klassKlass);
+            }
+
+            return new ResolveResult[]{};
+        }
+        if (innerNode instanceof KlassExpressionMemberName)
         {
             KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
             PsiElement        type              = klassTypedElement.getType();
@@ -89,20 +126,12 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 
             return new ResolveResult[]{};
         }
-
-        // Polymorphic projection
-        PsiReference reference = classifierName.getReference();
-        PsiElement   resolve   = reference.resolve();
-        if (resolve instanceof KlassKlass)
+        else
         {
-            KlassKlass klassKlass = (KlassKlass) resolve;
-            return this.getAssociationEndResolveResults(klassKlass);
+            throw new AssertionError(innerNode.getClass().getSimpleName());
         }
-
-        return new ResolveResult[]{};
     }
 
-    @Nonnull
     public ResolveResult[] getAssociationEndResolveResults(KlassKlass klassKlass)
     {
         Objects.requireNonNull(klassKlass);

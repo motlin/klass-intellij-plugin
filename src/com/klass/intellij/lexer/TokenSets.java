@@ -24,6 +24,7 @@ import static com.klass.intellij.psi.KlassTypes.CREATED_ON_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.CREATE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.CRITERIA_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.DELETE_KEYWORD;
+import static com.klass.intellij.psi.KlassTypes.DERIVED_MODIFIER;
 import static com.klass.intellij.psi.KlassTypes.DESCENDING_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.DOUBLE_KEYWORD;
 import static com.klass.intellij.psi.KlassTypes.ENDS_WITH_OPERATOR;
@@ -170,7 +171,8 @@ public interface TokenSets
             TO_MODIFIER,
             CREATED_BY_MODIFIER,
             CREATED_ON_MODIFIER,
-            LAST_UPDATED_BY_MODIFIER);
+            LAST_UPDATED_BY_MODIFIER,
+            DERIVED_MODIFIER);
 
     TokenSet LITERAL_BIT_SET = TokenSet.create(TRUE_KEYWORD, FALSE_KEYWORD, NULL_KEYWORD);
 
