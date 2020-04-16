@@ -53,6 +53,7 @@ import com.klass.intellij.reference.KlassMemberReference;
 import com.klass.intellij.reference.KlassParameterReference;
 import com.klass.intellij.reference.KlassParameterizedPropertyReference;
 import com.klass.intellij.reference.KlassProjectionReference;
+import icons.JavaUltimateIcons.Javaee;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassPsiImplUtil
@@ -380,7 +381,7 @@ public class KlassPsiImplUtil
 
     public static ItemPresentation getPresentation(KlassAssociation element)
     {
-        return new KlassNamedElementItemPresentation(element, null, AllIcons.Javaee.PersistenceRelationship);
+        return new KlassNamedElementItemPresentation(element, null, Javaee.PersistenceRelationship);
     }
 
     public static ItemPresentation getPresentation(KlassProjection element)
