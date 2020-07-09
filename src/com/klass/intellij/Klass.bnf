@@ -217,7 +217,7 @@ queryParamPart ::= lBrace parameterDeclaration rBrace
 
 service ::= verb serviceBlock {pin=1 methods=[getPresentation]}
 serviceBlock ::= lBrace serviceBody rBrace
-serviceBody ::= serviceMultiplicityClause? serviceCriteriaClause? serviceAuthorizeClause? serviceValidateClause? serviceConflictClause? serviceProjectionClause serviceOrderByClause?
+serviceBody ::= serviceMultiplicityClause? serviceCriteriaClause? serviceAuthorizeClause? serviceValidateClause? serviceConflictClause? serviceProjectionClause? serviceOrderByClause?
 
 // TODO: This order of criteria may not match antlr
 serviceMultiplicityClause ::= MULTIPLICITY_KEYWORD ':' serviceMultiplicity SEMICOLON
