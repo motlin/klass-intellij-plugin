@@ -387,7 +387,8 @@ parameterName ::= nombre {methods=[getReference]}
 
 expressionNativeValue ::= USER_KEYWORD {methods=[getReference]}
 
-multiplicity ::= '[' ((lowerBound '..' upperBound) | dummyMultiplicity) ']'
+multiplicityBody::= ((lowerBound '..' upperBound) | dummyMultiplicity)
+multiplicity ::= '[' multiplicityBody ']'
 dummyMultiplicity ::= lowerBound | lowerBound '..' {methods=[getReference]}
 
 lowerBound ::= INTEGER_LITERAL

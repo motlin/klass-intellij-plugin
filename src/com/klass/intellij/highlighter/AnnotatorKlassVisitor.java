@@ -47,6 +47,7 @@ import com.klass.intellij.psi.KlassLowerBound;
 import com.klass.intellij.psi.KlassMember;
 import com.klass.intellij.psi.KlassMemberName;
 import com.klass.intellij.psi.KlassMultiplicity;
+import com.klass.intellij.psi.KlassMultiplicityBody;
 import com.klass.intellij.psi.KlassNombreText;
 import com.klass.intellij.psi.KlassOperator;
 import com.klass.intellij.psi.KlassOptionalMarker;
@@ -756,8 +757,9 @@ public class AnnotatorKlassVisitor extends KlassVisitor
 
     private Multiplicity getMultiplicity(KlassMultiplicity multiplicity)
     {
-        String lowerBound  = multiplicity.getLowerBound().getText();
-        String uppderBound = multiplicity.getUpperBound().getText();
+        KlassMultiplicityBody multiplicityBody = multiplicity.getMultiplicityBody();
+        String lowerBound  = multiplicityBody.getLowerBound().getText();
+        String uppderBound = multiplicityBody.getUpperBound().getText();
 
         if (lowerBound.equals("0") && uppderBound.equals("1"))
         {
