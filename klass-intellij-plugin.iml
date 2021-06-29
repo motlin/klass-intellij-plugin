@@ -10,6 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="org.eclipse.collections:eclipse-collections:11.0.0.M1" level="project" />
+    <orderEntry type="library" exported="" name="org.eclipse.collections:eclipse-collections:11.0.0.M2" level="project" />
+    <orderEntry type="library" exported="" name="org.eclipse.collections:eclipse-collections-api:11.0.0.M2" level="project" />
   </component>
 </module>

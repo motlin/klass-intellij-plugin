@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="org.eclipse.collections:eclipse-collections:11.0.0.M2" type="repository">
+    <properties include-transitive-deps="false" maven-id="org.eclipse.collections:eclipse-collections:11.0.0.M2" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/eclipse-collections-11.0.0.M2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/eclipse-collections-11.0.0.M2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
