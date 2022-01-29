@@ -10,7 +10,29 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="org.eclipse.collections:eclipse-collections:11.0.0.M2" level="project" />
-    <orderEntry type="library" exported="" name="org.eclipse.collections:eclipse-collections-api:11.0.0.M2" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library type="repository">
+        <properties include-transitive-deps="false" maven-id="org.eclipse.collections:eclipse-collections:11.0.0" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/eclipse-collections-11.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/eclipse-collections-11.0.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="repository">
+        <properties include-transitive-deps="false" maven-id="org.eclipse.collections:eclipse-collections-api:11.0.0" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/eclipse-collections-api-11.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/eclipse-collections-api-11.0.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
