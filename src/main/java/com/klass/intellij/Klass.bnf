@@ -175,7 +175,7 @@ projectionBlock ::= lBrace projectionBody rBrace
 projectionBody ::= (projectionNode ',')*
 
 // TODO: Consider moving serviceGroup inside class
-serviceGroup ::= SERVICE_KEYWORD klassName serviceGroupBlock
+serviceGroup ::= SERVICE_KEYWORD nombre 'on' klassName serviceGroupBlock
 {
     pin="{" methods=[getPresentation]
     extends=topLevelItem
