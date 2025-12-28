@@ -88,6 +88,8 @@
     TRUE_KEYWORD='true'
     FALSE_KEYWORD='false'
     NULL_KEYWORD='null'
+
+    URL_IDENTIFIER='regexp:[a-zA-Z][a-zA-Z0-9_]*-[a-zA-Z0-9_-]*'
   ]
 
   mixin("projection")="com.klass.intellij.psi.impl.AbstractKlassProjectionNode"
@@ -212,7 +214,7 @@ urlGroup ::= url service+ {methods=[getPresentation]}
 url ::= urlPart+ '/'? queryParams?
 queryParams ::= '?' queryParamPart ('&' queryParamPart)*
 urlPart ::= ('/' urlConstant) | ('/' lBrace parameterDeclaration rBrace) {pin='/'}
-urlConstant ::= nombre
+urlConstant ::= nombre | URL_IDENTIFIER
 queryParamPart ::= lBrace parameterDeclaration rBrace
 
 service ::= verb serviceBlock {pin=1 methods=[getPresentation]}
