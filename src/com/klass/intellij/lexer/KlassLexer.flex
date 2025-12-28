@@ -26,6 +26,10 @@ WHITE_SPACE_CHAR = [\ \n\r\t\f]
 
 IDENTIFIER = [:jletter:] [:jletterdigit:]*
 
+// URL identifier that contains dashes (e.g., /api/user-profile)
+// Must contain at least one dash; regular IDENTIFIER handles non-dash cases
+URL_IDENTIFIER = [a-zA-Z] [a-zA-Z0-9_]* "-" [a-zA-Z0-9_\-]*
+
 C_STYLE_COMMENT=("/*"[^"*"]{COMMENT_TAIL})|"/*"
 // TODO: Doc comments (the kind that show up with Ctrl+Q
 DOC_COMMENT="/*""*"+("/"|([^"/""*"]{COMMENT_TAIL}))?
@@ -198,6 +202,7 @@ STRING_LITERAL = \" ([^\\\"\r\n] | {ESCAPE_SEQUENCE})* (\"|\\)?
   //  "volatile"             { return KlassTypes.VOLATILE_KEYWORD; }
   //  "throws"               { return KlassTypes.THROWS_KEYWORD; }
 
+  { URL_IDENTIFIER}           { return KlassTypes.URL_IDENTIFIER; }
   { IDENTIFIER}              { return KlassTypes.IDENTIFIER; }
 
   "=="                       { return KlassTypes.EQEQ; }
