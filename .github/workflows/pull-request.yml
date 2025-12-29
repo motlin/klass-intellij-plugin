@@ -6,6 +6,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  automerge-dependabot:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enable auto-merge for Dependabot PR
+        run: gh pr merge --rebase --auto "${{ github.event.pull_request.number }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
     runs-on: ubuntu-latest
     steps:
