@@ -1,0 +1,35 @@
+# `just --list --unsorted`
+default:
+    @just --list --unsorted
+
+# Run build and auto-formatters
+precommit: mise gradle-build
+
+# `mise install`
+mise:
+    mise install --quiet
+    mise current
+
+# Run Gradle build
+gradle-build:
+    ./gradlew build
+
+# Build the IntelliJ plugin
+build-plugin:
+    ./gradlew buildPlugin
+
+# Run Gradle tests
+test:
+    ./gradlew test
+
+# Clean build output
+clean:
+    ./gradlew clean
+
+# Generate lexer and parser
+generate:
+    ./gradlew generateLexer generateParser
+
+# Verify the IntelliJ plugin
+verify:
+    ./gradlew verifyPlugin
