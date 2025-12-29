@@ -1,0 +1,11 @@
+# Generated code
+src/main/gen/
+
+# Build output
+build/
+
+# Gradle cache
+.gradle/
+
+# IntelliJ IDEA
+.idea/
