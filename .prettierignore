@@ -4,6 +4,10 @@ src/main/gen/
 # Java files (formatted by Spotless with google-java-format)
 *.java
 
+# JSON files (formatted by Biome)
+**/*.json
+**/*.jsonc
+
 # Build output
 build/
 

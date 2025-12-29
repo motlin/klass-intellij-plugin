@@ -102,8 +102,7 @@ jobs:
     all-checks:
         name: All checks
         if: ${{ !cancelled() }}
-        needs:
-            [pre-commit, build, verify, prettier, biome, reviewdog-markdownlint, reviewdog-yamllint]
+        needs: [pre-commit, build, verify, prettier, biome, reviewdog-markdownlint, reviewdog-yamllint]
         runs-on: ubuntu-latest
         steps:
             - uses: re-actors/alls-green@release/v1
