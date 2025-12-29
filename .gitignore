@@ -8,8 +8,8 @@ build/
 *.iml
 out/
 
-# Generated sources
-src/main/gen/
+# IntelliJ Platform cache
+.intellijPlatform/
 
 # OS files
 .DS_Store
