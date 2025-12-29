@@ -1,52 +1,52 @@
 on:
-  pull_request:
+    pull_request:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
 
 jobs:
-  automerge-dependabot:
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
+    automerge-dependabot:
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
+        runs-on: ubuntu-latest
+        permissions:
+            pull-requests: write
+            contents: write
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Enable auto-merge for Dependabot PR
-        run: gh pr merge --rebase --auto "${{ github.event.pull_request.number }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Enable auto-merge for Dependabot PR
+              run: gh pr merge --rebase --auto "${{ github.event.pull_request.number }}"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
 
-      - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v3
 
-      - run: ./gradlew buildPlugin
+            - run: ./gradlew buildPlugin
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: plugin
-          path: build/distributions/*.zip
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: plugin
+                  path: build/distributions/*.zip
 
-  verify:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    verify:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
 
-      - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v3
 
-      - name: Run Plugin Verification tasks
-        run: ./gradlew verifyPlugin
+            - name: Run Plugin Verification tasks
+              run: ./gradlew verifyPlugin
 
-      - name: Collect Plugin Verifier Result
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pluginVerifier-result
-          path: build/reports/pluginVerifier
+            - name: Collect Plugin Verifier Result
+              if: ${{ always() }}
+              uses: actions/upload-artifact@v4
+              with:
+                  name: pluginVerifier-result
+                  path: build/reports/pluginVerifier

@@ -1,6 +1,9 @@
 # Generated code
 src/main/gen/
 
+# Java files (formatted by Spotless with google-java-format)
+*.java
+
 # Build output
 build/
 
