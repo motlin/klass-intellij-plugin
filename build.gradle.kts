@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("org.jetbrains.intellij.platform") version "2.2.1"
     id("org.jetbrains.grammarkit") version "2022.3.2.2"
+    id("com.diffplug.spotless") version "7.0.2"
 }
 
 group = "com.klass"
@@ -59,6 +60,14 @@ intellijPlatform {
 
 grammarKit {
     jflexRelease = "1.9.1"
+}
+
+spotless {
+    java {
+        target("src/main/java/**/*.java")
+        googleJavaFormat("1.25.2")
+        formatAnnotations()
+    }
 }
 
 tasks {
