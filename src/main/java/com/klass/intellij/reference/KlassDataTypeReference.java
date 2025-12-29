@@ -7,45 +7,30 @@ import com.intellij.psi.ResolveResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class KlassDataTypeReference extends PsiPolyVariantReferenceBase<PsiElement>
-{
-    public static final String[] VARIANTS = {
-            "Boolean",
-            "Integer",
-            "Long",
-            "Double",
-            "Float",
-            "String",
-            "Instant",
-            "LocalDate",
-    };
+public class KlassDataTypeReference extends PsiPolyVariantReferenceBase<PsiElement> {
+  public static final String[] VARIANTS = {
+    "Boolean", "Integer", "Long", "Double", "Float", "String", "Instant", "LocalDate",
+  };
 
-    private final String substring;
+  private final String substring;
 
-    public KlassDataTypeReference(@NotNull PsiElement element, String substring)
-    {
-        super(element, new TextRange(0, substring.length()));
-        this.substring = substring;
-    }
+  public KlassDataTypeReference(@NotNull PsiElement element, String substring) {
+    super(element, new TextRange(0, substring.length()));
+    this.substring = substring;
+  }
 
-    @NotNull
-    @Override
-    public ResolveResult[] multiResolve(boolean incompleteCode)
-    {
-        return new ResolveResult[]{};
-    }
+  @NotNull @Override
+  public ResolveResult[] multiResolve(boolean incompleteCode) {
+    return new ResolveResult[] {};
+  }
 
-    @Nullable
-    @Override
-    public PsiElement resolve()
-    {
-        return null;
-    }
+  @Nullable @Override
+  public PsiElement resolve() {
+    return null;
+  }
 
-    @NotNull
-    @Override
-    public Object[] getVariants()
-    {
-        return VARIANTS;
-    }
+  @NotNull @Override
+  public Object[] getVariants() {
+    return VARIANTS;
+  }
 }

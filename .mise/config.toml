@@ -1,10 +1,9 @@
 [tools]
-java = "temurin-17.0.17+10.0.LTS"
+java = "temurin-21.0.9+10.0.LTS"
 just = "1.45.0"
 node = "24.12.0"
 "npm:markdownlint-cli" = "0.45.0"
 "npm:strip-ansi-cli" = "4.0.0"
-gradle = "9.2.1"
 
 [env]
 TERM = 'xterm-256color'
