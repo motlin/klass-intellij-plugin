@@ -63,7 +63,7 @@ grammarKit {
 
 tasks {
     wrapper {
-        gradleVersion = "8.10"
+        gradleVersion = "9.2.1"
     }
 
     generateLexer {
