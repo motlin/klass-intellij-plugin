@@ -4,6 +4,7 @@ just = "1.45.0"
 node = "24.12.0"
 "npm:markdownlint-cli" = "0.45.0"
 "npm:strip-ansi-cli" = "4.0.0"
+gradle = "9.2.1"
 
 [env]
 TERM = 'xterm-256color'
