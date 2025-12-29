@@ -36,3 +36,7 @@ generate:
 # Verify the IntelliJ plugin
 verify:
     ./gradlew verifyPlugin
+
+# Override this with a command called `woof` which notifies you in whatever ways you prefer.
+# My `woof` command uses `echo`, `say`, and sends a Pushover notification.
+echo_command := env('ECHO_COMMAND', "echo")
