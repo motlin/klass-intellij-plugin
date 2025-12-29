@@ -43,6 +43,7 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder
 
     public static final TokenSet NONE_AROUND = TokenSet.create(
             KlassTypes.URL_CONSTANT,
+            KlassTypes.URL_IDENTIFIER,
             KlassTypes.URL_PART,
             KlassTypes.DOT,
             KlassTypes.DOTDOT,

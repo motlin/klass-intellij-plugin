@@ -62,6 +62,7 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase
         ourMap1.put(KlassTypes.DOTDOT, KlassHighlightingColors.DOT);
         ourMap1.put(KlassTypes.SEMICOLON, KlassHighlightingColors.KLASS_SEMICOLON);
         ourMap1.put(KlassTypes.SLASH, KlassHighlightingColors.DOT);
+        ourMap1.put(KlassTypes.URL_IDENTIFIER, KlassHighlightingColors.URL_CONSTANT);
 
         ourMap1.put(KlassTokenType.C_STYLE_COMMENT, KlassHighlightingColors.KLASS_BLOCK_COMMENT);
         ourMap1.put(KlassTokenType.END_OF_LINE_COMMENT, KlassHighlightingColors.LINE_COMMENT);
