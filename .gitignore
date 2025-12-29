@@ -29,3 +29,6 @@ JUSTFILE_BRANCH
 # Local config
 .envrc
 .llm/
+!.llm/todo.md
+.mise/config.local.toml
+.pre-commit-config.local.yaml
