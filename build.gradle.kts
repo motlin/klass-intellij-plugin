@@ -83,6 +83,10 @@ tasks {
     compileJava {
         dependsOn(generateLexer, generateParser)
     }
+
+    processResources {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
 }
 
 sourceSets {
