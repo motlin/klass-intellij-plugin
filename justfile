@@ -1,3 +1,6 @@
+# Use mise shim for all recipes
+set shell := ["mise", "x", "--", "bash", "-euo", "pipefail", "-c"]
+
 # `just --list --unsorted`
 default:
     @just --list --unsorted

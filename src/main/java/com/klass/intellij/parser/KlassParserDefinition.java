@@ -20,71 +20,56 @@ import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class KlassParserDefinition implements ParserDefinition
-{
-    public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
-    public static final TokenSet COMMENTS = TokenSet.create(KlassTokenType.C_STYLE_COMMENT, KlassTokenType.END_OF_LINE_COMMENT);
+public class KlassParserDefinition implements ParserDefinition {
+  public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
+  public static final TokenSet COMMENTS =
+      TokenSet.create(KlassTokenType.C_STYLE_COMMENT, KlassTokenType.END_OF_LINE_COMMENT);
 
-    public static final IFileElementType FILE = new IFileElementType(KlassLanguage.INSTANCE);
+  public static final IFileElementType FILE = new IFileElementType(KlassLanguage.INSTANCE);
 
-    @Override
-    @NotNull
-    public Lexer createLexer(@Nullable Project project)
-    {
-        return new KlassLexerAdapter();
-    }
+  @Override
+  @NotNull public Lexer createLexer(@Nullable Project project) {
+    return new KlassLexerAdapter();
+  }
 
-    @Override
-    public IFileElementType getFileNodeType()
-    {
-        return FILE;
-    }
+  @Override
+  public IFileElementType getFileNodeType() {
+    return FILE;
+  }
 
-    @Override
-    @NotNull
-    public TokenSet getWhitespaceTokens()
-    {
-        return WHITE_SPACES;
-    }
+  @Override
+  @NotNull public TokenSet getWhitespaceTokens() {
+    return WHITE_SPACES;
+  }
 
-    @Override
-    @NotNull
-    public TokenSet getCommentTokens()
-    {
-        return COMMENTS;
-    }
+  @Override
+  @NotNull public TokenSet getCommentTokens() {
+    return COMMENTS;
+  }
 
-    @Override
-    @NotNull
-    public TokenSet getStringLiteralElements()
-    {
-        return TokenSet.EMPTY;
-    }
+  @Override
+  @NotNull public TokenSet getStringLiteralElements() {
+    return TokenSet.EMPTY;
+  }
 
-    @Override
-    @NotNull
-    public PsiParser createParser(Project project)
-    {
-        return new KlassParser();
-    }
+  @Override
+  @NotNull public PsiParser createParser(Project project) {
+    return new KlassParser();
+  }
 
-    @Override
-    @NotNull
-    public PsiElement createElement(ASTNode node)
-    {
-        return KlassTypes.Factory.createElement(node);
-    }
+  @Override
+  @NotNull public PsiElement createElement(ASTNode node) {
+    return KlassTypes.Factory.createElement(node);
+  }
 
-    @Override
-    public PsiFile createFile(FileViewProvider viewProvider)
-    {
-        return new KlassFile(viewProvider);
-    }
+  @Override
+  public PsiFile createFile(FileViewProvider viewProvider) {
+    return new KlassFile(viewProvider);
+  }
 
-    @Override
-    public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right)
-    {
-        Lexer lexer = new KlassLexerAdapter();
-        return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
-    }
+  @Override
+  public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
+    Lexer lexer = new KlassLexerAdapter();
+    return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
+  }
 }

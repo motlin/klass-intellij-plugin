@@ -4,8 +4,6 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import org.jetbrains.annotations.NotNull;
 
-public interface KlassNamedElement extends PsiNameIdentifierOwner, NavigationItem
-{
-    @NotNull
-    KlassNombre getNombre();
+public interface KlassNamedElement extends PsiNameIdentifierOwner, NavigationItem {
+  @NotNull KlassNombre getNombre();
 }
