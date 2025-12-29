@@ -11,6 +11,21 @@ out/
 # IntelliJ Platform cache
 .intellijPlatform/
 
-# OS files
-.DS_Store
-Thumbs.db
+# Generated sources (grammarKit)
+src/main/gen/
+gen/
+
+# Build artifacts
+*.zip
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# JFlex
+idea-flex.skeleton
+
+# Justfile temp files
+JUSTFILE_BRANCH
+
+# Local config
+.envrc
+.llm/
