@@ -87,3 +87,14 @@ jobs:
                   reporter: github-pr-check
                   fail_on_error: true
                   filter_mode: nofilter
+
+    reviewdog-yamllint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: reviewdog/action-yamllint@v1.21.0
+              with:
+                  reporter: github-pr-check
+                  fail_on_error: true
+                  filter_mode: nofilter
