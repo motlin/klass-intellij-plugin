@@ -64,3 +64,15 @@ jobs:
 
             - name: 'Prettier Format Check'
               run: npx prettier --check .
+
+    biome:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+
+            - uses: jdx/mise-action@v3
+
+            - name: 'Biome Format Check'
+              run: npx @biomejs/biome ci
