@@ -98,3 +98,14 @@ jobs:
                   reporter: github-pr-check
                   fail_on_error: true
                   filter_mode: nofilter
+
+    all-checks:
+        name: All checks
+        if: ${{ !cancelled() }}
+        needs:
+            [pre-commit, build, verify, prettier, biome, reviewdog-markdownlint, reviewdog-yamllint]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: re-actors/alls-green@release/v1
+              with:
+                  jobs: ${{ toJSON(needs) }}
