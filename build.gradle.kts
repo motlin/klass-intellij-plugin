@@ -1,3 +1,5 @@
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+
 plugins {
     id("java")
     id("org.jetbrains.intellij.platform") version "2.2.1"
@@ -25,7 +27,6 @@ dependencies {
     intellijPlatform {
         intellijIdeaCommunity("2024.3")
         bundledPlugin("com.intellij.java")
-        instrumentationTools()
         pluginVerifier()
     }
 
@@ -53,7 +54,8 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            recommended()
+            ide(IntelliJPlatformType.IntellijIdeaCommunity, "2024.3")
+            ide(IntelliJPlatformType.IntellijIdeaCommunity, "2024.3.5")
         }
     }
 }
