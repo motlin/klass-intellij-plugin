@@ -66,7 +66,7 @@ jobs:
 
             - run: ./gradlew buildPlugin
 
-            - uses: actions/upload-artifact@v4
+            - uses: actions/upload-artifact@v6
               with:
                   name: plugin
                   path: build/distributions/*.zip
@@ -83,7 +83,7 @@ jobs:
 
             - name: Collect Plugin Verifier Result
               if: ${{ always() }}
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v6
               with:
                   name: pluginVerifier-result
                   path: build/reports/pluginVerifier
