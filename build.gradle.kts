@@ -3,7 +3,7 @@ import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 plugins {
     id("java")
     id("org.jetbrains.intellij.platform") version "2.2.1"
-    id("org.jetbrains.grammarkit") version "2022.3.2.2"
+    id("org.jetbrains.grammarkit") version "2023.3.0.1"
     id("com.diffplug.spotless") version "7.0.2"
 }
 
