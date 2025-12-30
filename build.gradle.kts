@@ -30,8 +30,8 @@ dependencies {
         pluginVerifier()
     }
 
-    implementation("org.eclipse.collections:eclipse-collections-api:11.0.0")
-    implementation("org.eclipse.collections:eclipse-collections:11.0.0")
+    implementation("org.eclipse.collections:eclipse-collections-api:13.0.0")
+    implementation("org.eclipse.collections:eclipse-collections:13.0.0")
 }
 
 intellijPlatform {
