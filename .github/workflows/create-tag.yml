@@ -1,0 +1,61 @@
+name: Create Release Tag
+
+on:
+    workflow_dispatch:
+        inputs:
+            next-version:
+                description: "Next development version (e.g., 1.0.1). Leave empty to auto-increment patch."
+                required: false
+                type: string
+
+jobs:
+    create-tag:
+        permissions:
+            contents: write
+
+        name: Create Release Tag
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.RELEASE_TOKEN }}
+
+            - name: Configure Git
+              run: |
+                  git config user.email "actions@github.com"
+                  git config user.name "GitHub Actions"
+
+            - name: Extract current version and create tag
+              id: version
+              run: |
+                  # Extract version from build.gradle.kts
+                  CURRENT_VERSION=$(grep -E '^version\s*=' build.gradle.kts | sed 's/version\s*=\s*"\(.*\)"/\1/')
+                  echo "Current version: $CURRENT_VERSION"
+                  echo "current=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
+
+                  # Create and push tag
+                  git tag -a "v$CURRENT_VERSION" -m "Release v$CURRENT_VERSION"
+                  git push origin "v$CURRENT_VERSION"
+
+            - name: Bump to next version
+              run: |
+                  CURRENT_VERSION="${{ steps.version.outputs.current }}"
+                  NEXT_VERSION="${{ inputs.next-version }}"
+
+                  # Auto-increment patch version if not specified
+                  if [ -z "$NEXT_VERSION" ]; then
+                      IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+                      NEXT_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+                  fi
+
+                  echo "Bumping version to: $NEXT_VERSION"
+
+                  # Update build.gradle.kts
+                  sed -i "s/^version = \"$CURRENT_VERSION\"/version = \"$NEXT_VERSION\"/" build.gradle.kts
+
+                  # Commit and push
+                  git add build.gradle.kts
+                  git commit -m "Bump version to $NEXT_VERSION"
+                  git push origin HEAD
