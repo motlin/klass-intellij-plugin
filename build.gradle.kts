@@ -4,7 +4,7 @@ plugins {
     id("java")
     id("org.jetbrains.intellij.platform") version "2.2.1"
     id("org.jetbrains.grammarkit") version "2023.3.0.1"
-    id("com.diffplug.spotless") version "7.0.2"
+    id("com.diffplug.spotless") version "8.1.0"
 }
 
 group = "com.klass"
