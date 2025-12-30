@@ -1,4 +1,7 @@
+# Jobs that run on merge_group, meaning they must pass before changes land. They also run on pull_request.
+
 on:
+    pull_request:
     merge_group:
 
 concurrency:
@@ -99,10 +102,31 @@ jobs:
                   fail_on_error: true
                   filter_mode: nofilter
 
+    reviewdog-actionlint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: reviewdog/action-actionlint@v1.69.1
+              with:
+                  reporter: github-pr-check
+                  fail_on_error: true
+                  filter_mode: nofilter
+
     all-checks:
         name: All checks
         if: ${{ !cancelled() }}
-        needs: [pre-commit, build, verify, prettier, biome, reviewdog-markdownlint, reviewdog-yamllint]
+        needs:
+            [
+                pre-commit,
+                build,
+                verify,
+                prettier,
+                biome,
+                reviewdog-markdownlint,
+                reviewdog-yamllint,
+                reviewdog-actionlint,
+            ]
         runs-on: ubuntu-latest
         steps:
             - uses: re-actors/alls-green@release/v1
