@@ -1,26 +1,18 @@
 package com.klass.intellij.reference;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.klass.intellij.KlassUtil;
 import com.klass.intellij.psi.KlassElementFactory;
-import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassParameterName;
 import com.klass.intellij.psi.KlassProjection;
 import com.klass.intellij.psi.KlassUrl;
 import com.klass.intellij.psi.KlassUrlGroup;
 import com.klass.intellij.psi.KlassUrlPart;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,19 +67,7 @@ public class KlassParameterReference extends PsiPolyVariantReferenceBase<PsiElem
 
   @NotNull @Override
   public Object[] getVariants() {
-    Project project = this.myElement.getProject();
-    List<KlassKlass> klassKlasses = KlassUtil.findClasses(project);
-    List<LookupElement> variants = new ArrayList<>();
-    for (KlassKlass klassKlass : klassKlasses) {
-      if (klassKlass.getName() != null && !klassKlass.getName().isEmpty()) {
-        LookupElementBuilder lookupElementBuilder =
-            LookupElementBuilder.create(klassKlass.getName())
-                .withIcon(AllIcons.Nodes.Class)
-                .withTypeText(klassKlass.getContainingFile().getName());
-        variants.add(lookupElementBuilder);
-      }
-    }
-    return variants.toArray();
+    return new Object[] {};
   }
 
   @Override

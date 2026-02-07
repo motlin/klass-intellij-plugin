@@ -374,12 +374,12 @@ parameterDeclaration ::= nombre (':' dataTypeDeclaration)? parameterModifier*
 dataType ::= primitiveType | enumerationType;
 primitiveType ::= BOOLEAN_KEYWORD | INTEGER_KEYWORD | LONG_KEYWORD | DOUBLE_KEYWORD | FLOAT_KEYWORD | STRING_KEYWORD | INSTANT_KEYWORD | LOCAL_DATE_KEYWORD | TEMPORAL_INSTANT_KEYWORD | TEMPORAL_RANGE_KEYWORD
 {
-    methods=[getReference]
+    mixin="com.klass.intellij.psi.impl.KlassPrimitiveTypeMixin"
     extends=dataType
 }
 enumerationType ::= nombre
 {
-    methods=[getReference]
+    mixin="com.klass.intellij.psi.impl.KlassEnumerationTypeMixin"
     extends=dataType
 }
 
@@ -387,21 +387,21 @@ dataTypeDeclaration ::= dataType multiplicity
 enumerationPrettyName ::= STRING_LITERAL
 optionalMarker ::= QUESTION_MARK
 
-interfaceName ::= nombre {methods=[getReference]}
-classifierName ::= nombre {methods=[getReference]}
-klassName ::= nombre {methods=[getReference]}
-memberName ::= nombre {methods=[getReference]}
-associationEndName ::= nombre {methods=[getReference]}
-parameterizedPropertyName ::= nombre {methods=[getReference]}
-projectionName ::= nombre {methods=[getReference]}
-expressionVariableName ::= nombre {methods=[getReference]}
-parameterName ::= nombre {methods=[getReference]}
+interfaceName ::= nombre {mixin="com.klass.intellij.psi.impl.KlassInterfaceNameMixin"}
+classifierName ::= nombre {mixin="com.klass.intellij.psi.impl.KlassClassifierNameMixin"}
+klassName ::= nombre {mixin="com.klass.intellij.psi.impl.KlassKlassNameMixin"}
+memberName ::= nombre {mixin="com.klass.intellij.psi.impl.KlassMemberNameMixin"}
+associationEndName ::= nombre {mixin="com.klass.intellij.psi.impl.KlassAssociationEndNameMixin"}
+parameterizedPropertyName ::= nombre {mixin="com.klass.intellij.psi.impl.KlassParameterizedPropertyNameMixin"}
+projectionName ::= nombre {mixin="com.klass.intellij.psi.impl.KlassProjectionNameMixin"}
+expressionVariableName ::= nombre {mixin="com.klass.intellij.psi.impl.KlassExpressionVariableNameMixin"}
+parameterName ::= nombre {mixin="com.klass.intellij.psi.impl.KlassParameterNameMixin"}
 
-expressionNativeValue ::= USER_KEYWORD {methods=[getReference]}
+expressionNativeValue ::= USER_KEYWORD {mixin="com.klass.intellij.psi.impl.KlassExpressionNativeValueMixin"}
 
 multiplicityBody::= ((lowerBound '..' upperBound) | dummyMultiplicity)
 multiplicity ::= '[' multiplicityBody ']'
-dummyMultiplicity ::= lowerBound | lowerBound '..' {methods=[getReference]}
+dummyMultiplicity ::= lowerBound | lowerBound '..' {mixin="com.klass.intellij.psi.impl.KlassDummyMultiplicityMixin"}
 
 lowerBound ::= INTEGER_LITERAL
 upperBound ::= INTEGER_LITERAL | ASTERISK

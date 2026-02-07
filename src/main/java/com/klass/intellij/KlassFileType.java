@@ -14,7 +14,7 @@ public class KlassFileType extends LanguageFileType {
 
   @NotNull @Override
   public String getName() {
-    return "Klass file";
+    return "Klass";
   }
 
   @NotNull @Override

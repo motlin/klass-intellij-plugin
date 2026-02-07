@@ -4,7 +4,6 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
@@ -16,20 +15,10 @@ import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassEnumerationType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassEnumerationReference extends PsiPolyVariantReferenceBase<PsiElement> {
-  public static final String[] VARIANTS = {
-    "Boolean", "Integer", "Long", "Double", "Float", "String", "Instant", "LocalDate",
-  };
-  public static final List<LookupElementBuilder> DATA_TYPE_VARIANTS =
-      Stream.of(VARIANTS)
-          .map(variant -> LookupElementBuilder.create(variant).withIcon(AllIcons.Nodes.Enum))
-          .collect(Collectors.toList());
-
   private final String enumerationName;
 
   public KlassEnumerationReference(@NotNull PsiElement element, String enumerationName) {
@@ -39,8 +28,7 @@ public class KlassEnumerationReference extends PsiPolyVariantReferenceBase<PsiEl
 
   @NotNull @Override
   public ResolveResult[] multiResolve(boolean incompleteCode) {
-    Project project = this.myElement.getProject();
-    return KlassUtil.findEnumerations(project).stream()
+    return KlassUtil.findEnumerations(this.myElement).stream()
         .filter(klassEnumeration -> klassEnumeration.getName().equals(this.enumerationName))
         .map(PsiElementResolveResult::new)
         .toArray(ResolveResult[]::new);
@@ -54,8 +42,7 @@ public class KlassEnumerationReference extends PsiPolyVariantReferenceBase<PsiEl
 
   @NotNull @Override
   public Object[] getVariants() {
-    Project project = this.myElement.getProject();
-    List<KlassEnumeration> klassEnumerations = KlassUtil.findEnumerations(project);
+    List<KlassEnumeration> klassEnumerations = KlassUtil.findEnumerations(this.myElement);
     List<LookupElement> variants = new ArrayList<>();
 
     for (KlassEnumeration klassEnumeration : klassEnumerations) {
@@ -67,8 +54,6 @@ public class KlassEnumerationReference extends PsiPolyVariantReferenceBase<PsiEl
         variants.add(lookupElementBuilder);
       }
     }
-
-    variants.addAll(DATA_TYPE_VARIANTS);
 
     return variants.toArray();
   }
