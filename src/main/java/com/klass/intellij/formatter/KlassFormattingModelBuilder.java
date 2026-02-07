@@ -1,6 +1,7 @@
 package com.klass.intellij.formatter;
 
 import com.intellij.formatting.Alignment;
+import com.intellij.formatting.FormattingContext;
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.formatting.FormattingModelProvider;
@@ -9,10 +10,7 @@ import com.intellij.formatting.SpacingBuilder;
 import com.intellij.formatting.SpacingBuilder.RuleBuilder;
 import com.intellij.formatting.Wrap;
 import com.intellij.formatting.WrapType;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.tree.IElementType;
@@ -156,9 +154,11 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder {
           KlassTypes.PARAMETERIZED_PROPERTY);
 
   @NotNull @Override
-  public FormattingModel createModel(PsiElement element, CodeStyleSettings settings) {
+  public FormattingModel createModel(@NotNull FormattingContext formattingContext) {
+    PsiElement element = formattingContext.getPsiElement();
+    CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
     return FormattingModelProvider.createFormattingModelForPsiFile(
-        element.getContainingFile(),
+        formattingContext.getContainingFile(),
         new KlassBlock(
             element.getNode(),
             Wrap.createWrap(WrapType.NONE, false),
@@ -234,10 +234,5 @@ public class KlassFormattingModelBuilder implements FormattingModelBuilder {
     }
 
     return spacingBuilder;
-  }
-
-  @Nullable @Override
-  public TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset) {
-    return null;
   }
 }
