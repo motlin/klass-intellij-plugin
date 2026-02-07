@@ -171,11 +171,11 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
       PsiElement projectionNodeParent = projectionLeafNode.getParent().getParent().getParent();
       if (projectionNodeParent instanceof KlassProjection) {
         KlassProjection projection = (KlassProjection) projectionNodeParent;
-        PsiReference klassReference = projection.getKlassName().getReference();
-        KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
+        PsiReference classifierReference = projection.getClassifierName().getReference();
+        PsiElement resolved = classifierReference.resolve();
 
-        if (klassKlass != null) {
-          return this.getKlassResolveResults(klassKlass);
+        if (resolved instanceof KlassClassifier) {
+          return this.getClassifierResolveResults((KlassClassifier) resolved);
         }
       } else if (projectionNodeParent instanceof KlassProjectionAssociationEndNode) {
         KlassProjectionAssociationEndNode associationEndNode =
@@ -303,11 +303,17 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
         }
       }
     } else if (grandparent instanceof KlassProjection) {
-      KlassKlassName klassName = ((KlassProjection) grandparent).getKlassName();
-      PsiReference klassReference = klassName.getReference();
+      KlassClassifierName classifierName = ((KlassProjection) grandparent).getClassifierName();
+      PsiReference classifierReference = classifierName.getReference();
+      PsiElement resolved = classifierReference.resolve();
 
-      KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
-      return this.getKlassResolveResults(klassKlass);
+      if (resolved instanceof KlassKlass) {
+        return this.getKlassMemberLookups((KlassKlass) resolved);
+      }
+      if (resolved instanceof KlassInterface) {
+        return this.getInterfaceMemberLookups((KlassInterface) resolved);
+      }
+      return new Object[] {};
     } else if (parent instanceof KlassExpressionThisMember) {
       KlassKlass klassKlass = PsiTreeUtil.getParentOfType(this.myElement, KlassKlass.class);
 
@@ -361,11 +367,14 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
       PsiElement projectionNodeParent = projectionLeafNode.getParent().getParent().getParent();
       if (projectionNodeParent instanceof KlassProjection) {
         KlassProjection projection = (KlassProjection) projectionNodeParent;
-        PsiReference klassReference = projection.getKlassName().getReference();
-        KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
+        PsiReference classifierReference = projection.getClassifierName().getReference();
+        PsiElement resolved = classifierReference.resolve();
 
-        if (klassKlass != null) {
-          return this.getKlassMemberLookups(klassKlass);
+        if (resolved instanceof KlassKlass) {
+          return this.getKlassMemberLookups((KlassKlass) resolved);
+        }
+        if (resolved instanceof KlassInterface) {
+          return this.getInterfaceMemberLookups((KlassInterface) resolved);
         }
       } else if (projectionNodeParent instanceof KlassProjectionAssociationEndNode) {
         KlassProjectionAssociationEndNode associationEndNode =
@@ -502,6 +511,17 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
         .getClassBody()
         .getMemberList()
         .stream()
+        .map(PsiNamedElement::getName)
+        .map(LookupElementBuilder::create)
+        .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Property))
+        .toArray();
+  }
+
+  private Object[] getInterfaceMemberLookups(KlassInterface klassInterface) {
+    if (klassInterface == null) {
+      return new Object[] {};
+    }
+    return klassInterface.getInterfaceBlock().getInterfaceBody().getMemberList().stream()
         .map(PsiNamedElement::getName)
         .map(LookupElementBuilder::create)
         .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Property))

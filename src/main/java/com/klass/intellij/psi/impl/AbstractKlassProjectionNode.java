@@ -16,7 +16,7 @@ public abstract class AbstractKlassProjectionNode extends KlassNombredImpl
   @NotNull @Override
   public PsiElement getType() {
     if (this instanceof KlassProjection) {
-      return ((KlassProjection) this).getKlassName();
+      return ((KlassProjection) this).getClassifierName();
     }
 
     throw new AssertionError(this);
