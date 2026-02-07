@@ -1,6 +1,7 @@
 package com.klass.intellij.highlighter;
 
 import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.psi.PsiElement;
 import com.klass.intellij.psi.KlassNombre;
 import com.klass.intellij.psi.KlassUrlConstant;
@@ -81,10 +82,10 @@ public class ReservedNameVisitor extends KlassVisitor {
     }
     if (JAVA_KEYWORDS.contains(nombre.getText())) {
       String message = "Reserved Java keyword";
-      this.annotationHolder.createErrorAnnotation(nombre, message);
+      this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(nombre).create();
     } else if (JAVA_LITERALS.contains(nombre.getText())) {
       String message = "Reserved Java literal";
-      this.annotationHolder.createErrorAnnotation(nombre, message);
+      this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(nombre).create();
     }
   }
 }

@@ -1,10 +1,12 @@
 package com.klass.intellij.highlighter;
 
-import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.ResolveResult;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.klass.intellij.highlighter.type.DataTypeType;
 import com.klass.intellij.highlighter.type.Multiplicity;
@@ -97,20 +99,32 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
     int size = associationEndList.size();
     if (size == 0) {
       String message = "Expected association ends.";
-      this.annotationHolder.createErrorAnnotation(klassAssociation, message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(klassAssociation)
+          .create();
     } else if (size == 1) {
       String message = "Expected two association ends.";
-      this.annotationHolder.createErrorAnnotation(associationEndList.get(0), message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(associationEndList.get(0))
+          .create();
     } else if (size > 2) {
       String message = "Expected two association ends.";
-      this.annotationHolder.createErrorAnnotation(associationEndList.get(2), message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(associationEndList.get(2))
+          .create();
     }
   }
 
   @Override
   public void visitAssociationEnd(@NotNull KlassAssociationEnd klassAssociationEnd) {
     if (klassAssociationEnd.getMultiplicity() == null) {
-      this.annotationHolder.createErrorAnnotation(klassAssociationEnd, "Expected multiplicity");
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, "Expected multiplicity")
+          .range(klassAssociationEnd)
+          .create();
     }
   }
 
@@ -128,14 +142,20 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
           String.format(
               "Incompatible types: '%s' and '%s' in '%s'.",
               possibleSourceTypes.get(0), possibleTargetTypes.get(0), criteriaOperator.getText());
-      this.annotationHolder.createErrorAnnotation(criteriaOperator, message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(criteriaOperator)
+          .create();
     }
 
     if (!possibleSourceTypes.isEmpty()
         && ListAdapter.adapt(possibleSourceTypes)
             .allSatisfy(type -> type.getMultiplicity().isToMany())) {
       String message = String.format("Invalid multiplicity '%s'.", possibleSourceTypes.get(0));
-      this.annotationHolder.createErrorAnnotation(criteriaOperator, message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(criteriaOperator)
+          .create();
     }
     KlassOperator operator = criteriaOperator.getOperator();
     boolean expectMany = operator.getText().equals("in");
@@ -144,13 +164,19 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
             .allSatisfy(type -> type.getMultiplicity().isToMany());
     if (!possibleTargetTypes.isEmpty() && actualMany != expectMany) {
       String message = String.format("Invalid multiplicity '%s'.", possibleTargetTypes.get(0));
-      this.annotationHolder.createErrorAnnotation(criteriaOperator, message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(criteriaOperator)
+          .create();
     }
   }
 
   @Override
   public void visitDummyMultiplicity(@NotNull KlassDummyMultiplicity klassDummyMultiplicity) {
-    this.annotationHolder.createErrorAnnotation(klassDummyMultiplicity, "Expected multiplicity");
+    this.annotationHolder
+        .newAnnotation(HighlightSeverity.ERROR, "Expected multiplicity")
+        .range(klassDummyMultiplicity)
+        .create();
   }
 
   @Override
@@ -159,8 +185,11 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
   }
 
   private void applyClassName(PsiElement psiElement) {
-    Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(psiElement, null);
-    infoAnnotation.setTextAttributes(KlassHighlightingColors.CLASS_NAME_ATTRIBUTES);
+    this.annotationHolder
+        .newSilentAnnotation(HighlightSeverity.INFORMATION)
+        .range(psiElement)
+        .textAttributes(KlassHighlightingColors.CLASS_NAME_ATTRIBUTES)
+        .create();
   }
 
   @Override
@@ -183,7 +212,10 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
       Long occurrences = propertyCountByName.get(propertyName);
       if (occurrences > 1) {
         String message = String.format("Duplicate property '%s'", propertyName);
-        this.annotationHolder.createErrorAnnotation(klassMember.getNombre(), message);
+        this.annotationHolder
+            .newAnnotation(HighlightSeverity.ERROR, message)
+            .range(klassMember.getNombre())
+            .create();
       }
     }
   }
@@ -201,7 +233,10 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
       Long occurrences = propertyCountByName.get(propertyName);
       if (occurrences > 1) {
         String message = String.format("Duplicate property '%s'", propertyName);
-        this.annotationHolder.createErrorAnnotation(klassMember.getNombre(), message);
+        this.annotationHolder
+            .newAnnotation(HighlightSeverity.ERROR, message)
+            .range(klassMember.getNombre())
+            .create();
       }
     }
   }
@@ -223,11 +258,21 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 
   private void annotateUnresolvableReference(PsiElement elementWithReference) {
     PsiReference reference = elementWithReference.getReference();
-    if (reference != null && reference.resolve() == null) {
+    if (reference != null && isUnresolved(reference)) {
       String message = String.format("Cannot resolve symbol '%s'", elementWithReference.getText());
-      this.annotationHolder.createErrorAnnotation(elementWithReference, message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(elementWithReference)
+          .create();
     }
     this.applyClassName(elementWithReference);
+  }
+
+  private static boolean isUnresolved(PsiReference reference) {
+    if (reference instanceof PsiPolyVariantReference) {
+      return ((PsiPolyVariantReference) reference).multiResolve(false).length == 0;
+    }
+    return reference.resolve() == null;
   }
 
   @Override
@@ -235,55 +280,102 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
     String text = klassLowerBound.getText();
     if (!text.equals("0") && !text.equals("1")) {
       String message = "Expected 0 or 1 for the lower bound.";
-      this.annotationHolder.createErrorAnnotation(klassLowerBound, message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(klassLowerBound)
+          .create();
     }
   }
 
   @Override
   public void visitMemberName(@NotNull KlassMemberName propertyName) {
     KlassMemberReference memberReference = (KlassMemberReference) propertyName.getReference();
-    PsiElement resolved = memberReference.resolve();
-    if (resolved == null) {
+    if (memberReference == null) {
+      return;
+    }
+    ResolveResult[] resolveResults = memberReference.multiResolve(false);
+    if (resolveResults.length == 0) {
       String message = String.format("Cannot resolve symbol '%s'", propertyName.getText());
-      this.annotationHolder.createErrorAnnotation(propertyName, message);
-    } else if (resolved instanceof KlassPrimitiveTypeProperty
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(propertyName)
+          .create();
+      return;
+    }
+    PsiElement resolved = resolveResults[0].getElement();
+    if (resolved instanceof KlassPrimitiveTypeProperty
         || resolved instanceof KlassEnumerationProperty
         || resolved instanceof KlassClassModifier) {
-      Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(propertyName, null);
-      infoAnnotation.setTextAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES);
+      this.annotationHolder
+          .newSilentAnnotation(HighlightSeverity.INFORMATION)
+          .range(propertyName)
+          .textAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES)
+          .create();
     } else if (resolved instanceof KlassEnumerationLiteral) {
-      Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(propertyName, null);
-      infoAnnotation.setTextAttributes(KlassHighlightingColors.STATIC_FINAL_FIELD_ATTRIBUTES);
+      this.annotationHolder
+          .newSilentAnnotation(HighlightSeverity.INFORMATION)
+          .range(propertyName)
+          .textAttributes(KlassHighlightingColors.STATIC_FINAL_FIELD_ATTRIBUTES)
+          .create();
     }
   }
 
   @Override
   public void visitNombreText(@NotNull KlassNombreText klassNombreText) {
-    Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(klassNombreText, null);
     PsiElement parent = klassNombreText.getParent().getParent();
     if (parent instanceof KlassMemberName) {
       // Handled specially by resolving reference first
     } else if (parent instanceof KlassEnumeration) {
-      infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_NAME_ATTRIBUTES);
+      this.annotationHolder
+          .newSilentAnnotation(HighlightSeverity.INFORMATION)
+          .range(klassNombreText)
+          .textAttributes(KlassHighlightingColors.ENUM_NAME_ATTRIBUTES)
+          .create();
     } else if (parent instanceof KlassMember
         || parent instanceof KlassAssociationEnd
         || parent instanceof KlassAssociationEndName
         || parent instanceof KlassParameterizedPropertyName) {
-      infoAnnotation.setTextAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES);
+      this.annotationHolder
+          .newSilentAnnotation(HighlightSeverity.INFORMATION)
+          .range(klassNombreText)
+          .textAttributes(KlassHighlightingColors.INSTANCE_FINAL_FIELD_ATTRIBUTES)
+          .create();
     } else if (parent instanceof KlassEnumerationLiteral) {
-      infoAnnotation.setTextAttributes(KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES);
+      this.annotationHolder
+          .newSilentAnnotation(HighlightSeverity.INFORMATION)
+          .range(klassNombreText)
+          .textAttributes(KlassHighlightingColors.ENUM_LITERAL_ATTRIBUTES)
+          .create();
     } else if (parent instanceof KlassParameterDeclaration) {
-      // infoAnnotation.setTextAttributes(KlassHighlightingColors.PATH_PARAMETER);
-
-      infoAnnotation.setTextAttributes(KlassHighlightingColors.PARAMETER_ATTRIBUTES);
+      this.annotationHolder
+          .newSilentAnnotation(HighlightSeverity.INFORMATION)
+          .range(klassNombreText)
+          .textAttributes(KlassHighlightingColors.PARAMETER_ATTRIBUTES)
+          .create();
     } else if (parent instanceof KlassParameterName) {
-      infoAnnotation.setTextAttributes(KlassHighlightingColors.LOCAL_VARIABLE_ATTRIBUTES);
+      this.annotationHolder
+          .newSilentAnnotation(HighlightSeverity.INFORMATION)
+          .range(klassNombreText)
+          .textAttributes(KlassHighlightingColors.LOCAL_VARIABLE_ATTRIBUTES)
+          .create();
     } else if (parent instanceof KlassUrlConstant) {
-      infoAnnotation.setTextAttributes(KlassHighlightingColors.URL_CONSTANT);
+      this.annotationHolder
+          .newSilentAnnotation(HighlightSeverity.INFORMATION)
+          .range(klassNombreText)
+          .textAttributes(KlassHighlightingColors.URL_CONSTANT)
+          .create();
     } else if (parent instanceof KlassExpressionVariableName) {
-      infoAnnotation.setTextAttributes(KlassHighlightingColors.LOCAL_VARIABLE_ATTRIBUTES);
+      this.annotationHolder
+          .newSilentAnnotation(HighlightSeverity.INFORMATION)
+          .range(klassNombreText)
+          .textAttributes(KlassHighlightingColors.LOCAL_VARIABLE_ATTRIBUTES)
+          .create();
     } else {
-      infoAnnotation.setTextAttributes(KlassHighlightingColors.CLASS_NAME_ATTRIBUTES);
+      this.annotationHolder
+          .newSilentAnnotation(HighlightSeverity.INFORMATION)
+          .range(klassNombreText)
+          .textAttributes(KlassHighlightingColors.CLASS_NAME_ATTRIBUTES)
+          .create();
     }
   }
 
@@ -294,7 +386,10 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
       String message =
           String.format(
               "Expected a type declaration on parameter: '%s'.", parameterDeclaration.getText());
-      this.annotationHolder.createErrorAnnotation(parameterDeclaration, message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(parameterDeclaration)
+          .create();
     }
   }
 
@@ -310,6 +405,9 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
         projectionParameterizedPropertyNode.getParameterizedPropertyName();
     KlassParameterizedPropertyReference parameterizedPropertyReference =
         (KlassParameterizedPropertyReference) parameterizedPropertyName.getReference();
+    if (parameterizedPropertyReference == null) {
+      return;
+    }
     KlassParameterizedProperty parameterizedProperty =
         (KlassParameterizedProperty) parameterizedPropertyReference.resolve();
 
@@ -355,7 +453,10 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
                   .collect(KlassParameterDeclaration::getDataTypeDeclaration)
                   .collect(PsiElement::getText)
                   .makeString());
-      this.annotationHolder.createErrorAnnotation(parameterizedPropertyName, message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(parameterizedPropertyName)
+          .create();
     }
   }
 
@@ -365,7 +466,10 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
     klassRelationship.getCriteriaExpression().accept(visitor);
     if (!visitor.hasThisMember()) {
       String message = "Expected at least one clause with a reference to 'this'.";
-      this.annotationHolder.createErrorAnnotation(klassRelationship, message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(klassRelationship)
+          .create();
     }
   }
 
@@ -378,6 +482,9 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
     KlassProjectionName projectionName = projectionClause.getProjectionName();
     KlassProjectionReference projectionReference =
         (KlassProjectionReference) projectionName.getReference();
+    if (projectionReference == null) {
+      return;
+    }
     KlassProjection projection = (KlassProjection) projectionReference.resolve();
     if (projection != null) {
       MutableList<KlassParameterDeclaration> serviceParameterDeclarations =
@@ -414,7 +521,10 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
                     .collect(KlassParameterDeclaration::getDataTypeDeclaration)
                     .collect(PsiElement::getText)
                     .makeString());
-        this.annotationHolder.createErrorAnnotation(projectionClause.getProjectionName(), message);
+        this.annotationHolder
+            .newAnnotation(HighlightSeverity.ERROR, message)
+            .range(projectionClause.getProjectionName())
+            .create();
       }
     }
   }
@@ -424,14 +534,20 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
     String text = klassUpperBound.getText();
     if (!text.equals("1") && !text.equals("*")) {
       String message = "Expected 1 or * for the upper bound.";
-      this.annotationHolder.createErrorAnnotation(klassUpperBound, message);
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(klassUpperBound)
+          .create();
     }
   }
 
   @Override
   public void visitVerb(@NotNull KlassVerb klassVerb) {
-    Annotation infoAnnotation = this.annotationHolder.createInfoAnnotation(klassVerb, null);
-    infoAnnotation.setTextAttributes(KlassHighlightingColors.VERB);
+    this.annotationHolder
+        .newSilentAnnotation(HighlightSeverity.INFORMATION)
+        .range(klassVerb)
+        .textAttributes(KlassHighlightingColors.VERB)
+        .create();
   }
 
   public void typeCheckPassedParameters(
@@ -455,23 +571,25 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
             String.format(
                 "Incompatible types: '%s' cannot be converted to '%s'.",
                 serviceParameterTypes.get(0), projectionParameterTypes.get(0));
-        this.annotationHolder.createErrorAnnotation(parameterName, message);
+        this.annotationHolder
+            .newAnnotation(HighlightSeverity.ERROR, message)
+            .range(parameterName)
+            .create();
       }
     }
   }
 
   public void annotateCannotResolve(@NotNull PsiElement psiElement) {
     PsiReference reference = psiElement.getReference();
-    PsiElement resolved = reference.resolve();
-    this.annotateCannotResolve(psiElement, resolved);
-  }
-
-  public void annotateCannotResolve(
-      @NotNull PsiElement expressionVariableName, PsiElement resolved) {
-    if (resolved == null) {
-      String message =
-          String.format("Cannot resolve symbol '%s'", expressionVariableName.getText());
-      this.annotationHolder.createErrorAnnotation(expressionVariableName, message);
+    if (reference == null) {
+      return;
+    }
+    if (isUnresolved(reference)) {
+      String message = String.format("Cannot resolve symbol '%s'", psiElement.getText());
+      this.annotationHolder
+          .newAnnotation(HighlightSeverity.ERROR, message)
+          .range(psiElement)
+          .create();
     }
   }
 
@@ -510,6 +628,9 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
       /* TODO: factor in expressionMemberName.getAssociationEndNameList() */
       KlassMemberName propertyName = expressionMemberName.getMemberName();
       KlassMemberReference reference = (KlassMemberReference) propertyName.getReference();
+      if (reference == null) {
+        return Lists.immutable.<Type>empty().castToList();
+      }
       PsiElement resolve = reference.resolve();
       if (resolve instanceof KlassPrimitiveTypeProperty) {
         KlassPrimitiveTypeProperty primitiveTypeProperty = (KlassPrimitiveTypeProperty) resolve;
@@ -571,6 +692,9 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
       KlassExpressionVariableName expressionVariableName =
           (KlassExpressionVariableName) expressionValue;
       PsiReference reference = expressionVariableName.getReference();
+      if (reference == null) {
+        return Lists.immutable.<Type>empty().castToList();
+      }
       KlassParameterDeclaration parameterDeclaration =
           (KlassParameterDeclaration) reference.resolve();
       if (parameterDeclaration != null) {

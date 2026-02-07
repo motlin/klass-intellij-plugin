@@ -330,7 +330,7 @@ public class KlassPsiImplUtil {
   public static ItemPresentation getPresentation(KlassProjection element) {
     return new KlassNamedElementItemPresentation(
         element,
-        "on " + element.getKlassName().getNombre().getNombreText().getText(),
+        "on " + element.getClassifierName().getNombre().getNombreText().getText(),
         AllIcons.Hierarchy.Subtypes);
   }
 

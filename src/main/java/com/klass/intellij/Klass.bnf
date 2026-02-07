@@ -162,7 +162,7 @@ enumeration ::= ENUMERATION_KEYWORD nombre enumerationBlock
 enumerationBlock ::= lBrace enumerationBody rBrace
 enumerationBody ::= (enumerationLiteral COMMA)*
 
-projection ::= PROJECTION_KEYWORD nombre parameterDeclarationsParens? 'on' klassName projectionBlock
+projection ::= PROJECTION_KEYWORD nombre parameterDeclarationsParens? 'on' classifierName projectionBlock
 {
     pin="{" methods=[setName getPresentation]
     extends=topLevelItem

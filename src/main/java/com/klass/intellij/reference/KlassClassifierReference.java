@@ -12,10 +12,10 @@ import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.klass.intellij.KlassUtil;
+import com.klass.intellij.psi.KlassClassifierName;
 import com.klass.intellij.psi.KlassElementFactory;
 import com.klass.intellij.psi.KlassInterface;
 import com.klass.intellij.psi.KlassKlass;
-import com.klass.intellij.psi.KlassKlassName;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -99,10 +99,10 @@ public class KlassClassifierReference extends PsiPolyVariantReferenceBase<PsiEle
   public PsiElement handleElementRename(String newElementName) {
     ASTNode node = this.myElement.getNode();
     if (node != null) {
-      KlassKlassName klassName =
-          KlassElementFactory.createKlassName(this.myElement.getProject(), newElementName);
+      KlassClassifierName classifierName =
+          KlassElementFactory.createClassifierName(this.myElement.getProject(), newElementName);
 
-      ASTNode newNode = klassName.getNode();
+      ASTNode newNode = classifierName.getNode();
       node.getTreeParent().replaceChild(node, newNode);
     }
     return this.myElement;
