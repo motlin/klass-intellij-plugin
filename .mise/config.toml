@@ -1,7 +1,7 @@
 [tools]
 java = "temurin-21.0.9+10.0.LTS"
 just = "1.46.0"
-node = "24.12.0"
+node = "24.13.0"
 "npm:markdownlint-cli" = "0.45.0"
 "npm:strip-ansi-cli" = "4.0.0"
 
