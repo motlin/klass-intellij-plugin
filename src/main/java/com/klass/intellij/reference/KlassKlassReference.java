@@ -6,7 +6,6 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
@@ -14,6 +13,7 @@ import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.klass.intellij.KlassUtil;
 import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
 import java.util.ArrayList;
@@ -37,43 +37,39 @@ public class KlassKlassReference extends PsiPolyVariantReferenceBase<PsiElement>
 
   @NotNull @Override
   public ResolveResult[] multiResolve(boolean incompleteCode) {
-    Project project = this.myElement.getProject();
-    // TODO: Combine
-    ResolveResult[] klassResolveResults =
-        KlassUtil.findClasses(project).stream()
+    ResolveResult[] klassResults =
+        KlassUtil.findClasses(this.myElement).stream()
             .filter(klass -> klass.getName().equals(this.name))
             .map(PsiElementResolveResult::new)
             .toArray(ResolveResult[]::new);
-    if (klassResolveResults.length > 0) {
-      return klassResolveResults;
+    if (klassResults.length > 0) {
+      return klassResults;
     }
-
-    ResolveResult[] enumerationResolveResults =
-        KlassUtil.findEnumerations(project).stream()
-            .filter(enumeration -> enumeration.getName().equals(this.name))
-            .map(PsiElementResolveResult::new)
-            .toArray(ResolveResult[]::new);
-    if (enumerationResolveResults.length > 0) {
-      return enumerationResolveResults;
-    }
-
-    return new ResolveResult[] {};
+    return KlassUtil.findEnumerations(this.myElement).stream()
+        .filter(enumeration -> enumeration.getName().equals(this.name))
+        .map(PsiElementResolveResult::new)
+        .toArray(ResolveResult[]::new);
   }
 
   @NotNull @Override
   public Object[] getVariants() {
-    Project project = this.myElement.getProject();
-    List<KlassKlass> klassKlasses = KlassUtil.findClasses(project);
     List<LookupElement> variants = new ArrayList<>();
     BracketsInsertHandler insertHandler = new BracketsInsertHandler();
-    for (KlassKlass klassKlass : klassKlasses) {
+    for (KlassKlass klassKlass : KlassUtil.findClasses(this.myElement)) {
       if (klassKlass.getName() != null && !klassKlass.getName().isEmpty()) {
-        LookupElementBuilder lookupElementBuilder =
+        variants.add(
             LookupElementBuilder.create(klassKlass.getName())
                 .withIcon(AllIcons.Nodes.Class)
                 .withTypeText(klassKlass.getContainingFile().getName())
-                .withInsertHandler(insertHandler);
-        variants.add(lookupElementBuilder);
+                .withInsertHandler(insertHandler));
+      }
+    }
+    for (KlassEnumeration enumeration : KlassUtil.findEnumerations(this.myElement)) {
+      if (enumeration.getName() != null && !enumeration.getName().isEmpty()) {
+        variants.add(
+            LookupElementBuilder.create(enumeration.getName())
+                .withIcon(AllIcons.Nodes.Enum)
+                .withTypeText(enumeration.getContainingFile().getName()));
       }
     }
     return variants.toArray();

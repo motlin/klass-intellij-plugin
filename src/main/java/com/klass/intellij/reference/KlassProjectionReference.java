@@ -4,7 +4,6 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
@@ -16,7 +15,6 @@ import com.klass.intellij.psi.KlassProjection;
 import com.klass.intellij.psi.KlassProjectionName;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,19 +34,15 @@ public class KlassProjectionReference extends PsiPolyVariantReferenceBase<PsiEle
       return new PsiElementResolveResult[] {new PsiElementResolveResult(this.projection)};
     }
 
-    Project project = this.myElement.getProject();
-    List<KlassProjection> projections =
-        KlassUtil.findProjections(project).stream()
+    ResolveResult[] resolveResults =
+        KlassUtil.findProjections(this.myElement).stream()
             .filter(projection -> projection.getName().equals(this.projectionName))
-            .collect(Collectors.toList());
-    if (projections.size() == 2) {
-      return new ResolveResult[] {};
+            .map(PsiElementResolveResult::new)
+            .toArray(ResolveResult[]::new);
+    if (resolveResults.length == 1) {
+      this.projection = (KlassProjection) resolveResults[0].getElement();
     }
-    if (projections.size() == 1) {
-      this.projection = projections.get(0);
-      return new PsiElementResolveResult[] {new PsiElementResolveResult(this.projection)};
-    }
-    return new ResolveResult[] {};
+    return resolveResults;
   }
 
   @Nullable @Override
@@ -59,8 +53,7 @@ public class KlassProjectionReference extends PsiPolyVariantReferenceBase<PsiEle
 
   @NotNull @Override
   public Object[] getVariants() {
-    Project project = this.myElement.getProject();
-    List<KlassProjection> projections = KlassUtil.findProjections(project);
+    List<KlassProjection> projections = KlassUtil.findProjections(this.myElement);
     List<LookupElement> variants = new ArrayList<>();
     for (KlassProjection projection : projections) {
       if (projection.getName() != null && !projection.getName().isEmpty()) {

@@ -1,10 +1,6 @@
 package com.klass.intellij.reference;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
@@ -23,7 +19,6 @@ import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
 import com.klass.intellij.psi.KlassProjectionWithAssociationEnd;
 import com.klass.intellij.psi.KlassTypedElement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
@@ -66,11 +61,10 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 
         if (resolve instanceof KlassAssociationEnd) {
           KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
-          PsiReference klassReference = klassAssociationEnd.getKlassName().getReference();
-          PsiElement klassResolved = klassReference.resolve();
-          KlassKlass klassKlass = (KlassKlass) klassResolved;
-
-          return this.getAssociationEndResolveResults(klassKlass);
+          PsiElement klassResolved = klassAssociationEnd.getKlassName().getReference().resolve();
+          if (klassResolved instanceof KlassKlass) {
+            return this.getAssociationEndResolveResults((KlassKlass) klassResolved);
+          }
         }
 
         return new ResolveResult[] {};
@@ -103,11 +97,10 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 
       if (resolve instanceof KlassAssociationEnd) {
         KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
-        PsiReference klassReference = klassAssociationEnd.getKlassName().getReference();
-        PsiElement klassResolved = klassReference.resolve();
-        KlassKlass klassKlass = (KlassKlass) klassResolved;
-
-        return this.getAssociationEndResolveResults(klassKlass);
+        PsiElement klassResolved = klassAssociationEnd.getKlassName().getReference().resolve();
+        if (klassResolved instanceof KlassKlass) {
+          return this.getAssociationEndResolveResults((KlassKlass) klassResolved);
+        }
       }
 
       return new ResolveResult[] {};
@@ -118,7 +111,7 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 
   public ResolveResult[] getAssociationEndResolveResults(KlassKlass klassKlass) {
     Objects.requireNonNull(klassKlass);
-    List<KlassAssociation> associations = KlassUtil.findAssociations(klassKlass.getProject());
+    List<KlassAssociation> associations = KlassUtil.findAssociations(klassKlass);
     for (KlassAssociation association : associations) {
       List<KlassAssociationEnd> associationEndList =
           association.getAssociationBlock().getAssociationBody().getAssociationEndList();
@@ -133,8 +126,13 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
       KlassKlassName sourceTypeName = sourceEnd.getKlassName();
       KlassKlassName targetTypeName = targetEnd.getKlassName();
 
-      KlassKlass sourceKlass = (KlassKlass) sourceTypeName.getReference().resolve();
-      KlassKlass targetKlass = (KlassKlass) targetTypeName.getReference().resolve();
+      PsiElement sourceResolved = sourceTypeName.getReference().resolve();
+      PsiElement targetResolved = targetTypeName.getReference().resolve();
+      if (!(sourceResolved instanceof KlassKlass) || !(targetResolved instanceof KlassKlass)) {
+        continue;
+      }
+      KlassKlass sourceKlass = (KlassKlass) sourceResolved;
+      KlassKlass targetKlass = (KlassKlass) targetResolved;
 
       if (this.isInstanceOf(klassKlass, sourceKlass)
           && targetName.equals(this.associationEndName)) {
@@ -177,19 +175,7 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 
   @NotNull @Override
   public Object[] getVariants() {
-    Project project = this.myElement.getProject();
-    List<KlassKlass> klassKlasses = KlassUtil.findClasses(project);
-    List<LookupElement> variants = new ArrayList<>();
-    for (KlassKlass klassKlass : klassKlasses) {
-      if (klassKlass.getName() != null && !klassKlass.getName().isEmpty()) {
-        LookupElementBuilder lookupElementBuilder =
-            LookupElementBuilder.create(klassKlass.getName())
-                .withIcon(AllIcons.Nodes.Class)
-                .withTypeText(klassKlass.getContainingFile().getName());
-        variants.add(lookupElementBuilder);
-      }
-    }
-    return variants.toArray();
+    return new Object[] {};
   }
 
   @Override
