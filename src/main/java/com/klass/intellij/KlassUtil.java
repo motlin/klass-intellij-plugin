@@ -3,11 +3,16 @@ package com.klass.intellij;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassAssociationEnd;
@@ -21,9 +26,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassUtil {
+  private static final Key<CachedValue<ConcurrentHashMap<Class<?>, List<?>>>>
+      ALL_ELEMENTS_CACHE_KEY = Key.create("klass.util.allElements");
+
   @NotNull private static GlobalSearchScope getModuleScope(@NotNull PsiElement context) {
     Module module = ModuleUtilCore.findModuleForPsiElement(context);
     if (module != null) {
@@ -83,20 +93,48 @@ public class KlassUtil {
   // Module-scoped: for references, restricts to current module and its dependencies.
   public static <T extends PsiElement> List<T> findElementsOfType(
       @NotNull PsiElement context, @NotNull Class<T> klass) {
-    return findElementsOfType(context.getProject(), klass, getModuleScope(context));
+    GlobalSearchScope scope = getModuleScope(context);
+    return filterByScope(getAllElementsOfType(context.getProject(), klass), scope);
   }
 
   // Project-scoped: for navigation (Go to Class/Symbol), searches all modules.
   public static <T extends PsiElement> List<T> findElementsOfType(
       @NotNull Project project, @NotNull Class<T> klass) {
-    return findElementsOfType(project, klass, GlobalSearchScope.allScope(project));
+    return getAllElementsOfType(project, klass);
   }
 
-  private static <T extends PsiElement> List<T> findElementsOfType(
-      @NotNull Project project, @NotNull Class<T> klass, @NotNull GlobalSearchScope scope) {
+  @SuppressWarnings("unchecked")
+  private static <T extends PsiElement> List<T> getAllElementsOfType(
+      @NotNull Project project, @NotNull Class<T> klass) {
+    ConcurrentHashMap<Class<?>, List<?>> cache =
+        CachedValuesManager.getManager(project)
+            .getCachedValue(
+                project,
+                ALL_ELEMENTS_CACHE_KEY,
+                () ->
+                    CachedValueProvider.Result.create(
+                        new ConcurrentHashMap<>(), PsiModificationTracker.MODIFICATION_COUNT),
+                false);
+    return (List<T>) cache.computeIfAbsent(klass, k -> scanAllElementsOfType(project, klass));
+  }
+
+  private static <T extends PsiElement> List<T> filterByScope(
+      @NotNull List<T> elements, @NotNull GlobalSearchScope scope) {
+    return elements.stream()
+        .filter(
+            element -> {
+              VirtualFile vf = element.getContainingFile().getVirtualFile();
+              return vf != null && scope.contains(vf);
+            })
+        .collect(Collectors.toList());
+  }
+
+  private static <T extends PsiElement> List<T> scanAllElementsOfType(
+      @NotNull Project project, @NotNull Class<T> klass) {
     PsiManager psiManager = PsiManager.getInstance(project);
 
-    Collection<VirtualFile> virtualFiles = FilenameIndex.getAllFilesByExt(project, "klass", scope);
+    Collection<VirtualFile> virtualFiles =
+        FilenameIndex.getAllFilesByExt(project, "klass", GlobalSearchScope.allScope(project));
 
     List<T> result = new ArrayList<>();
 
@@ -108,6 +146,6 @@ public class KlassUtil {
         .filter(Objects::nonNull)
         .forEach(classes -> Collections.addAll(result, classes));
 
-    return result;
+    return Collections.unmodifiableList(result);
   }
 }
