@@ -200,29 +200,16 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 
   @Override
   public void visitInterface(@NotNull KlassInterface klassInterface) {
-    List<KlassMember> propertyList =
-        klassInterface.getInterfaceBlock().getInterfaceBody().getMemberList();
-    Map<String, Long> propertyCountByName =
-        propertyList.stream()
-            .map(PsiNamedElement::getName)
-            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-    for (KlassMember klassMember : propertyList) {
-      String propertyName = klassMember.getName();
-      Long occurrences = propertyCountByName.get(propertyName);
-      if (occurrences > 1) {
-        String message = String.format("Duplicate property '%s'", propertyName);
-        this.annotationHolder
-            .newAnnotation(HighlightSeverity.ERROR, message)
-            .range(klassMember.getNombre())
-            .create();
-      }
-    }
+    this.annotateDuplicateProperties(
+        klassInterface.getInterfaceBlock().getInterfaceBody().getMemberList());
   }
 
   @Override
   public void visitKlass(@NotNull KlassKlass klassKlass) {
-    List<KlassMember> propertyList = klassKlass.getClassBlock().getClassBody().getMemberList();
+    this.annotateDuplicateProperties(klassKlass.getClassBlock().getClassBody().getMemberList());
+  }
+
+  private void annotateDuplicateProperties(List<KlassMember> propertyList) {
     Map<String, Long> propertyCountByName =
         propertyList.stream()
             .map(PsiNamedElement::getName)
