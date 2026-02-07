@@ -10,8 +10,14 @@ import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassEnumerationLiteral;
 import com.klass.intellij.psi.KlassEnumerationProperty;
+import com.klass.intellij.psi.KlassInterface;
 import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassMember;
 import com.klass.intellij.psi.KlassPrimitiveTypeProperty;
+import com.klass.intellij.psi.KlassService;
+import com.klass.intellij.psi.KlassServiceGroup;
+import com.klass.intellij.psi.KlassTopLevelItem;
+import com.klass.intellij.psi.KlassUrlGroup;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassStructureViewModel extends StructureViewModelBase implements ElementInfoProvider {
@@ -25,17 +31,36 @@ public class KlassStructureViewModel extends StructureViewModelBase implements E
   }
 
   @Override
+  protected Class<?> @NotNull [] getSuitableClasses() {
+    return new Class[] {
+      KlassTopLevelItem.class,
+      KlassInterface.class,
+      KlassKlass.class,
+      KlassEnumeration.class,
+      KlassAssociation.class,
+      KlassServiceGroup.class,
+      KlassMember.class,
+      KlassAssociationEnd.class,
+      KlassEnumerationLiteral.class,
+      KlassUrlGroup.class,
+      KlassService.class,
+    };
+  }
+
+  @Override
   public boolean isAlwaysShowsPlus(StructureViewTreeElement element) {
-    return element instanceof KlassKlass
-        || element instanceof KlassAssociation
-        || element instanceof KlassEnumeration;
+    Object value = element.getValue();
+    return value instanceof KlassKlass
+        || value instanceof KlassAssociation
+        || value instanceof KlassEnumeration;
   }
 
   @Override
   public boolean isAlwaysLeaf(StructureViewTreeElement element) {
-    return element instanceof KlassPrimitiveTypeProperty
-        || element instanceof KlassEnumerationProperty
-        || element instanceof KlassAssociationEnd
-        || element instanceof KlassEnumerationLiteral;
+    Object value = element.getValue();
+    return value instanceof KlassPrimitiveTypeProperty
+        || value instanceof KlassEnumerationProperty
+        || value instanceof KlassAssociationEnd
+        || value instanceof KlassEnumerationLiteral;
   }
 }
