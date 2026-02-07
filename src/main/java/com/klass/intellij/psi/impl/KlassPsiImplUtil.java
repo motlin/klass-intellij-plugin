@@ -35,6 +35,7 @@ import com.klass.intellij.psi.KlassPrimitiveTypeProperty;
 import com.klass.intellij.psi.KlassProjection;
 import com.klass.intellij.psi.KlassProjectionName;
 import com.klass.intellij.psi.KlassService;
+import com.klass.intellij.psi.KlassServiceBlock;
 import com.klass.intellij.psi.KlassServiceCriteriaClause;
 import com.klass.intellij.psi.KlassServiceGroup;
 import com.klass.intellij.psi.KlassUrlGroup;
@@ -417,8 +418,12 @@ public class KlassPsiImplUtil {
 
       @Nullable @Override
       public String getLocationString() {
+        KlassServiceBlock serviceBlock = element.getServiceBlock();
+        if (serviceBlock == null) {
+          return null;
+        }
         KlassServiceCriteriaClause serviceCriteriaClause =
-            element.getServiceBlock().getServiceBody().getServiceCriteriaClause();
+            serviceBlock.getServiceBody().getServiceCriteriaClause();
         if (serviceCriteriaClause == null) {
           return null;
         }
