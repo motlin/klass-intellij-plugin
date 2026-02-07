@@ -80,11 +80,13 @@ public class KlassUtil {
     return findElementsOfType(project, KlassProjection.class);
   }
 
+  // Module-scoped: for references, restricts to current module and its dependencies.
   public static <T extends PsiElement> List<T> findElementsOfType(
       @NotNull PsiElement context, @NotNull Class<T> klass) {
     return findElementsOfType(context.getProject(), klass, getModuleScope(context));
   }
 
+  // Project-scoped: for navigation (Go to Class/Symbol), searches all modules.
   public static <T extends PsiElement> List<T> findElementsOfType(
       @NotNull Project project, @NotNull Class<T> klass) {
     return findElementsOfType(project, klass, GlobalSearchScope.allScope(project));
