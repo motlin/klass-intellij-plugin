@@ -1,0 +1,11 @@
+package example
+
+class User
+{
+    <caret>name: String key;
+}
+
+projection UserProjection on User
+{
+    name: "Name",
+}

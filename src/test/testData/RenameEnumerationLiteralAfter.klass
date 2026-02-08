@@ -1,0 +1,7 @@
+package example
+
+enumeration Status
+{
+    ENABLED("Active"),
+    INACTIVE("Inactive"),
+}

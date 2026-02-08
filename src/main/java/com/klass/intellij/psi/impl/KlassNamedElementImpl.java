@@ -33,9 +33,12 @@ public abstract class KlassNamedElementImpl extends ASTWrapperPsiElement {
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
     KlassNombre nombre = getNombre();
     if (nombre != null) {
-      PsiElement identifier = nombre.getFirstChild();
-      if (identifier instanceof LeafPsiElement) {
-        ((LeafPsiElement) identifier).replaceWithText(name);
+      PsiElement nombreText = nombre.getNombreText();
+      if (nombreText != null) {
+        PsiElement identifier = nombreText.getFirstChild();
+        if (identifier instanceof LeafPsiElement) {
+          ((LeafPsiElement) identifier).replaceWithText(name);
+        }
       }
     }
     return this;
