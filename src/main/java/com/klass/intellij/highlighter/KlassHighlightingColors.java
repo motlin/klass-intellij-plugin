@@ -3,16 +3,11 @@ package com.klass.intellij.highlighter;
 import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.BLOCK_COMMENT;
 import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.CLASS_NAME;
 import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.CONSTANT;
-import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.FUNCTION_CALL;
-import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.FUNCTION_DECLARATION;
 import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.INSTANCE_FIELD;
-import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.INTERFACE_NAME;
 import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.LOCAL_VARIABLE;
-import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.METADATA;
 import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.PARAMETER;
 import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.SEMICOLON;
 import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.STATIC_FIELD;
-import static com.intellij.openapi.editor.DefaultLanguageHighlighterColors.STATIC_METHOD;
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
@@ -46,14 +41,9 @@ public class KlassHighlightingColors {
       createTextAttributesKey("KLASS_DOT", DefaultLanguageHighlighterColors.DOT);
   public static final TextAttributesKey KLASS_SEMICOLON =
       createTextAttributesKey("KLASS_SEMICOLON", SEMICOLON);
-  public static final TextAttributesKey DOC_COMMENT_TAG =
-      createTextAttributesKey("KLASS_DOC_TAG", DefaultLanguageHighlighterColors.DOC_COMMENT_TAG);
   public static final TextAttributesKey DOC_COMMENT_MARKUP =
       createTextAttributesKey(
           "KLASS_DOC_MARKUP", DefaultLanguageHighlighterColors.DOC_COMMENT_MARKUP);
-  public static final TextAttributesKey DOC_COMMENT_TAG_VALUE =
-      createTextAttributesKey(
-          "DOC_COMMENT_TAG_VALUE", DefaultLanguageHighlighterColors.DOC_COMMENT_TAG_VALUE);
   public static final TextAttributesKey VALID_STRING_ESCAPE =
       createTextAttributesKey(
           "KLASS_VALID_STRING_ESCAPE", DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE);
@@ -65,11 +55,6 @@ public class KlassHighlightingColors {
       createTextAttributesKey("LOCAL_VARIABLE_ATTRIBUTES", LOCAL_VARIABLE);
   public static final TextAttributesKey PARAMETER_ATTRIBUTES =
       createTextAttributesKey("PARAMETER_ATTRIBUTES", PARAMETER);
-  public static final TextAttributesKey PATH_PARAMETER =
-      createTextAttributesKey("PATH_PARAMETER", PARAMETER_ATTRIBUTES);
-
-  public static final TextAttributesKey LAMBDA_PARAMETER_ATTRIBUTES =
-      createTextAttributesKey("LAMBDA_PARAMETER_ATTRIBUTES", PARAMETER_ATTRIBUTES);
   public static final TextAttributesKey INSTANCE_FIELD_ATTRIBUTES =
       createTextAttributesKey("INSTANCE_FIELD_ATTRIBUTES", INSTANCE_FIELD);
   public static final TextAttributesKey INSTANCE_FINAL_FIELD_ATTRIBUTES =
@@ -82,41 +67,10 @@ public class KlassHighlightingColors {
       createTextAttributesKey("CLASS_NAME_ATTRIBUTES", CLASS_NAME);
   public static final TextAttributesKey PROJECTION_NAME_ATTRIBUTES =
       createTextAttributesKey("PROJECTION_NAME_ATTRIBUTES", CLASS_NAME);
-  public static final TextAttributesKey ANONYMOUS_CLASS_NAME_ATTRIBUTES =
-      createTextAttributesKey("ANONYMOUS_CLASS_NAME_ATTRIBUTES", CLASS_NAME_ATTRIBUTES);
-  public static final TextAttributesKey IMPLICIT_ANONYMOUS_CLASS_PARAMETER_ATTRIBUTES =
-      createTextAttributesKey(
-          "IMPLICIT_ANONYMOUS_CLASS_PARAMETER_ATTRIBUTES", CLASS_NAME_ATTRIBUTES);
-  public static final TextAttributesKey TYPE_PARAMETER_NAME_ATTRIBUTES =
-      createTextAttributesKey("TYPE_PARAMETER_NAME_ATTRIBUTES", PARAMETER);
-  public static final TextAttributesKey INTERFACE_NAME_ATTRIBUTES =
-      createTextAttributesKey("INTERFACE_NAME_ATTRIBUTES", INTERFACE_NAME);
   public static final TextAttributesKey ENUM_NAME_ATTRIBUTES =
       createTextAttributesKey("ENUM_NAME_ATTRIBUTES", CLASS_NAME_ATTRIBUTES);
   public static final TextAttributesKey ENUM_LITERAL_ATTRIBUTES =
       createTextAttributesKey("ENUM_LITERAL_ATTRIBUTES", CONSTANT);
-  public static final TextAttributesKey ABSTRACT_CLASS_NAME_ATTRIBUTES =
-      createTextAttributesKey("ABSTRACT_CLASS_NAME_ATTRIBUTES", CLASS_NAME_ATTRIBUTES);
-  public static final TextAttributesKey METHOD_CALL_ATTRIBUTES =
-      createTextAttributesKey("METHOD_CALL_ATTRIBUTES", FUNCTION_CALL);
-  public static final TextAttributesKey METHOD_DECLARATION_ATTRIBUTES =
-      createTextAttributesKey("METHOD_DECLARATION_ATTRIBUTES", FUNCTION_DECLARATION);
-  public static final TextAttributesKey STATIC_METHOD_ATTRIBUTES =
-      createTextAttributesKey("STATIC_METHOD_ATTRIBUTES", STATIC_METHOD);
-  public static final TextAttributesKey ABSTRACT_METHOD_ATTRIBUTES =
-      createTextAttributesKey("ABSTRACT_METHOD_ATTRIBUTES", METHOD_CALL_ATTRIBUTES);
-  public static final TextAttributesKey INHERITED_METHOD_ATTRIBUTES =
-      createTextAttributesKey("INHERITED_METHOD_ATTRIBUTES", METHOD_CALL_ATTRIBUTES);
-  public static final TextAttributesKey CONSTRUCTOR_CALL_ATTRIBUTES =
-      createTextAttributesKey("CONSTRUCTOR_CALL_ATTRIBUTES", FUNCTION_CALL);
-  public static final TextAttributesKey CONSTRUCTOR_DECLARATION_ATTRIBUTES =
-      createTextAttributesKey("CONSTRUCTOR_DECLARATION_ATTRIBUTES", FUNCTION_DECLARATION);
-  public static final TextAttributesKey ANNOTATION_NAME_ATTRIBUTES =
-      createTextAttributesKey("ANNOTATION_NAME_ATTRIBUTES", METADATA);
-  public static final TextAttributesKey ANNOTATION_ATTRIBUTE_NAME_ATTRIBUTES =
-      createTextAttributesKey("ANNOTATION_ATTRIBUTE_NAME_ATTRIBUTES", METADATA);
-  public static final TextAttributesKey ANNOTATION_ATTRIBUTE_VALUE_ATTRIBUTES =
-      createTextAttributesKey("ANNOTATION_ATTRIBUTE_VALUE_ATTRIBUTES", METADATA);
 
   public static final TextAttributesKey VERB = createTextAttributesKey("VERB", KEYWORD);
   public static final TextAttributesKey URL_CONSTANT =

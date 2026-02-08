@@ -6,16 +6,16 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.klass.intellij.KlassUtil;
+import com.klass.intellij.psi.KlassClassifierName;
 import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassInterface;
 import com.klass.intellij.psi.KlassKlass;
-import com.klass.intellij.psi.KlassKlassName;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -37,10 +37,9 @@ public class KlassClassifierReference extends PsiPolyVariantReferenceBase<PsiEle
 
   @NotNull @Override
   public ResolveResult[] multiResolve(boolean incompleteCode) {
-    Project project = this.myElement.getProject();
     // TODO: Combine
     ResolveResult[] interfaceResolveResults =
-        KlassUtil.findInterfaces(project).stream()
+        KlassUtil.findInterfaces(this.myElement).stream()
             .filter(klassInterface -> klassInterface.getName().equals(this.name))
             .map(PsiElementResolveResult::new)
             .toArray(ResolveResult[]::new);
@@ -49,7 +48,7 @@ public class KlassClassifierReference extends PsiPolyVariantReferenceBase<PsiEle
     }
 
     ResolveResult[] klassResolveResults =
-        KlassUtil.findClasses(project).stream()
+        KlassUtil.findClasses(this.myElement).stream()
             .filter(klass -> klass.getName().equals(this.name))
             .map(PsiElementResolveResult::new)
             .toArray(ResolveResult[]::new);
@@ -62,19 +61,24 @@ public class KlassClassifierReference extends PsiPolyVariantReferenceBase<PsiEle
 
   @NotNull @Override
   public Object[] getVariants() {
-    // TODO: Interfaces
-    Project project = this.myElement.getProject();
-    List<KlassKlass> klassKlasses = KlassUtil.findClasses(project);
     List<LookupElement> variants = new ArrayList<>();
     BracketsInsertHandler insertHandler = new BracketsInsertHandler();
-    for (KlassKlass klassKlass : klassKlasses) {
+    for (KlassInterface klassInterface : KlassUtil.findInterfaces(this.myElement)) {
+      if (klassInterface.getName() != null && !klassInterface.getName().isEmpty()) {
+        variants.add(
+            LookupElementBuilder.create(klassInterface.getName())
+                .withIcon(AllIcons.Nodes.Interface)
+                .withTypeText(klassInterface.getContainingFile().getName())
+                .withInsertHandler(insertHandler));
+      }
+    }
+    for (KlassKlass klassKlass : KlassUtil.findClasses(this.myElement)) {
       if (klassKlass.getName() != null && !klassKlass.getName().isEmpty()) {
-        LookupElementBuilder lookupElementBuilder =
+        variants.add(
             LookupElementBuilder.create(klassKlass.getName())
                 .withIcon(AllIcons.Nodes.Class)
                 .withTypeText(klassKlass.getContainingFile().getName())
-                .withInsertHandler(insertHandler);
-        variants.add(lookupElementBuilder);
+                .withInsertHandler(insertHandler));
       }
     }
     return variants.toArray();
@@ -95,10 +99,10 @@ public class KlassClassifierReference extends PsiPolyVariantReferenceBase<PsiEle
   public PsiElement handleElementRename(String newElementName) {
     ASTNode node = this.myElement.getNode();
     if (node != null) {
-      KlassKlassName klassName =
-          KlassElementFactory.createKlassName(this.myElement.getProject(), newElementName);
+      KlassClassifierName classifierName =
+          KlassElementFactory.createClassifierName(this.myElement.getProject(), newElementName);
 
-      ASTNode newNode = klassName.getNode();
+      ASTNode newNode = classifierName.getNode();
       node.getTreeParent().replaceChild(node, newNode);
     }
     return this.myElement;

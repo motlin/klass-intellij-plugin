@@ -323,13 +323,28 @@ public class KlassElementFactory {
             project,
             "package dummy\n"
                 + "\n"
+                + "class DummyClass extends "
+                + newElementName
+                + "\n"
+                + "{\n"
+                + "}\n");
+    KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
+    return klassKlass.getExtendsClause().getKlassName();
+  }
+
+  public static KlassClassifierName createClassifierName(Project project, String newElementName) {
+    KlassFile file =
+        KlassElementFactory.createFile(
+            project,
+            "package dummy\n"
+                + "\n"
                 + "projection DummyProjection on "
                 + newElementName
                 + "\n"
                 + "{\n"
                 + "}\n");
     KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
-    return klassProjection.getKlassName();
+    return klassProjection.getClassifierName();
   }
 
   public static KlassAssociationEndName createAssociationEndName(

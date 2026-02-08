@@ -6,7 +6,6 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
@@ -14,8 +13,8 @@ import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.klass.intellij.KlassUtil;
 import com.klass.intellij.psi.KlassElementFactory;
+import com.klass.intellij.psi.KlassInterface;
 import com.klass.intellij.psi.KlassInterfaceName;
-import com.klass.intellij.psi.KlassKlass;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -37,9 +36,8 @@ public class KlassInterfaceReference extends PsiPolyVariantReferenceBase<PsiElem
 
   @NotNull @Override
   public ResolveResult[] multiResolve(boolean incompleteCode) {
-    Project project = this.myElement.getProject();
     ResolveResult[] interfaceResolveResults =
-        KlassUtil.findInterfaces(project).stream()
+        KlassUtil.findInterfaces(this.myElement).stream()
             .filter(klassInterface -> klassInterface.getName().equals(this.name))
             .map(PsiElementResolveResult::new)
             .toArray(ResolveResult[]::new);
@@ -52,18 +50,14 @@ public class KlassInterfaceReference extends PsiPolyVariantReferenceBase<PsiElem
 
   @NotNull @Override
   public Object[] getVariants() {
-    // TODO: Interfaces
-    Project project = this.myElement.getProject();
-    List<KlassKlass> klassKlasses = KlassUtil.findClasses(project);
+    List<KlassInterface> interfaces = KlassUtil.findInterfaces(this.myElement);
     List<LookupElement> variants = new ArrayList<>();
-    BracketsInsertHandler insertHandler = new BracketsInsertHandler();
-    for (KlassKlass klassKlass : klassKlasses) {
-      if (klassKlass.getName() != null && !klassKlass.getName().isEmpty()) {
+    for (KlassInterface klassInterface : interfaces) {
+      if (klassInterface.getName() != null && !klassInterface.getName().isEmpty()) {
         LookupElementBuilder lookupElementBuilder =
-            LookupElementBuilder.create(klassKlass.getName())
-                .withIcon(AllIcons.Nodes.Class)
-                .withTypeText(klassKlass.getContainingFile().getName())
-                .withInsertHandler(insertHandler);
+            LookupElementBuilder.create(klassInterface.getName())
+                .withIcon(AllIcons.Nodes.Interface)
+                .withTypeText(klassInterface.getContainingFile().getName());
         variants.add(lookupElementBuilder);
       }
     }

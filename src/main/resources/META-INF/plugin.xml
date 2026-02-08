@@ -16,7 +16,6 @@
         <lang.syntaxHighlighterFactory language="Klass" implementationClass="com.klass.intellij.highlighter.KlassSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="com.klass.intellij.highlighter.KlassColorSettingsPage"/>
         <completion.contributor language="Klass" implementationClass="com.klass.intellij.completion.KlassCompletionContributor"/>
-        <psi.referenceContributor implementation="com.klass.intellij.reference.KlassReferenceContributor"/>
         <annotator language="Klass" implementationClass="com.klass.intellij.highlighter.KlassAnnotator"/>
         <lang.refactoringSupport language="Klass" implementationClass="com.klass.intellij.refactor.KlassRefactoringSupportProvider"/>
         <lang.findUsagesProvider language="Klass" implementationClass="com.klass.intellij.usages.KlassFindUsagesProvider"/>

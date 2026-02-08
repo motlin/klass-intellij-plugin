@@ -1,7 +1,6 @@
 package com.klass.intellij.reference;
 
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
@@ -26,8 +25,7 @@ public class KlassExpressionNativeValueReference extends PsiPolyVariantReference
 
   @NotNull @Override
   public ResolveResult[] multiResolve(boolean incompleteCode) {
-    Project project = this.myElement.getProject();
-    return KlassUtil.findClasses(project).stream()
+    return KlassUtil.findClasses(this.myElement).stream()
         .filter(klassKlass -> klassKlass.getFirstChild().getText().equals("user"))
         .map(PsiElementResolveResult::new)
         .toArray(ResolveResult[]::new);
