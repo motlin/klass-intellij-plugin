@@ -1,0 +1,13 @@
+package example
+
+class User
+{
+    name: String key;
+}
+
+association UserStatus
+{
+    user: <error descr="Cannot resolve symbol 'NonExistent'">NonExistent</error>[1..1];
+    status: User[0..*];
+    relationship this.<error descr="Cannot resolve symbol 'name'">name</error> == User.name
+}

@@ -1,0 +1,6 @@
+package example
+
+class User implements <error descr="Cannot resolve symbol 'NonExistent'">NonExistent</error>
+{
+    name: String key;
+}
