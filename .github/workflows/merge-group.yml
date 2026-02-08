@@ -57,6 +57,20 @@ jobs:
                   name: pluginVerifier-result
                   path: build/reports/pluginVerifier
 
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: actions/setup-java@v5
+              with:
+                  distribution: "temurin"
+                  java-version: "21"
+
+            - uses: gradle/actions/setup-gradle@v5
+
+            - run: ./gradlew test
+
     prettier:
         runs-on: ubuntu-latest
         steps:
@@ -106,7 +120,7 @@ jobs:
     all-checks:
         name: All checks
         if: ${{ !cancelled() }}
-        needs: [pre-commit, build, verify, prettier, biome, reviewdog-markdownlint, reviewdog-actionlint]
+        needs: [pre-commit, build, test, verify, prettier, biome, reviewdog-markdownlint, reviewdog-actionlint]
         runs-on: ubuntu-latest
         steps:
             - uses: re-actors/alls-green@release/v1
