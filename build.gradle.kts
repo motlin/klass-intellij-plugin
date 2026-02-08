@@ -1,4 +1,5 @@
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
     id("java")
@@ -28,10 +29,13 @@ dependencies {
         intellijIdeaCommunity("2024.3")
         bundledPlugin("com.intellij.java")
         pluginVerifier()
+        testFramework(TestFrameworkType.Platform)
     }
 
     implementation("org.eclipse.collections:eclipse-collections-api:13.0.0")
     implementation("org.eclipse.collections:eclipse-collections:13.0.0")
+
+    testImplementation("junit:junit:4.13.2")
 }
 
 intellijPlatform {
@@ -66,7 +70,7 @@ grammarKit {
 
 spotless {
     java {
-        target("src/main/java/**/*.java")
+        target("src/main/java/**/*.java", "src/test/java/**/*.java")
         googleJavaFormat("1.25.2")
         formatAnnotations()
     }
@@ -107,6 +111,14 @@ sourceSets {
         }
         resources {
             srcDirs("src/main/resources")
+        }
+    }
+    test {
+        java {
+            srcDirs("src/test/java")
+        }
+        resources {
+            srcDirs("src/test/testData")
         }
     }
 }
