@@ -1,0 +1,41 @@
+package example
+
+interface Named
+{
+    name: String key;
+}
+
+class User implements Named
+{
+    name: String key;
+    email: String;
+    age: Integer;
+}
+
+enumeration Status
+{
+    ACTIVE("Active"),
+    INACTIVE("Inactive"),
+}
+
+association UserStatus
+{
+    user: User[1..1];
+    status: User[0..*];
+    relationship this.name == User.name
+}
+
+projection UserProjection on User
+{
+    name: "Name",
+    email: "Email",
+}
+
+service UserService on User
+{
+    /user
+        GET
+        {
+            multiplicity: one;
+        }
+}
