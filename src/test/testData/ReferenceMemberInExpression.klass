@@ -1,0 +1,14 @@
+package example
+
+class User
+{
+    name: String key;
+    email: String;
+}
+
+association UserFriend
+{
+    user: User[1..1];
+    friend: User[0..*];
+    relationship this.<caret>name == User.name
+}
