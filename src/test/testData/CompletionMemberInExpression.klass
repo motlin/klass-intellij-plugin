@@ -1,0 +1,19 @@
+package example
+
+class User
+{
+    name: String key;
+    email: String;
+}
+
+class Order
+{
+    id: String key;
+}
+
+association UserOrder
+{
+    user: User[1..1];
+    order: Order[0..*];
+    relationship this.name == User.<caret>name
+}

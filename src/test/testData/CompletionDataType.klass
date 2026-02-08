@@ -1,0 +1,6 @@
+package example
+
+class User
+{
+    name: <caret>String key;
+}

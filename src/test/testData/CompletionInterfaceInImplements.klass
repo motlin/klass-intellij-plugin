@@ -1,0 +1,16 @@
+package example
+
+interface Named
+{
+    name: String key;
+}
+
+interface Versioned
+{
+    version: Integer key;
+}
+
+class User implements <caret>Named
+{
+    name: String key;
+}
