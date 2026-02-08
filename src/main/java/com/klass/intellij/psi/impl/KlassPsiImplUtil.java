@@ -15,6 +15,7 @@ import com.klass.intellij.psi.KlassDummyMultiplicity;
 import com.klass.intellij.psi.KlassElementFactory;
 import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassEnumerationLiteral;
+import com.klass.intellij.psi.KlassEnumerationPrettyName;
 import com.klass.intellij.psi.KlassEnumerationProperty;
 import com.klass.intellij.psi.KlassEnumerationType;
 import com.klass.intellij.psi.KlassExpressionNativeValue;
@@ -406,6 +407,12 @@ public class KlassPsiImplUtil {
   public static ItemPresentation getPresentation(KlassParameterizedPropertySignature element) {
     String locationString =
         element.getClassifierName().getText() + element.getMultiplicity().getText();
+    return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
+  }
+
+  public static ItemPresentation getPresentation(KlassEnumerationLiteral element) {
+    KlassEnumerationPrettyName prettyName = element.getEnumerationPrettyName();
+    String locationString = prettyName != null ? prettyName.getText() : null;
     return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
   }
 

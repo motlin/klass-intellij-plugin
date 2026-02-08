@@ -5,17 +5,27 @@ import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.klass.intellij.psi.KlassAssociation;
+import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassEnumeration;
+import com.klass.intellij.psi.KlassEnumerationLiteral;
+import com.klass.intellij.psi.KlassEnumerationProperty;
 import com.klass.intellij.psi.KlassFile;
 import com.klass.intellij.psi.KlassInterface;
 import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassParameterizedProperty;
+import com.klass.intellij.psi.KlassParameterizedPropertySignature;
+import com.klass.intellij.psi.KlassPrimitiveTypeProperty;
+import com.klass.intellij.psi.KlassProjection;
+import com.klass.intellij.psi.KlassService;
 import com.klass.intellij.psi.KlassServiceGroup;
 import com.klass.intellij.psi.KlassTopLevelItem;
 import com.klass.intellij.psi.KlassUrlGroup;
 import com.klass.intellij.psi.impl.KlassPsiImplUtil;
 import java.util.Arrays;
+import javax.swing.*;
 
 public class KlassStructureViewElement implements StructureViewTreeElement {
   private final PsiElement element;
@@ -49,8 +59,22 @@ public class KlassStructureViewElement implements StructureViewTreeElement {
 
   @Override
   public ItemPresentation getPresentation() {
-    // Grammar-Kit does not generate getPresentation() delegation to KlassPsiImplUtil,
-    // so we call KlassPsiImplUtil directly for each PSI element type.
+    // Grammar-Kit does not generate getPresentation() delegation to KlassPsiImplUtil
+    // (purgeOldFiles deletes generated types before the util class is scanned for methods).
+    // Call KlassPsiImplUtil directly for every PSI type that appears in the structure view.
+    if (this.element instanceof PsiFile psiFile) {
+      return new ItemPresentation() {
+        @Override
+        public String getPresentableText() {
+          return psiFile.getName();
+        }
+
+        @Override
+        public Icon getIcon(boolean unused) {
+          return psiFile.getIcon(0);
+        }
+      };
+    }
     if (this.element instanceof KlassInterface klassInterface) {
       return KlassPsiImplUtil.getPresentation(klassInterface);
     }
@@ -63,14 +87,39 @@ public class KlassStructureViewElement implements StructureViewTreeElement {
     if (this.element instanceof KlassAssociation klassAssociation) {
       return KlassPsiImplUtil.getPresentation(klassAssociation);
     }
+    if (this.element instanceof KlassProjection klassProjection) {
+      return KlassPsiImplUtil.getPresentation(klassProjection);
+    }
     if (this.element instanceof KlassServiceGroup klassServiceGroup) {
       return KlassPsiImplUtil.getPresentation(klassServiceGroup);
     }
     if (this.element instanceof KlassUrlGroup klassUrlGroup) {
       return KlassPsiImplUtil.getPresentation(klassUrlGroup);
     }
-    if (this.element instanceof NavigationItem) {
-      return ((NavigationItem) this.element).getPresentation();
+    if (this.element instanceof KlassPrimitiveTypeProperty primitiveTypeProperty) {
+      return KlassPsiImplUtil.getPresentation(primitiveTypeProperty);
+    }
+    if (this.element instanceof KlassEnumerationProperty enumerationProperty) {
+      return KlassPsiImplUtil.getPresentation(enumerationProperty);
+    }
+    if (this.element instanceof KlassParameterizedProperty parameterizedProperty) {
+      return KlassPsiImplUtil.getPresentation(parameterizedProperty);
+    }
+    if (this.element
+        instanceof KlassParameterizedPropertySignature parameterizedPropertySignature) {
+      return KlassPsiImplUtil.getPresentation(parameterizedPropertySignature);
+    }
+    if (this.element instanceof KlassAssociationEnd associationEnd) {
+      return KlassPsiImplUtil.getPresentation(associationEnd);
+    }
+    if (this.element instanceof KlassEnumerationLiteral enumerationLiteral) {
+      return KlassPsiImplUtil.getPresentation(enumerationLiteral);
+    }
+    if (this.element instanceof KlassService klassService) {
+      return KlassPsiImplUtil.getPresentation(klassService);
+    }
+    if (this.element instanceof NavigationItem navigationItem) {
+      return navigationItem.getPresentation();
     }
     return null;
   }
