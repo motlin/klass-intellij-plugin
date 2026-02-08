@@ -1,0 +1,13 @@
+package example
+
+class User
+{
+    fullName: String key;
+}
+
+association UserStatus
+{
+    user: User[1..1];
+    status: User[0..*];
+    relationship this.fullName == User.fullName
+}

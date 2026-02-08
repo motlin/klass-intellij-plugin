@@ -1,0 +1,11 @@
+package example
+
+class User
+{
+    fullName: String key;
+}
+
+projection UserProjection on User
+{
+    fullName: "Name",
+}
