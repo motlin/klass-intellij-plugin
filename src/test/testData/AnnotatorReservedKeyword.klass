@@ -1,0 +1,6 @@
+package example
+
+class <error descr="Reserved Java keyword">class</error>
+{
+    <error descr="Reserved Java keyword">import</error>: String key;
+}

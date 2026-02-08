@@ -1,0 +1,26 @@
+package example
+
+interface Named
+{
+    name: String key;
+}
+
+class User implements Named
+{
+    name: String key;
+    email: String;
+    age: Integer;
+}
+
+enumeration Status
+{
+    ACTIVE("Active"),
+    INACTIVE("Inactive"),
+}
+
+association UserFriend
+{
+    user: User[1..1];
+    friend: User[0..*];
+    relationship this.name == User.name
+}

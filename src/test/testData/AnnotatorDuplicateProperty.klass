@@ -1,0 +1,8 @@
+package example
+
+class User
+{
+    <error descr="Duplicate property 'name'">name</error>: String key;
+    email: String;
+    <error descr="Duplicate property 'name'">name</error>: Integer;
+}

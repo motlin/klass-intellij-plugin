@@ -1,0 +1,7 @@
+package example
+
+class User
+{
+    name: String key;
+    status: <error descr="Cannot resolve symbol 'NonExistent'">NonExistent</error>;
+}
