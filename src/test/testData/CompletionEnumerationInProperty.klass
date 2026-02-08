@@ -1,0 +1,19 @@
+package example
+
+enumeration Status
+{
+    ACTIVE("Active"),
+    INACTIVE("Inactive"),
+}
+
+enumeration Priority
+{
+    HIGH("High"),
+    LOW("Low"),
+}
+
+class User
+{
+    name: String key;
+    status: <caret>Status;
+}

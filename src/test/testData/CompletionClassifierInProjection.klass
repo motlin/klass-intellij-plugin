@@ -1,0 +1,17 @@
+package example
+
+interface Named
+{
+    name: String key;
+}
+
+class User implements Named
+{
+    name: String key;
+    email: String;
+}
+
+projection UserProjection on <caret>User
+{
+    name: "Name",
+}
