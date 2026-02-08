@@ -1,0 +1,11 @@
+package example
+
+interface <caret>Named
+{
+    name: String key;
+}
+
+class User implements Named
+{
+    name: String key;
+}
