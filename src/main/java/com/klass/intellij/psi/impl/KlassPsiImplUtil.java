@@ -2,17 +2,13 @@ package com.klass.intellij.psi.impl;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.icons.AllIcons.Nodes;
-import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassAssociationEndName;
-import com.klass.intellij.psi.KlassAssociationEndSignature;
 import com.klass.intellij.psi.KlassClassifierName;
 import com.klass.intellij.psi.KlassDummyMultiplicity;
-import com.klass.intellij.psi.KlassElementFactory;
 import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassEnumerationLiteral;
 import com.klass.intellij.psi.KlassEnumerationPrettyName;
@@ -26,7 +22,6 @@ import com.klass.intellij.psi.KlassKlass;
 import com.klass.intellij.psi.KlassKlassName;
 import com.klass.intellij.psi.KlassMemberName;
 import com.klass.intellij.psi.KlassOptionalMarker;
-import com.klass.intellij.psi.KlassParameterDeclaration;
 import com.klass.intellij.psi.KlassParameterName;
 import com.klass.intellij.psi.KlassParameterizedProperty;
 import com.klass.intellij.psi.KlassParameterizedPropertyName;
@@ -57,146 +52,6 @@ import javax.swing.*;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassPsiImplUtil {
-  public static PsiElement setName(KlassInterface element, String newName) {
-    ASTNode classNameNode = element.getNombre().getNode();
-    if (classNameNode != null) {
-      KlassInterface klassInterface =
-          KlassElementFactory.createInterface(element.getProject(), newName);
-      ASTNode newInterfaceNameNode = klassInterface.getNombre().getNode();
-      element.getNode().replaceChild(classNameNode, newInterfaceNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassKlass element, String newName) {
-    ASTNode classNameNode = element.getNombre().getNode();
-    if (classNameNode != null) {
-      KlassKlass klass = KlassElementFactory.createClass(element.getProject(), newName);
-      ASTNode newClassNameNode = klass.getNombre().getNode();
-      element.getNode().replaceChild(classNameNode, newClassNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassEnumeration element, String newName) {
-    ASTNode classNameNode = element.getNombre().getNode();
-    if (classNameNode != null) {
-      KlassEnumeration klass = KlassElementFactory.createEnumeration(element.getProject(), newName);
-      ASTNode newEnumerationNameNode = klass.getNombre().getNode();
-      element.getNode().replaceChild(classNameNode, newEnumerationNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassAssociation element, String newName) {
-    ASTNode associationNameNode = element.getNombre().getNode();
-    if (associationNameNode != null) {
-      KlassAssociation association =
-          KlassElementFactory.createAssociation(element.getProject(), newName);
-      ASTNode newAssociationNameNode = association.getNombre().getNode();
-      element.getNode().replaceChild(associationNameNode, newAssociationNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassProjection element, String newName) {
-    ASTNode classNameNode = element.getNombre().getNode();
-    if (classNameNode != null) {
-      KlassProjection klass = KlassElementFactory.createProjection(element.getProject(), newName);
-      ASTNode newProjectionNameNode = klass.getNombre().getNode();
-      element.getNode().replaceChild(classNameNode, newProjectionNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassPrimitiveTypeProperty element, String newName) {
-    ASTNode primitivePropertyNameNode = element.getNombre().getNode();
-    if (primitivePropertyNameNode != null) {
-      KlassPrimitiveTypeProperty primitiveTypeProperty =
-          KlassElementFactory.createPrimitiveTypeProperty(element.getProject(), newName);
-      ASTNode newPrimitivePropertyNameNode = primitiveTypeProperty.getNombre().getNode();
-      element.getNode().replaceChild(primitivePropertyNameNode, newPrimitivePropertyNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassEnumerationProperty element, String newName) {
-    ASTNode primitivePropertyNameNode = element.getNombre().getNode();
-    if (primitivePropertyNameNode != null) {
-      KlassEnumerationProperty enumerationProperty =
-          KlassElementFactory.createEnumerationProperty(element.getProject(), newName);
-      ASTNode newPrimitivePropertyNameNode = enumerationProperty.getNombre().getNode();
-      element.getNode().replaceChild(primitivePropertyNameNode, newPrimitivePropertyNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassParameterizedProperty element, String newName) {
-    ASTNode primitivePropertyNameNode = element.getNombre().getNode();
-    if (primitivePropertyNameNode != null) {
-      KlassParameterizedProperty parameterizedProperty =
-          KlassElementFactory.createParameterizedProperty(element.getProject(), newName);
-      ASTNode newPrimitivePropertyNameNode = parameterizedProperty.getNombre().getNode();
-      element.getNode().replaceChild(primitivePropertyNameNode, newPrimitivePropertyNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassParameterizedPropertySignature element, String newName) {
-    ASTNode primitivePropertyNameNode = element.getNombre().getNode();
-    if (primitivePropertyNameNode != null) {
-      KlassParameterizedPropertySignature parameterizedPropertySignature =
-          KlassElementFactory.createParameterizedPropertySignature(element.getProject(), newName);
-      ASTNode newPrimitivePropertyNameNode = parameterizedPropertySignature.getNombre().getNode();
-      element.getNode().replaceChild(primitivePropertyNameNode, newPrimitivePropertyNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassAssociationEnd element, String newName) {
-    ASTNode associationEndNameNode = element.getNombre().getNode();
-    if (associationEndNameNode != null) {
-      KlassAssociationEnd associationEnd =
-          KlassElementFactory.createAssociationEnd(element.getProject(), newName);
-      ASTNode newAssociationEndNameNode = associationEnd.getNombre().getNode();
-      element.getNode().replaceChild(associationEndNameNode, newAssociationEndNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassAssociationEndSignature element, String newName) {
-    ASTNode associationEndNameNode = element.getNombre().getNode();
-    if (associationEndNameNode != null) {
-      KlassAssociationEndSignature associationEndSignature =
-          KlassElementFactory.createAssociationEndSignature(element.getProject(), newName);
-      ASTNode newAssociationEndSignatureNameNode = associationEndSignature.getNombre().getNode();
-      element.getNode().replaceChild(associationEndNameNode, newAssociationEndSignatureNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassParameterDeclaration element, String newName) {
-    ASTNode classNameNode = element.getNombre().getNode();
-    if (classNameNode != null) {
-      KlassParameterDeclaration klass =
-          KlassElementFactory.createParameterDeclaration(element.getProject(), newName);
-      ASTNode newPathParameterNameNode = klass.getNombre().getNode();
-      element.getNode().replaceChild(classNameNode, newPathParameterNameNode);
-    }
-    return element;
-  }
-
-  public static PsiElement setName(KlassEnumerationLiteral element, String newName) {
-    ASTNode primitiveLiteralNameNode = element.getNombre().getNode();
-    if (primitiveLiteralNameNode != null) {
-      KlassEnumerationLiteral enumerationLiteral =
-          KlassElementFactory.createEnumerationLiteral(element.getProject(), newName);
-      ASTNode newPrimitiveLiteralNameNode = enumerationLiteral.getNombre().getNode();
-      element.getNode().replaceChild(primitiveLiteralNameNode, newPrimitiveLiteralNameNode);
-    }
-    return element;
-  }
-
   public static PsiReference getReference(KlassClassifierName klassClassifierName) {
     String classifierName = klassClassifierName.getText();
     if (classifierName == null) {

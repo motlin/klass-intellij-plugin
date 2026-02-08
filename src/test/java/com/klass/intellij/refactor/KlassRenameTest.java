@@ -40,4 +40,32 @@ public class KlassRenameTest extends BasePlatformTestCase {
     myFixture.testRename(
         "RenameEnumerationLiteralBefore.klass", "RenameEnumerationLiteralAfter.klass", "ENABLED");
   }
+
+  public void testRenameMemberPropertyFromReference() {
+    myFixture.testRename(
+        "RenameMemberPropertyFromReferenceBefore.klass",
+        "RenameMemberPropertyFromReferenceAfter.klass",
+        "fullName");
+  }
+
+  public void testRenameMemberPropertyFromCriteria() {
+    myFixture.testRename(
+        "RenameMemberPropertyFromCriteriaBefore.klass",
+        "RenameMemberPropertyFromCriteriaAfter.klass",
+        "fullName");
+  }
+
+  public void testRenameInterfaceFromReference() {
+    myFixture.testRename(
+        "RenameInterfaceFromReferenceBefore.klass",
+        "RenameInterfaceFromReferenceAfter.klass",
+        "Identifiable");
+  }
+
+  public void testRenameEnumerationFromReference() {
+    myFixture.testRename(
+        "RenameEnumerationFromReferenceBefore.klass",
+        "RenameEnumerationFromReferenceAfter.klass",
+        "State");
+  }
 }
