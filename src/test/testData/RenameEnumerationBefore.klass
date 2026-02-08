@@ -1,0 +1,13 @@
+package example
+
+enumeration <caret>Status
+{
+    ACTIVE("Active"),
+    INACTIVE("Inactive"),
+}
+
+class User
+{
+    name: String key;
+    status: Status;
+}

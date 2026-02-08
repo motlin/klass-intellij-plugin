@@ -1,0 +1,13 @@
+package example
+
+enumeration State
+{
+    ACTIVE("Active"),
+    INACTIVE("Inactive"),
+}
+
+class User
+{
+    name: String key;
+    status: State;
+}

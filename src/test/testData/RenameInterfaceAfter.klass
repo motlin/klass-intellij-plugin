@@ -1,0 +1,11 @@
+package example
+
+interface Identifiable
+{
+    name: String key;
+}
+
+class User implements Identifiable
+{
+    name: String key;
+}
