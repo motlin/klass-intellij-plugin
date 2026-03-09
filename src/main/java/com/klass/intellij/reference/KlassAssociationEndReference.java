@@ -152,6 +152,14 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
           .toArray(ResolveResult[]::new);
     }
 
+    if (this.associationEndName.equals("createdBy")
+        || this.associationEndName.equals("lastUpdatedBy")) {
+      return klassKlass.getClassModifierList().stream()
+          .filter(classModifier -> classModifier.getText().equals("audited"))
+          .map(classModifier -> new PsiElementResolveResult(classModifier))
+          .toArray(ResolveResult[]::new);
+    }
+
     return new ResolveResult[] {};
   }
 

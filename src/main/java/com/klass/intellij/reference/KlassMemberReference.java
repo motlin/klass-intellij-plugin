@@ -47,6 +47,7 @@ import com.klass.intellij.psi.KlassProjectionAssociationEndNode;
 import com.klass.intellij.psi.KlassProjectionLeafNode;
 import com.klass.intellij.psi.KlassProjectionParameterizedPropertyNode;
 import com.klass.intellij.psi.KlassServiceGroup;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -60,6 +61,8 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
       Lists.immutable.with("valid", "validFrom", "validTo");
   public static final ImmutableList<String> SYSTEM_PROPERTIES =
       Lists.immutable.with("system", "systemFrom", "systemTo");
+  public static final ImmutableList<String> AUDIT_PROPERTIES =
+      Lists.immutable.with("createdById", "createdOn", "lastUpdatedById");
   private final String propertyName;
 
   public KlassMemberReference(@NotNull PsiElement element, String propertyName) {
@@ -506,15 +509,36 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
     if (klassKlass == null) {
       return new Object[] {};
     }
-    return Objects.requireNonNull(klassKlass)
-        .getClassBlock()
-        .getClassBody()
-        .getMemberList()
-        .stream()
+    List<Object> lookups = new ArrayList<>();
+    klassKlass.getClassBlock().getClassBody().getMemberList().stream()
         .map(PsiNamedElement::getName)
         .map(LookupElementBuilder::create)
         .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Property))
-        .toArray();
+        .forEach(lookups::add);
+
+    this.addMacroPropertyLookups(klassKlass.getClassModifierList(), lookups);
+
+    return lookups.toArray();
+  }
+
+  private void addMacroPropertyLookups(
+      List<KlassClassModifier> classModifierList, List<Object> lookups) {
+    for (KlassClassModifier modifier : classModifierList) {
+      String text = modifier.getText();
+      ImmutableList<String> macroProperties =
+          switch (text) {
+            case "audited" -> AUDIT_PROPERTIES;
+            case "validTemporal" -> VALID_PROPERTIES;
+            case "systemTemporal" -> SYSTEM_PROPERTIES;
+            case "bitemporal" -> VALID_PROPERTIES.newWithAll(SYSTEM_PROPERTIES);
+            default -> Lists.immutable.empty();
+          };
+      macroProperties.stream()
+          .map(LookupElementBuilder::create)
+          .map(builder -> builder.withIcon(AllIcons.Nodes.Property))
+          .map(builder -> builder.withTypeText("macro: " + text))
+          .forEach(lookups::add);
+    }
   }
 
   private Object[] getInterfaceMemberLookups(KlassInterface klassInterface) {
@@ -551,6 +575,9 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
     if (SYSTEM_PROPERTIES.contains(this.propertyName)) {
       return this.getTemporalReference("systemTemporal", classModifierList);
     }
+    if (AUDIT_PROPERTIES.contains(this.propertyName)) {
+      return this.getModifierReference("audited", classModifierList);
+    }
     return resolveResults;
   }
 
@@ -561,6 +588,14 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
             classModifier ->
                 classModifier.getText().equals(temporalKeyword)
                     || classModifier.getText().equals("bitemporal"))
+        .map(PsiElementResolveResult::new)
+        .toArray(ResolveResult[]::new);
+  }
+
+  @NotNull private ResolveResult[] getModifierReference(
+      String modifierKeyword, List<KlassClassModifier> classModifierList) {
+    return classModifierList.stream()
+        .filter(classModifier -> classModifier.getText().equals(modifierKeyword))
         .map(PsiElementResolveResult::new)
         .toArray(ResolveResult[]::new);
   }
