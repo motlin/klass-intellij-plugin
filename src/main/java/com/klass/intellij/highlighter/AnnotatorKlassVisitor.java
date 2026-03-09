@@ -656,19 +656,28 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
       if (resolve instanceof KlassClassModifier) {
         KlassClassModifier classModifier = (KlassClassModifier) resolve;
         String modifierText = classModifier.getText();
-        if (!TEMPORAL_PROPERTY_MODIFIERS.contains(modifierText)) {
-          throw new AssertionError(modifierText);
+        if (TEMPORAL_PROPERTY_MODIFIERS.contains(modifierText)) {
+          Type instantType =
+              new Type(DataTypeType.PRIMITIVE_TYPE, "Instant", Multiplicity.ONE_TO_ONE);
+          // TODO: Date literals in the language, infinity and now global variables
+          Type temporalInstantType =
+              new Type(DataTypeType.PRIMITIVE_TYPE, "TemporalInstant", Multiplicity.ONE_TO_ONE);
+          Type temporalRangeType =
+              new Type(DataTypeType.PRIMITIVE_TYPE, "TemporalRange", Multiplicity.ONE_TO_ONE);
+          return Lists.immutable
+              .with(instantType, temporalInstantType, temporalRangeType)
+              .castToList();
         }
-        Type instantType =
-            new Type(DataTypeType.PRIMITIVE_TYPE, "Instant", Multiplicity.ONE_TO_ONE);
-        // TODO: Date literals in the language, infinity and now global variables
-        Type temporalInstantType =
-            new Type(DataTypeType.PRIMITIVE_TYPE, "TemporalInstant", Multiplicity.ONE_TO_ONE);
-        Type temporalRangeType =
-            new Type(DataTypeType.PRIMITIVE_TYPE, "TemporalRange", Multiplicity.ONE_TO_ONE);
-        return Lists.immutable
-            .with(instantType, temporalInstantType, temporalRangeType)
-            .castToList();
+        if (modifierText.equals("audited")) {
+          String memberName = propertyName.getText();
+          if (memberName.equals("createdOn")) {
+            return Collections.singletonList(
+                new Type(DataTypeType.PRIMITIVE_TYPE, "Instant", Multiplicity.ONE_TO_ONE));
+          }
+          return Collections.singletonList(
+              new Type(DataTypeType.PRIMITIVE_TYPE, "String", Multiplicity.ONE_TO_ONE));
+        }
+        throw new AssertionError(modifierText);
       }
       if (resolve != null) {
         throw new AssertionError(resolve.getClass());
