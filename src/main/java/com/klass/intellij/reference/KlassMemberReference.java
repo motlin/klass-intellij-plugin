@@ -180,6 +180,9 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
         if (resolved instanceof KlassClassifier) {
           return this.getClassifierResolveResults((KlassClassifier) resolved);
         }
+        if (resolved instanceof KlassClassModifier) {
+          return new ResolveResult[] {new PsiElementResolveResult(resolved)};
+        }
       } else if (projectionNodeParent instanceof KlassProjectionAssociationEndNode) {
         KlassProjectionAssociationEndNode associationEndNode =
             (KlassProjectionAssociationEndNode) projectionNodeParent;
