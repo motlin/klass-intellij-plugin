@@ -11,6 +11,7 @@ import com.klass.intellij.KlassUtil;
 import com.klass.intellij.psi.KlassAssociation;
 import com.klass.intellij.psi.KlassAssociationEnd;
 import com.klass.intellij.psi.KlassAssociationEndName;
+import com.klass.intellij.psi.KlassClassModifier;
 import com.klass.intellij.psi.KlassClassifierName;
 import com.klass.intellij.psi.KlassElementFactory;
 import com.klass.intellij.psi.KlassExpressionMemberName;
@@ -67,6 +68,10 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
           }
         }
 
+        if (resolve instanceof KlassClassModifier) {
+          return new ResolveResult[] {new PsiElementResolveResult(resolve)};
+        }
+
         return new ResolveResult[] {};
       }
 
@@ -76,6 +81,10 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
       if (resolve instanceof KlassKlass) {
         KlassKlass klassKlass = (KlassKlass) resolve;
         return this.getAssociationEndResolveResults(klassKlass);
+      }
+
+      if (resolve instanceof KlassClassModifier) {
+        return new ResolveResult[] {new PsiElementResolveResult(resolve)};
       }
 
       return new ResolveResult[] {};
@@ -101,6 +110,10 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
         if (klassResolved instanceof KlassKlass) {
           return this.getAssociationEndResolveResults((KlassKlass) klassResolved);
         }
+      }
+
+      if (resolve instanceof KlassClassModifier) {
+        return new ResolveResult[] {new PsiElementResolveResult(resolve)};
       }
 
       return new ResolveResult[] {};
