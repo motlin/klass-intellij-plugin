@@ -45,10 +45,26 @@ public class KlassKlassReference extends PsiPolyVariantReferenceBase<PsiElement>
     if (klassResults.length > 0) {
       return klassResults;
     }
-    return KlassUtil.findEnumerations(this.myElement).stream()
-        .filter(enumeration -> enumeration.getName().equals(this.name))
-        .map(PsiElementResolveResult::new)
-        .toArray(ResolveResult[]::new);
+    ResolveResult[] enumerationResults =
+        KlassUtil.findEnumerations(this.myElement).stream()
+            .filter(enumeration -> enumeration.getName().equals(this.name))
+            .map(PsiElementResolveResult::new)
+            .toArray(ResolveResult[]::new);
+    if (enumerationResults.length > 0) {
+      return enumerationResults;
+    }
+
+    if (this.name.endsWith("Version")) {
+      String baseName = this.name.substring(0, this.name.length() - "Version".length());
+      return KlassUtil.findClasses(this.myElement).stream()
+          .filter(klass -> klass.getName().equals(baseName))
+          .flatMap(klass -> klass.getClassModifierList().stream())
+          .filter(modifier -> modifier.getText().equals("versioned"))
+          .map(PsiElementResolveResult::new)
+          .toArray(ResolveResult[]::new);
+    }
+
+    return new ResolveResult[] {};
   }
 
   @NotNull @Override

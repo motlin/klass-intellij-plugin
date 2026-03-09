@@ -56,6 +56,16 @@ public class KlassClassifierReference extends PsiPolyVariantReferenceBase<PsiEle
       return klassResolveResults;
     }
 
+    if (this.name.endsWith("Version")) {
+      String baseName = this.name.substring(0, this.name.length() - "Version".length());
+      return KlassUtil.findClasses(this.myElement).stream()
+          .filter(klass -> klass.getName().equals(baseName))
+          .flatMap(klass -> klass.getClassModifierList().stream())
+          .filter(modifier -> modifier.getText().equals("versioned"))
+          .map(PsiElementResolveResult::new)
+          .toArray(ResolveResult[]::new);
+    }
+
     return new ResolveResult[] {};
   }
 
