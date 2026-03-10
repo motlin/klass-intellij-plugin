@@ -9,6 +9,7 @@ plugins {
     id("org.jetbrains.grammarkit") version "2023.3.0.3"
     id("com.diffplug.spotless") version "8.3.0"
     id("net.ltgt.errorprone") version "5.1.0"
+    id("org.openrewrite.rewrite") version "7.28.0"
 }
 
 group = "com.klass"
@@ -41,6 +42,12 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     errorprone("com.google.errorprone:error_prone_core:2.36.0")
+
+    rewrite("io.liftwizard:liftwizard-rewrite:2.1.43")
+    rewrite("org.openrewrite.recipe:rewrite-static-analysis:2.29.0")
+    rewrite("org.openrewrite.recipe:rewrite-migrate-java:3.29.0")
+    rewrite("org.openrewrite.recipe:rewrite-testing-frameworks:3.29.0")
+    rewrite("org.openrewrite.recipe:rewrite-logging-frameworks:3.25.0")
 }
 
 intellijPlatform {
@@ -69,8 +76,29 @@ intellijPlatform {
     }
 }
 
+rewrite {
+    activeRecipe(
+        "io.liftwizard.staticanalysis.CommonStaticAnalysis",
+        "io.liftwizard.staticanalysis.CodeCleanup",
+        "io.liftwizard.rewrite.BestPractices",
+        "io.liftwizard.testing.junit.JupiterBestPractices",
+        "org.openrewrite.java.migrate.UpgradeToJava21",
+    )
+    activeStyle("io.liftwizard.NoStarImports")
+    exclusion(
+        "src/main/gen/**",
+        "build.gradle.kts",
+        "settings.gradle.kts",
+    )
+}
+
 checkstyle {
     toolVersion = "10.23.1"
+    configDirectory = file("config/checkstyle")
+}
+
+tasks.withType<Checkstyle> {
+    exclude("**/gen/**")
 }
 
 grammarKit {

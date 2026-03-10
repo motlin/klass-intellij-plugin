@@ -140,6 +140,48 @@ jobs:
                     echo "No changes needed by Prettier"
                   fi
 
+    rewrite-fix:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+        steps:
+            - uses: actions/checkout@v6
+              with:
+                  ref: ${{ github.event.pull_request.head.ref }}
+                  repository: ${{ github.event.pull_request.head.repo.full_name }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - uses: actions/setup-java@v5
+              with:
+                  distribution: "temurin"
+                  java-version: "21"
+
+            - uses: gradle/actions/setup-gradle@v5
+
+            - name: Configure Git
+              run: |
+                  git config --global user.name "GitHub Actions"
+                  git config --global user.email "github-actions@github.com"
+
+            - name: Run OpenRewrite and commit changes
+              run: |
+                  ./gradlew rewriteRun
+
+                  if [[ -n $(git status --porcelain) ]]; then
+                    FIX_BRANCH="fix-${{ github.event.pull_request.number }}-rewrite"
+                    git switch --create $FIX_BRANCH
+
+                    git add --all
+                    git commit --message "Apply OpenRewrite changes."
+                    git push --force origin $FIX_BRANCH
+
+                    echo "OpenRewrite fixes have been pushed to the $FIX_BRANCH branch."
+                    exit 1
+                  else
+                    echo "No changes needed by OpenRewrite"
+                  fi
+
     spotless-java-fix:
         runs-on: ubuntu-latest
         permissions:
