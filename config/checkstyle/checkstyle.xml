@@ -24,6 +24,9 @@
     <property name="severity" value="error" />
 
     <!--region Filters-->
+    <module name="SuppressionFilter">
+        <property name="file" value="${config_loc}/suppressions.xml" />
+    </module>
     <module name="SeverityMatchFilter">
         <!-- report all violations except ignore -->
         <property name="severity" value="ignore" />
