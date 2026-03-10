@@ -106,6 +106,17 @@ jobs:
                   fail_on_error: true
                   filter_mode: nofilter
 
+    reviewdog-yamllint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: reviewdog/action-yamllint@v1.21.0
+              with:
+                  reporter: github-pr-check
+                  fail_on_error: true
+                  filter_mode: nofilter
+
     reviewdog-actionlint:
         runs-on: ubuntu-latest
         steps:
@@ -120,7 +131,18 @@ jobs:
     all-checks:
         name: All checks
         if: ${{ !cancelled() }}
-        needs: [pre-commit, build, test, verify, prettier, biome, reviewdog-markdownlint, reviewdog-actionlint]
+        needs:
+            [
+                pre-commit,
+                build,
+                test,
+                verify,
+                prettier,
+                biome,
+                reviewdog-markdownlint,
+                reviewdog-yamllint,
+                reviewdog-actionlint,
+            ]
         runs-on: ubuntu-latest
         steps:
             - uses: re-actors/alls-green@release/v1

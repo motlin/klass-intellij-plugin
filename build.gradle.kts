@@ -6,6 +6,7 @@ plugins {
     id("org.jetbrains.intellij.platform") version "2.11.0"
     id("org.jetbrains.grammarkit") version "2023.3.0.3"
     id("com.diffplug.spotless") version "8.3.0"
+    id("net.ltgt.errorprone") version "4.1.0"
 }
 
 group = "com.klass"
@@ -36,6 +37,8 @@ dependencies {
     implementation("org.eclipse.collections:eclipse-collections:13.0.0")
 
     testImplementation("junit:junit:4.13.2")
+
+    errorprone("com.google.errorprone:error_prone_core:2.36.0")
 }
 
 intellijPlatform {
@@ -69,10 +72,17 @@ grammarKit {
 }
 
 spotless {
+    format("misc") {
+        target("**/*.md", "**/*.yaml", "**/*.yml", "**/*.sh", "**/.gitignore")
+        targetExclude("build/**", ".gradle/**")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
     java {
         target("src/main/java/**/*.java", "src/test/java/**/*.java")
         googleJavaFormat("1.25.2")
         formatAnnotations()
+        cleanthat()
     }
 }
 
