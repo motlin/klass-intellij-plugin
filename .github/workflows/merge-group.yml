@@ -71,6 +71,20 @@ jobs:
 
             - run: ./gradlew test
 
+    checkstyle:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: actions/setup-java@v5
+              with:
+                  distribution: "temurin"
+                  java-version: "21"
+
+            - uses: gradle/actions/setup-gradle@v5
+
+            - run: ./gradlew checkstyleMain
+
     prettier:
         runs-on: ubuntu-latest
         steps:
@@ -137,6 +151,7 @@ jobs:
                 build,
                 test,
                 verify,
+                checkstyle,
                 prettier,
                 biome,
                 reviewdog-markdownlint,
