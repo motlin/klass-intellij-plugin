@@ -52,250 +52,249 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassPsiImplUtil {
-  public static PsiReference getReference(KlassClassifierName klassClassifierName) {
-    String classifierName = klassClassifierName.getText();
-    if (classifierName == null) {
-      return null;
-    }
 
-    return new KlassClassifierReference(klassClassifierName, classifierName);
-  }
+	public static PsiReference getReference(KlassClassifierName klassClassifierName) {
+		String classifierName = klassClassifierName.getText();
+		if (classifierName == null) {
+			return null;
+		}
 
-  public static PsiReference getReference(KlassInterfaceName klassInterfaceName) {
-    String interfaceName = klassInterfaceName.getText();
-    if (interfaceName == null) {
-      return null;
-    }
+		return new KlassClassifierReference(klassClassifierName, classifierName);
+	}
 
-    return new KlassInterfaceReference(klassInterfaceName, interfaceName);
-  }
+	public static PsiReference getReference(KlassInterfaceName klassInterfaceName) {
+		String interfaceName = klassInterfaceName.getText();
+		if (interfaceName == null) {
+			return null;
+		}
 
-  public static PsiReference getReference(KlassKlassName klassKlassName) {
-    String className = klassKlassName.getText();
-    if (className == null) {
-      return null;
-    }
+		return new KlassInterfaceReference(klassInterfaceName, interfaceName);
+	}
 
-    return new KlassKlassReference(klassKlassName, className);
-  }
+	public static PsiReference getReference(KlassKlassName klassKlassName) {
+		String className = klassKlassName.getText();
+		if (className == null) {
+			return null;
+		}
 
-  public static PsiReference getReference(KlassMemberName klassMemberName) {
-    String memberName = klassMemberName.getText();
-    if (memberName == null) {
-      return null;
-    }
+		return new KlassKlassReference(klassKlassName, className);
+	}
 
-    return new KlassMemberReference(klassMemberName, memberName);
-  }
+	public static PsiReference getReference(KlassMemberName klassMemberName) {
+		String memberName = klassMemberName.getText();
+		if (memberName == null) {
+			return null;
+		}
 
-  public static PsiReference getReference(KlassAssociationEndName klassAssociationEndName) {
-    String associationEndName = klassAssociationEndName.getText();
-    if (associationEndName == null) {
-      return null;
-    }
+		return new KlassMemberReference(klassMemberName, memberName);
+	}
 
-    return new KlassAssociationEndReference(klassAssociationEndName, associationEndName);
-  }
+	public static PsiReference getReference(KlassAssociationEndName klassAssociationEndName) {
+		String associationEndName = klassAssociationEndName.getText();
+		if (associationEndName == null) {
+			return null;
+		}
 
-  public static PsiReference getReference(
-      KlassParameterizedPropertyName klassParameterizedPropertyName) {
-    String parameterizedPropertyType = klassParameterizedPropertyName.getText();
-    if (parameterizedPropertyType == null) {
-      return null;
-    }
+		return new KlassAssociationEndReference(klassAssociationEndName, associationEndName);
+	}
 
-    return new KlassParameterizedPropertyReference(
-        klassParameterizedPropertyName, parameterizedPropertyType);
-  }
+	public static PsiReference getReference(KlassParameterizedPropertyName klassParameterizedPropertyName) {
+		String parameterizedPropertyType = klassParameterizedPropertyName.getText();
+		if (parameterizedPropertyType == null) {
+			return null;
+		}
 
-  public static PsiReference getReference(KlassParameterName klassParameterName) {
-    String parameterNameText = klassParameterName.getText();
-    if (parameterNameText == null) {
-      return null;
-    }
+		return new KlassParameterizedPropertyReference(klassParameterizedPropertyName, parameterizedPropertyType);
+	}
 
-    return new KlassParameterReference(klassParameterName, parameterNameText);
-  }
+	public static PsiReference getReference(KlassParameterName klassParameterName) {
+		String parameterNameText = klassParameterName.getText();
+		if (parameterNameText == null) {
+			return null;
+		}
 
-  public static PsiReference getReference(KlassExpressionNativeValue klassExpressionNativeValue) {
-    String expressionNativeValueText = klassExpressionNativeValue.getText();
-    if (expressionNativeValueText == null) {
-      return null;
-    }
+		return new KlassParameterReference(klassParameterName, parameterNameText);
+	}
 
-    return new KlassExpressionNativeValueReference(
-        klassExpressionNativeValue, expressionNativeValueText);
-  }
+	public static PsiReference getReference(KlassExpressionNativeValue klassExpressionNativeValue) {
+		String expressionNativeValueText = klassExpressionNativeValue.getText();
+		if (expressionNativeValueText == null) {
+			return null;
+		}
 
-  public static PsiReference getReference(KlassPrimitiveType klassPrimitiveType) {
-    String dataType = klassPrimitiveType.getText();
-    if (dataType == null) {
-      return null;
-    }
+		return new KlassExpressionNativeValueReference(klassExpressionNativeValue, expressionNativeValueText);
+	}
 
-    return new KlassDataTypeReference(klassPrimitiveType, dataType);
-  }
+	public static PsiReference getReference(KlassPrimitiveType klassPrimitiveType) {
+		String dataType = klassPrimitiveType.getText();
+		if (dataType == null) {
+			return null;
+		}
 
-  public static PsiReference getReference(KlassEnumerationType klassEnumerationType) {
-    String enumerationType = klassEnumerationType.getText();
-    if (enumerationType == null) {
-      return null;
-    }
+		return new KlassDataTypeReference(klassPrimitiveType, dataType);
+	}
 
-    return new KlassEnumerationReference(klassEnumerationType, enumerationType);
-  }
+	public static PsiReference getReference(KlassEnumerationType klassEnumerationType) {
+		String enumerationType = klassEnumerationType.getText();
+		if (enumerationType == null) {
+			return null;
+		}
 
-  public static PsiReference getReference(KlassDummyMultiplicity klassDummyMultiplicity) {
-    return new KlassDummyMultiplicityReference(klassDummyMultiplicity);
-  }
+		return new KlassEnumerationReference(klassEnumerationType, enumerationType);
+	}
 
-  public static PsiReference getReference(KlassProjectionName klassProjectionName) {
-    String projectionName = klassProjectionName.getText();
-    if (projectionName == null) {
-      return null;
-    }
+	public static PsiReference getReference(KlassDummyMultiplicity klassDummyMultiplicity) {
+		return new KlassDummyMultiplicityReference(klassDummyMultiplicity);
+	}
 
-    return new KlassProjectionReference(klassProjectionName, projectionName);
-  }
+	public static PsiReference getReference(KlassProjectionName klassProjectionName) {
+		String projectionName = klassProjectionName.getText();
+		if (projectionName == null) {
+			return null;
+		}
 
-  public static PsiReference getReference(KlassExpressionVariableName klassExpressionVariableName) {
-    String expressionVariableName = klassExpressionVariableName.getText();
-    if (expressionVariableName == null) {
-      return null;
-    }
+		return new KlassProjectionReference(klassProjectionName, projectionName);
+	}
 
-    return new KlassExpressionVariableNameReference(
-        klassExpressionVariableName, expressionVariableName);
-  }
+	public static PsiReference getReference(KlassExpressionVariableName klassExpressionVariableName) {
+		String expressionVariableName = klassExpressionVariableName.getText();
+		if (expressionVariableName == null) {
+			return null;
+		}
 
-  public static ItemPresentation getPresentation(KlassInterface element) {
-    return new KlassNamedElementItemPresentation(element, null, Nodes.Interface);
-  }
+		return new KlassExpressionVariableNameReference(klassExpressionVariableName, expressionVariableName);
+	}
 
-  public static ItemPresentation getPresentation(KlassKlass element) {
-    return new KlassNamedElementItemPresentation(element, null, AllIcons.Nodes.Class);
-  }
+	public static ItemPresentation getPresentation(KlassInterface element) {
+		return new KlassNamedElementItemPresentation(element, null, Nodes.Interface);
+	}
 
-  public static ItemPresentation getPresentation(KlassEnumeration element) {
-    return new KlassNamedElementItemPresentation(element, null, AllIcons.Nodes.Enum);
-  }
+	public static ItemPresentation getPresentation(KlassKlass element) {
+		return new KlassNamedElementItemPresentation(element, null, AllIcons.Nodes.Class);
+	}
 
-  public static ItemPresentation getPresentation(KlassAssociation element) {
-    return new KlassNamedElementItemPresentation(element, null, Nodes.Related);
-  }
+	public static ItemPresentation getPresentation(KlassEnumeration element) {
+		return new KlassNamedElementItemPresentation(element, null, AllIcons.Nodes.Enum);
+	}
 
-  public static ItemPresentation getPresentation(KlassProjection element) {
-    return new KlassNamedElementItemPresentation(
-        element,
-        "on " + element.getClassifierName().getNombre().getNombreText().getText(),
-        AllIcons.Hierarchy.Subtypes);
-  }
+	public static ItemPresentation getPresentation(KlassAssociation element) {
+		return new KlassNamedElementItemPresentation(element, null, Nodes.Related);
+	}
 
-  public static ItemPresentation getPresentation(KlassServiceGroup element) {
-    return new ItemPresentation() {
-      @Nullable @Override
-      public String getPresentableText() {
-        return element.getKlassName().getText();
-      }
+	public static ItemPresentation getPresentation(KlassProjection element) {
+		return new KlassNamedElementItemPresentation(
+			element,
+			"on " + element.getClassifierName().getNombre().getNombreText().getText(),
+			AllIcons.Hierarchy.Subtypes
+		);
+	}
 
-      @Nullable @Override
-      public String getLocationString() {
-        return null;
-      }
+	public static ItemPresentation getPresentation(KlassServiceGroup element) {
+		return new ItemPresentation() {
+			@Nullable @Override
+			public String getPresentableText() {
+				return element.getKlassName().getText();
+			}
 
-      @Nullable @Override
-      public Icon getIcon(boolean unused) {
-        return AllIcons.Gutter.Java9Service;
-      }
-    };
-  }
+			@Nullable @Override
+			public String getLocationString() {
+				return null;
+			}
 
-  public static ItemPresentation getPresentation(KlassUrlGroup element) {
-    return new ItemPresentation() {
-      @Nullable @Override
-      public String getPresentableText() {
-        return element.getUrl().getText();
-      }
+			@Nullable @Override
+			public Icon getIcon(boolean unused) {
+				return AllIcons.Gutter.Java9Service;
+			}
+		};
+	}
 
-      @Nullable @Override
-      public String getLocationString() {
-        return null;
-      }
+	public static ItemPresentation getPresentation(KlassUrlGroup element) {
+		return new ItemPresentation() {
+			@Nullable @Override
+			public String getPresentableText() {
+				return element.getUrl().getText();
+			}
 
-      @Nullable @Override
-      public Icon getIcon(boolean unused) {
-        return AllIcons.Gutter.Java9Service;
-      }
-    };
-  }
+			@Nullable @Override
+			public String getLocationString() {
+				return null;
+			}
 
-  public static ItemPresentation getPresentation(KlassAssociationEnd element) {
-    String locationString = element.getKlassName().getText() + element.getMultiplicity().getText();
-    return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Property);
-  }
+			@Nullable @Override
+			public Icon getIcon(boolean unused) {
+				return AllIcons.Gutter.Java9Service;
+			}
+		};
+	}
 
-  public static ItemPresentation getPresentation(KlassPrimitiveTypeProperty element) {
-    boolean hasKeyProperty =
-        element.getPropertyModifierList().stream()
-            .anyMatch(propertyModifier -> propertyModifier.getText().equals("key"));
-    String keyModifier = hasKeyProperty ? "key " : "";
+	public static ItemPresentation getPresentation(KlassAssociationEnd element) {
+		String locationString = element.getKlassName().getText() + element.getMultiplicity().getText();
+		return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Property);
+	}
 
-    KlassOptionalMarker optionalMarker = element.getOptionalMarker();
-    String optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
+	public static ItemPresentation getPresentation(KlassPrimitiveTypeProperty element) {
+		boolean hasKeyProperty = element
+			.getPropertyModifierList()
+			.stream()
+			.anyMatch((propertyModifier) -> propertyModifier.getText().equals("key"));
+		String keyModifier = hasKeyProperty ? "key " : "";
 
-    String locationString = keyModifier + element.getPrimitiveType().getText() + optionalMarkerText;
-    return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
-  }
+		KlassOptionalMarker optionalMarker = element.getOptionalMarker();
+		String optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
 
-  public static ItemPresentation getPresentation(KlassEnumerationProperty element) {
-    KlassOptionalMarker optionalMarker = element.getOptionalMarker();
-    String optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
-    String locationString = element.getEnumerationType().getText() + optionalMarkerText;
-    return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
-  }
+		String locationString = keyModifier + element.getPrimitiveType().getText() + optionalMarkerText;
+		return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
+	}
 
-  public static ItemPresentation getPresentation(KlassParameterizedProperty element) {
-    String locationString = element.getKlassName().getText() + element.getMultiplicity().getText();
-    return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
-  }
+	public static ItemPresentation getPresentation(KlassEnumerationProperty element) {
+		KlassOptionalMarker optionalMarker = element.getOptionalMarker();
+		String optionalMarkerText = optionalMarker == null ? "" : optionalMarker.getText();
+		String locationString = element.getEnumerationType().getText() + optionalMarkerText;
+		return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
+	}
 
-  public static ItemPresentation getPresentation(KlassParameterizedPropertySignature element) {
-    String locationString =
-        element.getClassifierName().getText() + element.getMultiplicity().getText();
-    return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
-  }
+	public static ItemPresentation getPresentation(KlassParameterizedProperty element) {
+		String locationString = element.getKlassName().getText() + element.getMultiplicity().getText();
+		return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
+	}
 
-  public static ItemPresentation getPresentation(KlassEnumerationLiteral element) {
-    KlassEnumerationPrettyName prettyName = element.getEnumerationPrettyName();
-    String locationString = prettyName != null ? prettyName.getText() : null;
-    return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
-  }
+	public static ItemPresentation getPresentation(KlassParameterizedPropertySignature element) {
+		String locationString = element.getClassifierName().getText() + element.getMultiplicity().getText();
+		return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
+	}
 
-  public static ItemPresentation getPresentation(KlassService element) {
-    return new ItemPresentation() {
-      @Nullable @Override
-      public String getPresentableText() {
-        return element.getVerb().getText();
-      }
+	public static ItemPresentation getPresentation(KlassEnumerationLiteral element) {
+		KlassEnumerationPrettyName prettyName = element.getEnumerationPrettyName();
+		String locationString = prettyName != null ? prettyName.getText() : null;
+		return new KlassNamedElementItemPresentation(element, locationString, AllIcons.Nodes.Field);
+	}
 
-      @Nullable @Override
-      public String getLocationString() {
-        KlassServiceBlock serviceBlock = element.getServiceBlock();
-        if (serviceBlock == null) {
-          return null;
-        }
-        KlassServiceCriteriaClause serviceCriteriaClause =
-            serviceBlock.getServiceBody().getServiceCriteriaClause();
-        if (serviceCriteriaClause == null) {
-          return null;
-        }
-        return serviceCriteriaClause.getCriteriaExpression().getText();
-      }
+	public static ItemPresentation getPresentation(KlassService element) {
+		return new ItemPresentation() {
+			@Nullable @Override
+			public String getPresentableText() {
+				return element.getVerb().getText();
+			}
 
-      @Nullable @Override
-      public Icon getIcon(boolean unused) {
-        return AllIcons.Gutter.Java9Service;
-      }
-    };
-  }
+			@Nullable @Override
+			public String getLocationString() {
+				KlassServiceBlock serviceBlock = element.getServiceBlock();
+				if (serviceBlock == null) {
+					return null;
+				}
+				KlassServiceCriteriaClause serviceCriteriaClause = serviceBlock
+					.getServiceBody()
+					.getServiceCriteriaClause();
+				if (serviceCriteriaClause == null) {
+					return null;
+				}
+				return serviceCriteriaClause.getCriteriaExpression().getText();
+			}
+
+			@Nullable @Override
+			public Icon getIcon(boolean unused) {
+				return AllIcons.Gutter.Java9Service;
+			}
+		};
+	}
 }

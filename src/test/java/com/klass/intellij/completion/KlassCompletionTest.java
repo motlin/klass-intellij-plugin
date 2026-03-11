@@ -14,117 +14,112 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class KlassCompletionTest extends BasePlatformTestCase {
-  @Override
-  protected String getTestDataPath() {
-    return "src/test/testData";
-  }
 
-  public void testReferenceGetVariantsReturnsDataTypes() {
-    myFixture.configureByText(
-        "test.klass", "package example\n\nclass User\n{\n    name: <caret>String key;\n}\n");
+	@Override
+	protected String getTestDataPath() {
+		return "src/test/testData";
+	}
 
-    PsiReference ref = myFixture.getReferenceAtCaretPosition();
-    assertNotNull("Expected a reference at caret position", ref);
-    assertInstanceOf(ref, KlassDataTypeReference.class);
+	public void testReferenceGetVariantsReturnsDataTypes() {
+		myFixture.configureByText("test.klass", "package example\n\nclass User\n{\n    name: <caret>String key;\n}\n");
 
-    Object[] variants = ((KlassDataTypeReference) ref).getVariants();
-    List<String> variantStrings =
-        Arrays.stream(variants).map(Object::toString).collect(Collectors.toList());
+		PsiReference ref = myFixture.getReferenceAtCaretPosition();
+		assertNotNull("Expected a reference at caret position", ref);
+		assertInstanceOf(ref, KlassDataTypeReference.class);
 
-    assertContainsElements(
-        variantStrings,
-        "Boolean",
-        "Integer",
-        "Long",
-        "Double",
-        "Float",
-        "String",
-        "Instant",
-        "LocalDate");
-  }
+		Object[] variants = ((KlassDataTypeReference) ref).getVariants();
+		List<String> variantStrings = Arrays.stream(variants).map(Object::toString).collect(Collectors.toList());
 
-  public void testReferenceGetVariantsReturnsClasses() {
-    myFixture.configureByFile("CompletionClassInAssociation.klass");
+		assertContainsElements(
+			variantStrings,
+			"Boolean",
+			"Integer",
+			"Long",
+			"Double",
+			"Float",
+			"String",
+			"Instant",
+			"LocalDate"
+		);
+	}
 
-    PsiReference ref = myFixture.getReferenceAtCaretPosition();
-    assertNotNull("Expected a reference at caret position", ref);
-    assertInstanceOf(ref, KlassKlassReference.class);
+	public void testReferenceGetVariantsReturnsClasses() {
+		myFixture.configureByFile("CompletionClassInAssociation.klass");
 
-    Object[] variants = ((KlassKlassReference) ref).getVariants();
-    List<String> variantStrings =
-        Arrays.stream(variants)
-            .filter(o -> o instanceof LookupElement)
-            .map(o -> ((LookupElement) o).getLookupString())
-            .collect(Collectors.toList());
+		PsiReference ref = myFixture.getReferenceAtCaretPosition();
+		assertNotNull("Expected a reference at caret position", ref);
+		assertInstanceOf(ref, KlassKlassReference.class);
 
-    assertContainsElements(variantStrings, "User", "Order");
-  }
+		Object[] variants = ((KlassKlassReference) ref).getVariants();
+		List<String> variantStrings = Arrays.stream(variants)
+			.filter((o) -> o instanceof LookupElement)
+			.map((o) -> ((LookupElement) o).getLookupString())
+			.collect(Collectors.toList());
 
-  public void testReferenceGetVariantsReturnsInterfaces() {
-    myFixture.configureByFile("CompletionInterfaceInImplements.klass");
+		assertContainsElements(variantStrings, "User", "Order");
+	}
 
-    PsiReference ref = myFixture.getReferenceAtCaretPosition();
-    assertNotNull("Expected a reference at caret position", ref);
-    assertInstanceOf(ref, KlassInterfaceReference.class);
+	public void testReferenceGetVariantsReturnsInterfaces() {
+		myFixture.configureByFile("CompletionInterfaceInImplements.klass");
 
-    Object[] variants = ((KlassInterfaceReference) ref).getVariants();
-    List<String> variantStrings =
-        Arrays.stream(variants)
-            .filter(o -> o instanceof LookupElement)
-            .map(o -> ((LookupElement) o).getLookupString())
-            .collect(Collectors.toList());
+		PsiReference ref = myFixture.getReferenceAtCaretPosition();
+		assertNotNull("Expected a reference at caret position", ref);
+		assertInstanceOf(ref, KlassInterfaceReference.class);
 
-    assertContainsElements(variantStrings, "Named", "Versioned");
-  }
+		Object[] variants = ((KlassInterfaceReference) ref).getVariants();
+		List<String> variantStrings = Arrays.stream(variants)
+			.filter((o) -> o instanceof LookupElement)
+			.map((o) -> ((LookupElement) o).getLookupString())
+			.collect(Collectors.toList());
 
-  public void testReferenceGetVariantsReturnsEnumerations() {
-    myFixture.configureByFile("CompletionEnumerationInProperty.klass");
+		assertContainsElements(variantStrings, "Named", "Versioned");
+	}
 
-    PsiReference ref = myFixture.getReferenceAtCaretPosition();
-    assertNotNull("Expected a reference at caret position", ref);
-    assertInstanceOf(ref, KlassEnumerationReference.class);
+	public void testReferenceGetVariantsReturnsEnumerations() {
+		myFixture.configureByFile("CompletionEnumerationInProperty.klass");
 
-    Object[] variants = ((KlassEnumerationReference) ref).getVariants();
-    List<String> variantStrings =
-        Arrays.stream(variants)
-            .filter(o -> o instanceof LookupElement)
-            .map(o -> ((LookupElement) o).getLookupString())
-            .collect(Collectors.toList());
+		PsiReference ref = myFixture.getReferenceAtCaretPosition();
+		assertNotNull("Expected a reference at caret position", ref);
+		assertInstanceOf(ref, KlassEnumerationReference.class);
 
-    assertContainsElements(variantStrings, "Status", "Priority");
-  }
+		Object[] variants = ((KlassEnumerationReference) ref).getVariants();
+		List<String> variantStrings = Arrays.stream(variants)
+			.filter((o) -> o instanceof LookupElement)
+			.map((o) -> ((LookupElement) o).getLookupString())
+			.collect(Collectors.toList());
 
-  public void testReferenceGetVariantsReturnsMembers() {
-    myFixture.configureByFile("CompletionMemberInExpression.klass");
+		assertContainsElements(variantStrings, "Status", "Priority");
+	}
 
-    PsiReference ref = myFixture.getReferenceAtCaretPosition();
-    assertNotNull("Expected a reference at caret position", ref);
-    assertInstanceOf(ref, KlassMemberReference.class);
+	public void testReferenceGetVariantsReturnsMembers() {
+		myFixture.configureByFile("CompletionMemberInExpression.klass");
 
-    Object[] variants = ((KlassMemberReference) ref).getVariants();
-    List<String> variantStrings =
-        Arrays.stream(variants)
-            .filter(o -> o instanceof LookupElement)
-            .map(o -> ((LookupElement) o).getLookupString())
-            .collect(Collectors.toList());
+		PsiReference ref = myFixture.getReferenceAtCaretPosition();
+		assertNotNull("Expected a reference at caret position", ref);
+		assertInstanceOf(ref, KlassMemberReference.class);
 
-    assertContainsElements(variantStrings, "name", "email");
-  }
+		Object[] variants = ((KlassMemberReference) ref).getVariants();
+		List<String> variantStrings = Arrays.stream(variants)
+			.filter((o) -> o instanceof LookupElement)
+			.map((o) -> ((LookupElement) o).getLookupString())
+			.collect(Collectors.toList());
 
-  public void testReferenceGetVariantsReturnsClassesAndInterfaces() {
-    myFixture.configureByFile("CompletionClassifierInProjection.klass");
+		assertContainsElements(variantStrings, "name", "email");
+	}
 
-    PsiReference ref = myFixture.getReferenceAtCaretPosition();
-    assertNotNull("Expected a reference at caret position", ref);
-    assertInstanceOf(ref, KlassClassifierReference.class);
+	public void testReferenceGetVariantsReturnsClassesAndInterfaces() {
+		myFixture.configureByFile("CompletionClassifierInProjection.klass");
 
-    Object[] variants = ((KlassClassifierReference) ref).getVariants();
-    List<String> variantStrings =
-        Arrays.stream(variants)
-            .filter(o -> o instanceof LookupElement)
-            .map(o -> ((LookupElement) o).getLookupString())
-            .collect(Collectors.toList());
+		PsiReference ref = myFixture.getReferenceAtCaretPosition();
+		assertNotNull("Expected a reference at caret position", ref);
+		assertInstanceOf(ref, KlassClassifierReference.class);
 
-    assertContainsElements(variantStrings, "User", "Named");
-  }
+		Object[] variants = ((KlassClassifierReference) ref).getVariants();
+		List<String> variantStrings = Arrays.stream(variants)
+			.filter((o) -> o instanceof LookupElement)
+			.map((o) -> ((LookupElement) o).getLookupString())
+			.collect(Collectors.toList());
+
+		assertContainsElements(variantStrings, "User", "Named");
+	}
 }

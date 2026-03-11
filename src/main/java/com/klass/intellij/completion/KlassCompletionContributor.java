@@ -15,53 +15,56 @@ import com.klass.intellij.KlassLanguage;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassCompletionContributor extends CompletionContributor {
-  private static final Capture<PsiElement> MULTIPLICITY =
-      psiElement().withLanguage(KlassLanguage.INSTANCE).afterLeaf("[");
 
-  private static final Capture<PsiElement> KEYWORD =
-      psiElement().withLanguage(KlassLanguage.INSTANCE).withParent(PsiErrorElement.class);
+	private static final Capture<PsiElement> MULTIPLICITY = psiElement()
+		.withLanguage(KlassLanguage.INSTANCE)
+		.afterLeaf("[");
 
-  public KlassCompletionContributor() {
-    CompletionProvider<CompletionParameters> multiplicityCompletionProvider =
-        new CompletionProvider<CompletionParameters>() {
-          public void addCompletions(
-              @NotNull CompletionParameters parameters,
-              ProcessingContext context,
-              @NotNull CompletionResultSet resultSet) {
-            resultSet.addElement(
-                LookupElementBuilder.create("0..1").withTailText(" One, not required", true));
-            resultSet.addElement(
-                LookupElementBuilder.create("1..1").withTailText(" One, required", true));
-            resultSet.addElement(LookupElementBuilder.create("0..*").withTailText(" Many", true));
-            resultSet.addElement(
-                LookupElementBuilder.create("1..*").withTailText(" Many, non-empty set", true));
-          }
-        };
+	private static final Capture<PsiElement> KEYWORD = psiElement()
+		.withLanguage(KlassLanguage.INSTANCE)
+		.withParent(PsiErrorElement.class);
 
-    CompletionProvider<CompletionParameters> keywordCompletionProvider =
-        new CompletionProvider<CompletionParameters>() {
-          @Override
-          protected void addCompletions(
-              @NotNull CompletionParameters parameters,
-              ProcessingContext context,
-              @NotNull CompletionResultSet result) {
-            result.addElement(LookupElementBuilder.create("class"));
-            result.addElement(LookupElementBuilder.create("enumeration"));
-            result.addElement(LookupElementBuilder.create("association"));
-            result.addElement(LookupElementBuilder.create("projection"));
-          }
-        };
+	public KlassCompletionContributor() {
+		CompletionProvider<CompletionParameters> multiplicityCompletionProvider = new CompletionProvider<
+			CompletionParameters
+		>() {
+			public void addCompletions(
+				@NotNull CompletionParameters parameters,
+				ProcessingContext context,
+				@NotNull CompletionResultSet resultSet
+			) {
+				resultSet.addElement(LookupElementBuilder.create("0..1").withTailText(" One, not required", true));
+				resultSet.addElement(LookupElementBuilder.create("1..1").withTailText(" One, required", true));
+				resultSet.addElement(LookupElementBuilder.create("0..*").withTailText(" Many", true));
+				resultSet.addElement(LookupElementBuilder.create("1..*").withTailText(" Many, non-empty set", true));
+			}
+		};
 
-    // TODO: These oversimplified forms of completion don't seem to work well at all.
+		CompletionProvider<CompletionParameters> keywordCompletionProvider = new CompletionProvider<
+			CompletionParameters
+		>() {
+			@Override
+			protected void addCompletions(
+				@NotNull CompletionParameters parameters,
+				ProcessingContext context,
+				@NotNull CompletionResultSet result
+			) {
+				result.addElement(LookupElementBuilder.create("class"));
+				result.addElement(LookupElementBuilder.create("enumeration"));
+				result.addElement(LookupElementBuilder.create("association"));
+				result.addElement(LookupElementBuilder.create("projection"));
+			}
+		};
 
-    // this.extend(CompletionType.BASIC, MULTIPLICITY, multiplicityCompletionProvider);
+		// TODO: These oversimplified forms of completion don't seem to work well at all.
 
-    // this.extend(CompletionType.BASIC, KEYWORD, keywordCompletionProvider);
-  }
+		// this.extend(CompletionType.BASIC, MULTIPLICITY, multiplicityCompletionProvider);
 
-  @Override
-  public void fillCompletionVariants(
-      @NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
-    super.fillCompletionVariants(parameters, result);
-  }
+		// this.extend(CompletionType.BASIC, KEYWORD, keywordCompletionProvider);
+	}
+
+	@Override
+	public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
+		super.fillCompletionVariants(parameters, result);
+	}
 }

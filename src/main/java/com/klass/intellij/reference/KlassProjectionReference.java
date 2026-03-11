@@ -19,64 +19,66 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassProjectionReference extends PsiPolyVariantReferenceBase<PsiElement> {
-  private final String projectionName;
 
-  private KlassProjection projection;
+	private final String projectionName;
 
-  public KlassProjectionReference(@NotNull PsiElement element, String projectionName) {
-    super(element, new TextRange(0, projectionName.length()));
-    this.projectionName = projectionName;
-  }
+	private KlassProjection projection;
 
-  @NotNull @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    if (this.projection != null) {
-      return new PsiElementResolveResult[] {new PsiElementResolveResult(this.projection)};
-    }
+	public KlassProjectionReference(@NotNull PsiElement element, String projectionName) {
+		super(element, new TextRange(0, projectionName.length()));
+		this.projectionName = projectionName;
+	}
 
-    ResolveResult[] resolveResults =
-        KlassUtil.findProjections(this.myElement).stream()
-            .filter(projection -> projection.getName().equals(this.projectionName))
-            .map(PsiElementResolveResult::new)
-            .toArray(ResolveResult[]::new);
-    if (resolveResults.length == 1) {
-      this.projection = (KlassProjection) resolveResults[0].getElement();
-    }
-    return resolveResults;
-  }
+	@NotNull @Override
+	public ResolveResult[] multiResolve(boolean incompleteCode) {
+		if (this.projection != null) {
+			return new PsiElementResolveResult[] { new PsiElementResolveResult(this.projection) };
+		}
 
-  @Nullable @Override
-  public PsiElement resolve() {
-    ResolveResult[] resolveResults = this.multiResolve(false);
-    return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
-  }
+		ResolveResult[] resolveResults = KlassUtil.findProjections(this.myElement)
+			.stream()
+			.filter((projection) -> projection.getName().equals(this.projectionName))
+			.map(PsiElementResolveResult::new)
+			.toArray(ResolveResult[]::new);
+		if (resolveResults.length == 1) {
+			this.projection = (KlassProjection) resolveResults[0].getElement();
+		}
+		return resolveResults;
+	}
 
-  @NotNull @Override
-  public Object[] getVariants() {
-    List<KlassProjection> projections = KlassUtil.findProjections(this.myElement);
-    List<LookupElement> variants = new ArrayList<>();
-    for (KlassProjection projection : projections) {
-      if (projection.getName() != null && !projection.getName().isEmpty()) {
-        LookupElementBuilder lookupElementBuilder =
-            LookupElementBuilder.create(projection.getName())
-                .withIcon(AllIcons.Hierarchy.Subtypes)
-                .withTypeText(projection.getContainingFile().getName());
-        variants.add(lookupElementBuilder);
-      }
-    }
-    return variants.toArray();
-  }
+	@Nullable @Override
+	public PsiElement resolve() {
+		ResolveResult[] resolveResults = this.multiResolve(false);
+		return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+	}
 
-  @Override
-  public PsiElement handleElementRename(String newElementName) {
-    ASTNode node = this.myElement.getNode();
-    if (node != null) {
-      KlassProjectionName projectionReference =
-          KlassElementFactory.createProjectionName(this.myElement.getProject(), newElementName);
+	@NotNull @Override
+	public Object[] getVariants() {
+		List<KlassProjection> projections = KlassUtil.findProjections(this.myElement);
+		List<LookupElement> variants = new ArrayList<>();
+		for (KlassProjection projection : projections) {
+			if (projection.getName() != null && !projection.getName().isEmpty()) {
+				LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(projection.getName())
+					.withIcon(AllIcons.Hierarchy.Subtypes)
+					.withTypeText(projection.getContainingFile().getName());
+				variants.add(lookupElementBuilder);
+			}
+		}
+		return variants.toArray();
+	}
 
-      ASTNode newNode = projectionReference.getNode();
-      node.getTreeParent().replaceChild(node, newNode);
-    }
-    return this.myElement;
-  }
+	@Override
+	public PsiElement handleElementRename(String newElementName) {
+		ASTNode node = this.myElement.getNode();
+		if (node != null) {
+			KlassProjectionName projectionReference = KlassElementFactory.createProjectionName(
+				this.myElement.getProject(),
+				newElementName
+			);
+
+			ASTNode newNode = projectionReference.getNode();
+			node.getTreeParent().replaceChild(node, newNode);
+		}
+		return this.myElement;
+	}
 }

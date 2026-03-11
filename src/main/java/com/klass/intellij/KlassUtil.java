@@ -32,121 +32,132 @@ import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassUtil {
-  private static final Key<CachedValue<Map<Class<?>, List<?>>>> ALL_ELEMENTS_CACHE_KEY =
-      Key.create("klass.util.allElements");
 
-  @NotNull private static GlobalSearchScope getModuleScope(@NotNull PsiElement context) {
-    Module module = ModuleUtilCore.findModuleForPsiElement(context);
-    if (module != null) {
-      return module.getModuleContentWithDependenciesScope();
-    }
-    return GlobalSearchScope.allScope(context.getProject());
-  }
+	private static final Key<CachedValue<Map<Class<?>, List<?>>>> ALL_ELEMENTS_CACHE_KEY = Key.create(
+		"klass.util.allElements"
+	);
 
-  public static List<KlassInterface> findInterfaces(@NotNull PsiElement context) {
-    return findElementsOfType(context, KlassInterface.class);
-  }
+	@NotNull private static GlobalSearchScope getModuleScope(@NotNull PsiElement context) {
+		Module module = ModuleUtilCore.findModuleForPsiElement(context);
+		if (module != null) {
+			return module.getModuleContentWithDependenciesScope();
+		}
+		return GlobalSearchScope.allScope(context.getProject());
+	}
 
-  public static List<KlassInterface> findInterfaces(@NotNull Project project) {
-    return findElementsOfType(project, KlassInterface.class);
-  }
+	public static List<KlassInterface> findInterfaces(@NotNull PsiElement context) {
+		return findElementsOfType(context, KlassInterface.class);
+	}
 
-  public static List<KlassKlass> findClasses(@NotNull PsiElement context) {
-    return findElementsOfType(context, KlassKlass.class);
-  }
+	public static List<KlassInterface> findInterfaces(@NotNull Project project) {
+		return findElementsOfType(project, KlassInterface.class);
+	}
 
-  public static List<KlassKlass> findClasses(@NotNull Project project) {
-    return findElementsOfType(project, KlassKlass.class);
-  }
+	public static List<KlassKlass> findClasses(@NotNull PsiElement context) {
+		return findElementsOfType(context, KlassKlass.class);
+	}
 
-  public static List<KlassAssociation> findAssociations(@NotNull PsiElement context) {
-    return findElementsOfType(context, KlassAssociation.class);
-  }
+	public static List<KlassKlass> findClasses(@NotNull Project project) {
+		return findElementsOfType(project, KlassKlass.class);
+	}
 
-  public static List<KlassAssociation> findAssociations(@NotNull Project project) {
-    return findElementsOfType(project, KlassAssociation.class);
-  }
+	public static List<KlassAssociation> findAssociations(@NotNull PsiElement context) {
+		return findElementsOfType(context, KlassAssociation.class);
+	}
 
-  public static List<KlassAssociationEnd> findAssociationEnds(@NotNull PsiElement context) {
-    return findElementsOfType(context, KlassAssociationEnd.class);
-  }
+	public static List<KlassAssociation> findAssociations(@NotNull Project project) {
+		return findElementsOfType(project, KlassAssociation.class);
+	}
 
-  public static List<KlassAssociationEnd> findAssociationEnds(@NotNull Project project) {
-    return findElementsOfType(project, KlassAssociationEnd.class);
-  }
+	public static List<KlassAssociationEnd> findAssociationEnds(@NotNull PsiElement context) {
+		return findElementsOfType(context, KlassAssociationEnd.class);
+	}
 
-  public static List<KlassEnumeration> findEnumerations(@NotNull PsiElement context) {
-    return findElementsOfType(context, KlassEnumeration.class);
-  }
+	public static List<KlassAssociationEnd> findAssociationEnds(@NotNull Project project) {
+		return findElementsOfType(project, KlassAssociationEnd.class);
+	}
 
-  public static List<KlassEnumeration> findEnumerations(@NotNull Project project) {
-    return findElementsOfType(project, KlassEnumeration.class);
-  }
+	public static List<KlassEnumeration> findEnumerations(@NotNull PsiElement context) {
+		return findElementsOfType(context, KlassEnumeration.class);
+	}
 
-  public static List<KlassProjection> findProjections(@NotNull PsiElement context) {
-    return findElementsOfType(context, KlassProjection.class);
-  }
+	public static List<KlassEnumeration> findEnumerations(@NotNull Project project) {
+		return findElementsOfType(project, KlassEnumeration.class);
+	}
 
-  public static List<KlassProjection> findProjections(@NotNull Project project) {
-    return findElementsOfType(project, KlassProjection.class);
-  }
+	public static List<KlassProjection> findProjections(@NotNull PsiElement context) {
+		return findElementsOfType(context, KlassProjection.class);
+	}
 
-  // Module-scoped: for references, restricts to current module and its dependencies.
-  public static <T extends PsiElement> List<T> findElementsOfType(
-      @NotNull PsiElement context, @NotNull Class<T> klass) {
-    GlobalSearchScope scope = getModuleScope(context);
-    return filterByScope(getAllElementsOfType(context.getProject(), klass), scope);
-  }
+	public static List<KlassProjection> findProjections(@NotNull Project project) {
+		return findElementsOfType(project, KlassProjection.class);
+	}
 
-  // Project-scoped: for navigation (Go to Class/Symbol), searches all modules.
-  public static <T extends PsiElement> List<T> findElementsOfType(
-      @NotNull Project project, @NotNull Class<T> klass) {
-    return getAllElementsOfType(project, klass);
-  }
+	// Module-scoped: for references, restricts to current module and its dependencies.
+	public static <T extends PsiElement> List<T> findElementsOfType(
+		@NotNull PsiElement context,
+		@NotNull Class<T> klass
+	) {
+		GlobalSearchScope scope = getModuleScope(context);
+		return filterByScope(getAllElementsOfType(context.getProject(), klass), scope);
+	}
 
-  @SuppressWarnings("unchecked")
-  private static <T extends PsiElement> List<T> getAllElementsOfType(
-      @NotNull Project project, @NotNull Class<T> klass) {
-    Map<Class<?>, List<?>> cache =
-        CachedValuesManager.getManager(project)
-            .getCachedValue(
-                project,
-                ALL_ELEMENTS_CACHE_KEY,
-                () ->
-                    CachedValueProvider.Result.create(
-                        new ConcurrentHashMap<>(), PsiModificationTracker.MODIFICATION_COUNT),
-                false);
-    return (List<T>) cache.computeIfAbsent(klass, k -> scanAllElementsOfType(project, klass));
-  }
+	// Project-scoped: for navigation (Go to Class/Symbol), searches all modules.
+	public static <T extends PsiElement> List<T> findElementsOfType(@NotNull Project project, @NotNull Class<T> klass) {
+		return getAllElementsOfType(project, klass);
+	}
 
-  private static <T extends PsiElement> List<T> filterByScope(
-      @NotNull List<T> elements, @NotNull GlobalSearchScope scope) {
-    return elements.stream()
-        .filter(
-            element -> {
-              VirtualFile vf = element.getContainingFile().getVirtualFile();
-              return vf != null && scope.contains(vf);
-            })
-        .collect(Collectors.toList());
-  }
+	@SuppressWarnings("unchecked")
+	private static <T extends PsiElement> List<T> getAllElementsOfType(
+		@NotNull Project project,
+		@NotNull Class<T> klass
+	) {
+		Map<Class<?>, List<?>> cache = CachedValuesManager.getManager(project).getCachedValue(
+			project,
+			ALL_ELEMENTS_CACHE_KEY,
+			() ->
+				CachedValueProvider.Result.create(new ConcurrentHashMap<>(), PsiModificationTracker.MODIFICATION_COUNT),
+			false
+		);
+		return (List<T>) cache.computeIfAbsent(klass, (k) -> scanAllElementsOfType(project, klass));
+	}
 
-  private static <T extends PsiElement> List<T> scanAllElementsOfType(
-      @NotNull Project project, @NotNull Class<T> klass) {
-    PsiManager psiManager = PsiManager.getInstance(project);
+	private static <T extends PsiElement> List<T> filterByScope(
+		@NotNull List<T> elements,
+		@NotNull GlobalSearchScope scope
+	) {
+		return elements
+			.stream()
+			.filter((element) -> {
+				VirtualFile vf = element.getContainingFile().getVirtualFile();
+				return vf != null && scope.contains(vf);
+			})
+			.collect(Collectors.toList());
+	}
 
-    Collection<VirtualFile> virtualFiles =
-        FilenameIndex.getAllFilesByExt(project, "klass", GlobalSearchScope.allScope(project));
+	private static <T extends PsiElement> List<T> scanAllElementsOfType(
+		@NotNull Project project,
+		@NotNull Class<T> klass
+	) {
+		PsiManager psiManager = PsiManager.getInstance(project);
 
-    List<T> result = new ArrayList<>();
+		Collection<VirtualFile> virtualFiles = FilenameIndex.getAllFilesByExt(
+			project,
+			"klass",
+			GlobalSearchScope.allScope(project)
+		);
 
-    virtualFiles.stream()
-        .map(psiManager::findFile)
-        .filter(KlassFile.class::isInstance)
-        .map(KlassFile.class::cast)
-        .map(klassFile -> PsiTreeUtil.getChildrenOfType(klassFile, klass))
-        .filter(Objects::nonNull)
-        .forEach(classes -> Collections.addAll(result, classes));
+		List<T> result = new ArrayList<>();
 
-    return Collections.unmodifiableList(result);
-  }
+		virtualFiles
+			.stream()
+			.map(psiManager::findFile)
+			.filter(KlassFile.class::isInstance)
+			.map(KlassFile.class::cast)
+			.map((klassFile) -> PsiTreeUtil.getChildrenOfType(klassFile, klass))
+			.filter(Objects::nonNull)
+			.forEach((classes) -> Collections.addAll(result, classes));
+
+		return Collections.unmodifiableList(result);
+	}
 }

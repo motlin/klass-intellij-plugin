@@ -85,9 +85,16 @@ spotless {
     }
     java {
         target("src/main/java/**/*.java", "src/test/java/**/*.java")
-        googleJavaFormat("1.25.2")
-        formatAnnotations()
+        toggleOffOn("@formatter:off", "@formatter:on")
+        importOrder("java", "javax", "", "\\#java|\\#javax", "\\#")
+        removeUnusedImports()
         cleanthat()
+        prettier(mapOf("prettier" to "3.3.2", "prettier-plugin-java" to "2.7.4"))
+            .configFile(".prettierrc.json5")
+            .config(mapOf("parser" to "java", "plugins" to listOf("prettier-plugin-java")))
+        formatAnnotations()
+        trimTrailingWhitespace()
+        endWithNewline()
     }
 }
 

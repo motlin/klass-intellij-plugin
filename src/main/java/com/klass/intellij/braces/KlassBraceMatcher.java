@@ -8,25 +8,25 @@ import com.klass.intellij.psi.KlassTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassBraceMatcher implements PairedBraceMatcher {
-  private static final BracePair[] PAIRS = {
-    new BracePair(KlassTypes.LBRACE, KlassTypes.RBRACE, true),
-    new BracePair(KlassTypes.LBRACKET, KlassTypes.RBRACKET, false),
-    new BracePair(KlassTypes.LPAREN, KlassTypes.RPAREN, false),
-  };
 
-  @NotNull @Override
-  public BracePair[] getPairs() {
-    return PAIRS;
-  }
+	private static final BracePair[] PAIRS = {
+		new BracePair(KlassTypes.LBRACE, KlassTypes.RBRACE, true),
+		new BracePair(KlassTypes.LBRACKET, KlassTypes.RBRACKET, false),
+		new BracePair(KlassTypes.LPAREN, KlassTypes.RPAREN, false),
+	};
 
-  @Override
-  public boolean isPairedBracesAllowedBeforeType(
-      @NotNull IElementType lbraceType, IElementType contextType) {
-    return true;
-  }
+	@NotNull @Override
+	public BracePair[] getPairs() {
+		return PAIRS;
+	}
 
-  @Override
-  public int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
-    return openingBraceOffset;
-  }
+	@Override
+	public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType lbraceType, IElementType contextType) {
+		return true;
+	}
+
+	@Override
+	public int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
+		return openingBraceOffset;
+	}
 }

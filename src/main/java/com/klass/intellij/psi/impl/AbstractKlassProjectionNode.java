@@ -7,18 +7,20 @@ import com.klass.intellij.psi.KlassProjectionNode;
 import com.klass.intellij.psi.KlassTypedElement;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractKlassProjectionNode extends KlassNombredImpl
-    implements KlassTypedElement, KlassProjectionNode {
-  public AbstractKlassProjectionNode(@NotNull ASTNode node) {
-    super(node);
-  }
+public abstract class AbstractKlassProjectionNode
+	extends KlassNombredImpl
+	implements KlassTypedElement, KlassProjectionNode {
 
-  @NotNull @Override
-  public PsiElement getType() {
-    if (this instanceof KlassProjection) {
-      return ((KlassProjection) this).getClassifierName();
-    }
+	public AbstractKlassProjectionNode(@NotNull ASTNode node) {
+		super(node);
+	}
 
-    throw new AssertionError(this);
-  }
+	@NotNull @Override
+	public PsiElement getType() {
+		if (this instanceof KlassProjection) {
+			return ((KlassProjection) this).getClassifierName();
+		}
+
+		throw new AssertionError(this);
+	}
 }

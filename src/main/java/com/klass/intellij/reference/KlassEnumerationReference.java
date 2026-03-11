@@ -19,55 +19,58 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassEnumerationReference extends PsiPolyVariantReferenceBase<PsiElement> {
-  private final String enumerationName;
 
-  public KlassEnumerationReference(@NotNull PsiElement element, String enumerationName) {
-    super(element, new TextRange(0, enumerationName.length()));
-    this.enumerationName = enumerationName;
-  }
+	private final String enumerationName;
 
-  @NotNull @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    return KlassUtil.findEnumerations(this.myElement).stream()
-        .filter(klassEnumeration -> klassEnumeration.getName().equals(this.enumerationName))
-        .map(PsiElementResolveResult::new)
-        .toArray(ResolveResult[]::new);
-  }
+	public KlassEnumerationReference(@NotNull PsiElement element, String enumerationName) {
+		super(element, new TextRange(0, enumerationName.length()));
+		this.enumerationName = enumerationName;
+	}
 
-  @Nullable @Override
-  public PsiElement resolve() {
-    ResolveResult[] resolveResults = this.multiResolve(false);
-    return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
-  }
+	@NotNull @Override
+	public ResolveResult[] multiResolve(boolean incompleteCode) {
+		return KlassUtil.findEnumerations(this.myElement)
+			.stream()
+			.filter((klassEnumeration) -> klassEnumeration.getName().equals(this.enumerationName))
+			.map(PsiElementResolveResult::new)
+			.toArray(ResolveResult[]::new);
+	}
 
-  @NotNull @Override
-  public Object[] getVariants() {
-    List<KlassEnumeration> klassEnumerations = KlassUtil.findEnumerations(this.myElement);
-    List<LookupElement> variants = new ArrayList<>();
+	@Nullable @Override
+	public PsiElement resolve() {
+		ResolveResult[] resolveResults = this.multiResolve(false);
+		return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+	}
 
-    for (KlassEnumeration klassEnumeration : klassEnumerations) {
-      if (klassEnumeration.getName() != null && !klassEnumeration.getName().isEmpty()) {
-        LookupElementBuilder lookupElementBuilder =
-            LookupElementBuilder.create(klassEnumeration.getName())
-                .withIcon(AllIcons.Nodes.Enum)
-                .withTypeText(klassEnumeration.getContainingFile().getName());
-        variants.add(lookupElementBuilder);
-      }
-    }
+	@NotNull @Override
+	public Object[] getVariants() {
+		List<KlassEnumeration> klassEnumerations = KlassUtil.findEnumerations(this.myElement);
+		List<LookupElement> variants = new ArrayList<>();
 
-    return variants.toArray();
-  }
+		for (KlassEnumeration klassEnumeration : klassEnumerations) {
+			if (klassEnumeration.getName() != null && !klassEnumeration.getName().isEmpty()) {
+				LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(klassEnumeration.getName())
+					.withIcon(AllIcons.Nodes.Enum)
+					.withTypeText(klassEnumeration.getContainingFile().getName());
+				variants.add(lookupElementBuilder);
+			}
+		}
 
-  @Override
-  public PsiElement handleElementRename(String newElementName) {
-    ASTNode node = this.myElement.getNode();
-    if (node != null) {
-      KlassEnumerationType enumerationType =
-          KlassElementFactory.createEnumerationType(this.myElement.getProject(), newElementName);
+		return variants.toArray();
+	}
 
-      ASTNode newNode = enumerationType.getNode();
-      node.getTreeParent().replaceChild(node, newNode);
-    }
-    return this.myElement;
-  }
+	@Override
+	public PsiElement handleElementRename(String newElementName) {
+		ASTNode node = this.myElement.getNode();
+		if (node != null) {
+			KlassEnumerationType enumerationType = KlassElementFactory.createEnumerationType(
+				this.myElement.getProject(),
+				newElementName
+			);
+
+			ASTNode newNode = enumerationType.getNode();
+			node.getTreeParent().replaceChild(node, newNode);
+		}
+		return this.myElement;
+	}
 }

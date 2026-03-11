@@ -9,22 +9,24 @@ import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassChooseByNameSymbolContributor extends AbstractKlassChooseByNameContributor {
-  @NotNull @Override
-  public String[] getNames(Project project, boolean includeNonProjectItems) {
-    List<String> names = new ArrayList<>();
 
-    this.addClassNames(project, names);
-    this.addAssociationNames(project, names);
-    this.addAssociationEndNames(project, names);
+	@NotNull @Override
+	public String[] getNames(Project project, boolean includeNonProjectItems) {
+		List<String> names = new ArrayList<>();
 
-    return names.toArray(new String[names.size()]);
-  }
+		this.addClassNames(project, names);
+		this.addAssociationNames(project, names);
+		this.addAssociationEndNames(project, names);
 
-  protected void addAssociationEndNames(Project project, List<String> names) {
-    KlassUtil.findAssociationEnds(project).stream()
-        .map(KlassAssociationEnd::getName)
-        .filter(Objects::nonNull)
-        .filter(name -> !name.isEmpty())
-        .forEachOrdered(names::add);
-  }
+		return names.toArray(new String[names.size()]);
+	}
+
+	protected void addAssociationEndNames(Project project, List<String> names) {
+		KlassUtil.findAssociationEnds(project)
+			.stream()
+			.map(KlassAssociationEnd::getName)
+			.filter(Objects::nonNull)
+			.filter((name) -> !name.isEmpty())
+			.forEachOrdered(names::add);
+	}
 }

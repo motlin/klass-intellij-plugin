@@ -28,155 +28,158 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassFoldingBuilder implements FoldingBuilder, DumbAware {
-  @NotNull @Override
-  public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
-    List<FoldingDescriptor> descriptors = new ArrayList<>();
-    KlassFoldingBuilder.collectDescriptorsRecursively(node, document, descriptors);
-    return descriptors.toArray(FoldingDescriptor.EMPTY);
-  }
 
-  private static void collectDescriptorsRecursively(
-      @NotNull ASTNode node,
-      @NotNull Document document,
-      @NotNull List<FoldingDescriptor> descriptors) {
-    PsiElement element = node.getPsi();
+	@NotNull @Override
+	public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
+		List<FoldingDescriptor> descriptors = new ArrayList<>();
+		KlassFoldingBuilder.collectDescriptorsRecursively(node, document, descriptors);
+		return descriptors.toArray(FoldingDescriptor.EMPTY);
+	}
 
-    if (hasBlock(element) && KlassFoldingBuilder.spanMultipleLines(node, document)) {
-      TextRange textRange = getTextRange(element);
-      descriptors.add(new FoldingDescriptor(node, textRange));
-    }
+	private static void collectDescriptorsRecursively(
+		@NotNull ASTNode node,
+		@NotNull Document document,
+		@NotNull List<FoldingDescriptor> descriptors
+	) {
+		PsiElement element = node.getPsi();
 
-    IElementType type = node.getElementType();
-    if (type == KlassTokenType.C_STYLE_COMMENT) {
-      descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
-    } else if (type == KlassTokenType.END_OF_LINE_COMMENT) {
-      Pair<PsiElement, PsiElement> commentRange =
-          KlassFoldingBuilder.expandLineCommentsRange(element);
+		if (hasBlock(element) && KlassFoldingBuilder.spanMultipleLines(node, document)) {
+			TextRange textRange = getTextRange(element);
+			descriptors.add(new FoldingDescriptor(node, textRange));
+		}
 
-      int startOffset = commentRange.getOne().getTextRange().getStartOffset();
-      int endOffset = commentRange.getTwo().getTextRange().getEndOffset();
-      if (document.getLineNumber(startOffset) != document.getLineNumber(endOffset)) {
-        descriptors.add(new FoldingDescriptor(node, new TextRange(startOffset, endOffset)));
-      }
-    }
+		IElementType type = node.getElementType();
+		if (type == KlassTokenType.C_STYLE_COMMENT) {
+			descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
+		} else if (type == KlassTokenType.END_OF_LINE_COMMENT) {
+			Pair<PsiElement, PsiElement> commentRange = KlassFoldingBuilder.expandLineCommentsRange(element);
 
-    for (ASTNode child : node.getChildren(null)) {
-      KlassFoldingBuilder.collectDescriptorsRecursively(child, document, descriptors);
-    }
-  }
+			int startOffset = commentRange.getOne().getTextRange().getStartOffset();
+			int endOffset = commentRange.getTwo().getTextRange().getEndOffset();
+			if (document.getLineNumber(startOffset) != document.getLineNumber(endOffset)) {
+				descriptors.add(new FoldingDescriptor(node, new TextRange(startOffset, endOffset)));
+			}
+		}
 
-  private static boolean hasBlock(PsiElement psiElement) {
-    return psiElement instanceof KlassClassBlock
-        || psiElement instanceof KlassInterfaceBlock
-        || psiElement instanceof KlassEnumerationBlock
-        || psiElement instanceof KlassAssociationBlock
-        || psiElement instanceof KlassProjectionBlock
-        || psiElement instanceof KlassServiceGroupBlock
-        || psiElement instanceof KlassServiceBlock;
-  }
+		for (ASTNode child : node.getChildren(null)) {
+			KlassFoldingBuilder.collectDescriptorsRecursively(child, document, descriptors);
+		}
+	}
 
-  @NotNull private static TextRange getTextRange(@NotNull PsiElement psiElement) {
-    if (psiElement instanceof KlassClassBlock) {
-      KlassLBrace lBrace = ((KlassClassBlock) psiElement).getLBrace();
-      KlassRBrace rBrace = ((KlassClassBlock) psiElement).getRBrace();
-      return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
-    }
+	private static boolean hasBlock(PsiElement psiElement) {
+		return (
+			psiElement instanceof KlassClassBlock
+			|| psiElement instanceof KlassInterfaceBlock
+			|| psiElement instanceof KlassEnumerationBlock
+			|| psiElement instanceof KlassAssociationBlock
+			|| psiElement instanceof KlassProjectionBlock
+			|| psiElement instanceof KlassServiceGroupBlock
+			|| psiElement instanceof KlassServiceBlock
+		);
+	}
 
-    if (psiElement instanceof KlassInterfaceBlock) {
-      KlassLBrace lBrace = ((KlassInterfaceBlock) psiElement).getLBrace();
-      KlassRBrace rBrace = ((KlassInterfaceBlock) psiElement).getRBrace();
-      return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
-    }
+	@NotNull private static TextRange getTextRange(@NotNull PsiElement psiElement) {
+		if (psiElement instanceof KlassClassBlock) {
+			KlassLBrace lBrace = ((KlassClassBlock) psiElement).getLBrace();
+			KlassRBrace rBrace = ((KlassClassBlock) psiElement).getRBrace();
+			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
+		}
 
-    if (psiElement instanceof KlassEnumerationBlock) {
-      KlassLBrace lBrace = ((KlassEnumerationBlock) psiElement).getLBrace();
-      KlassRBrace rBrace = ((KlassEnumerationBlock) psiElement).getRBrace();
-      return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
-    }
+		if (psiElement instanceof KlassInterfaceBlock) {
+			KlassLBrace lBrace = ((KlassInterfaceBlock) psiElement).getLBrace();
+			KlassRBrace rBrace = ((KlassInterfaceBlock) psiElement).getRBrace();
+			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
+		}
 
-    if (psiElement instanceof KlassAssociationBlock) {
-      KlassLBrace lBrace = ((KlassAssociationBlock) psiElement).getLBrace();
-      KlassRBrace rBrace = ((KlassAssociationBlock) psiElement).getRBrace();
-      return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
-    }
+		if (psiElement instanceof KlassEnumerationBlock) {
+			KlassLBrace lBrace = ((KlassEnumerationBlock) psiElement).getLBrace();
+			KlassRBrace rBrace = ((KlassEnumerationBlock) psiElement).getRBrace();
+			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
+		}
 
-    if (psiElement instanceof KlassProjectionBlock) {
-      KlassLBrace lBrace = ((KlassProjectionBlock) psiElement).getLBrace();
-      KlassRBrace rBrace = ((KlassProjectionBlock) psiElement).getRBrace();
-      return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
-    }
+		if (psiElement instanceof KlassAssociationBlock) {
+			KlassLBrace lBrace = ((KlassAssociationBlock) psiElement).getLBrace();
+			KlassRBrace rBrace = ((KlassAssociationBlock) psiElement).getRBrace();
+			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
+		}
 
-    if (psiElement instanceof KlassServiceGroupBlock) {
-      KlassLBrace lBrace = ((KlassServiceGroupBlock) psiElement).getLBrace();
-      KlassRBrace rBrace = ((KlassServiceGroupBlock) psiElement).getRBrace();
-      return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
-    }
+		if (psiElement instanceof KlassProjectionBlock) {
+			KlassLBrace lBrace = ((KlassProjectionBlock) psiElement).getLBrace();
+			KlassRBrace rBrace = ((KlassProjectionBlock) psiElement).getRBrace();
+			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
+		}
 
-    if (psiElement instanceof KlassServiceBlock) {
-      KlassLBrace lBrace = ((KlassServiceBlock) psiElement).getLBrace();
-      KlassRBrace rBrace = ((KlassServiceBlock) psiElement).getRBrace();
-      return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
-    }
+		if (psiElement instanceof KlassServiceGroupBlock) {
+			KlassLBrace lBrace = ((KlassServiceGroupBlock) psiElement).getLBrace();
+			KlassRBrace rBrace = ((KlassServiceGroupBlock) psiElement).getRBrace();
+			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
+		}
 
-    throw new AssertionError(psiElement);
-  }
+		if (psiElement instanceof KlassServiceBlock) {
+			KlassLBrace lBrace = ((KlassServiceBlock) psiElement).getLBrace();
+			KlassRBrace rBrace = ((KlassServiceBlock) psiElement).getRBrace();
+			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
+		}
 
-  @Nullable @Override
-  public String getPlaceholderText(@NotNull ASTNode node) {
-    IElementType type = node.getElementType();
-    if (type == KlassTypes.CLASS_BLOCK
-        || type == KlassTypes.INTERFACE_BLOCK
-        || type == KlassTypes.ENUMERATION_BLOCK
-        || type == KlassTypes.ASSOCIATION_BLOCK
-        || type == KlassTypes.PROJECTION_BLOCK
-        || type == KlassTypes.SERVICE_GROUP_BLOCK
-        || type == KlassTypes.SERVICE_BLOCK) {
-      return "{...}";
-    }
-    if (type == KlassTokenType.END_OF_LINE_COMMENT) {
-      return "//...";
-    }
-    if (type == KlassTokenType.C_STYLE_COMMENT) {
-      return "/*...*/";
-    }
-    return "...";
-  }
+		throw new AssertionError(psiElement);
+	}
 
-  @Override
-  public boolean isCollapsedByDefault(@NotNull ASTNode node) {
-    return false;
-  }
+	@Nullable @Override
+	public String getPlaceholderText(@NotNull ASTNode node) {
+		IElementType type = node.getElementType();
+		if (
+			type == KlassTypes.CLASS_BLOCK
+			|| type == KlassTypes.INTERFACE_BLOCK
+			|| type == KlassTypes.ENUMERATION_BLOCK
+			|| type == KlassTypes.ASSOCIATION_BLOCK
+			|| type == KlassTypes.PROJECTION_BLOCK
+			|| type == KlassTypes.SERVICE_GROUP_BLOCK
+			|| type == KlassTypes.SERVICE_BLOCK
+		) {
+			return "{...}";
+		}
+		if (type == KlassTokenType.END_OF_LINE_COMMENT) {
+			return "//...";
+		}
+		if (type == KlassTokenType.C_STYLE_COMMENT) {
+			return "/*...*/";
+		}
+		return "...";
+	}
 
-  @NotNull public static Pair<PsiElement, PsiElement> expandLineCommentsRange(@NotNull PsiElement anchor) {
-    return Tuples.pair(
-        KlassFoldingBuilder.findFurthestSiblingOfSameType(anchor, false),
-        KlassFoldingBuilder.findFurthestSiblingOfSameType(anchor, true));
-  }
+	@Override
+	public boolean isCollapsedByDefault(@NotNull ASTNode node) {
+		return false;
+	}
 
-  @NotNull public static PsiElement findFurthestSiblingOfSameType(
-      @NotNull PsiElement anchor, boolean after) {
-    ASTNode node = anchor.getNode();
-    // Compare by node type to distinguish between different types of comments
-    IElementType expectedType = node.getElementType();
-    ASTNode lastSeen = node;
-    while (node != null) {
-      IElementType elementType = node.getElementType();
-      if (elementType == expectedType) {
-        lastSeen = node;
-      } else if (elementType == TokenType.WHITE_SPACE) {
-        if (expectedType == KlassTokenType.END_OF_LINE_COMMENT
-            && node.getText().indexOf('\n', 1) != -1) {
-          break;
-        }
-      }
-      node = after ? node.getTreeNext() : node.getTreePrev();
-    }
-    return lastSeen.getPsi();
-  }
+	@NotNull public static Pair<PsiElement, PsiElement> expandLineCommentsRange(@NotNull PsiElement anchor) {
+		return Tuples.pair(
+			KlassFoldingBuilder.findFurthestSiblingOfSameType(anchor, false),
+			KlassFoldingBuilder.findFurthestSiblingOfSameType(anchor, true)
+		);
+	}
 
-  private static boolean spanMultipleLines(@NotNull ASTNode node, @NotNull Document document) {
-    TextRange range = node.getTextRange();
-    return document.getLineNumber(range.getStartOffset())
-        < document.getLineNumber(range.getEndOffset());
-  }
+	@NotNull public static PsiElement findFurthestSiblingOfSameType(@NotNull PsiElement anchor, boolean after) {
+		ASTNode node = anchor.getNode();
+		// Compare by node type to distinguish between different types of comments
+		IElementType expectedType = node.getElementType();
+		ASTNode lastSeen = node;
+		while (node != null) {
+			IElementType elementType = node.getElementType();
+			if (elementType == expectedType) {
+				lastSeen = node;
+			} else if (elementType == TokenType.WHITE_SPACE) {
+				if (expectedType == KlassTokenType.END_OF_LINE_COMMENT && node.getText().indexOf('\n', 1) != -1) {
+					break;
+				}
+			}
+			node = after ? node.getTreeNext() : node.getTreePrev();
+		}
+		return lastSeen.getPsi();
+	}
+
+	private static boolean spanMultipleLines(@NotNull ASTNode node, @NotNull Document document) {
+		TextRange range = node.getTextRange();
+		return document.getLineNumber(range.getStartOffset()) < document.getLineNumber(range.getEndOffset());
+	}
 }

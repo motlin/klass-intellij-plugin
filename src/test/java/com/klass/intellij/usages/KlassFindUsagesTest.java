@@ -16,151 +16,146 @@ import com.klass.intellij.psi.KlassProjection;
 import java.util.Collection;
 
 public class KlassFindUsagesTest extends BasePlatformTestCase {
-  @Override
-  protected String getTestDataPath() {
-    return "src/test/testData";
-  }
 
-  public void testFindUsagesOfClass() {
-    myFixture.configureByFile("FindUsagesClass.klass");
+	@Override
+	protected String getTestDataPath() {
+		return "src/test/testData";
+	}
 
-    Collection<UsageInfo> usages = myFixture.findUsages(myFixture.getElementAtCaret());
-    // User is referenced in: association end type User[1..1], association end type User[0..*],
-    // relationship User.name, and projection "on User"
-    assertFalse("Expected usages of class 'User' but found none", usages.isEmpty());
-  }
+	public void testFindUsagesOfClass() {
+		myFixture.configureByFile("FindUsagesClass.klass");
 
-  public void testFindUsagesOfInterface() {
-    myFixture.configureByFile("FindUsagesInterface.klass");
+		Collection<UsageInfo> usages = myFixture.findUsages(myFixture.getElementAtCaret());
+		// User is referenced in: association end type User[1..1], association end type User[0..*],
+		// relationship User.name, and projection "on User"
+		assertFalse("Expected usages of class 'User' but found none", usages.isEmpty());
+	}
 
-    Collection<UsageInfo> usages = myFixture.findUsages(myFixture.getElementAtCaret());
-    // Named is referenced in: class User implements Named
-    assertFalse("Expected usages of interface 'Named' but found none", usages.isEmpty());
-  }
+	public void testFindUsagesOfInterface() {
+		myFixture.configureByFile("FindUsagesInterface.klass");
 
-  public void testFindUsagesOfEnumeration() {
-    myFixture.configureByFile("FindUsagesEnumeration.klass");
+		Collection<UsageInfo> usages = myFixture.findUsages(myFixture.getElementAtCaret());
+		// Named is referenced in: class User implements Named
+		assertFalse("Expected usages of interface 'Named' but found none", usages.isEmpty());
+	}
 
-    Collection<UsageInfo> usages = myFixture.findUsages(myFixture.getElementAtCaret());
-    // Status is referenced in: status: Status;
-    assertFalse("Expected usages of enumeration 'Status' but found none", usages.isEmpty());
-  }
+	public void testFindUsagesOfEnumeration() {
+		myFixture.configureByFile("FindUsagesEnumeration.klass");
 
-  public void testCanFindUsagesForNamedElements() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		Collection<UsageInfo> usages = myFixture.findUsages(myFixture.getElementAtCaret());
+		// Status is referenced in: status: Status;
+		assertFalse("Expected usages of enumeration 'Status' but found none", usages.isEmpty());
+	}
 
-    KlassInterface klassInterface = PsiTreeUtil.findChildOfType(psiFile, KlassInterface.class);
-    assertNotNull("Expected to find an interface in the file", klassInterface);
-    assertTrue(
-        "Should be able to find usages of an interface", provider.canFindUsagesFor(klassInterface));
+	public void testCanFindUsagesForNamedElements() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
 
-    KlassKlass klassKlass = PsiTreeUtil.findChildOfType(psiFile, KlassKlass.class);
-    assertNotNull("Expected to find a class in the file", klassKlass);
-    assertTrue("Should be able to find usages of a class", provider.canFindUsagesFor(klassKlass));
+		KlassInterface klassInterface = PsiTreeUtil.findChildOfType(psiFile, KlassInterface.class);
+		assertNotNull("Expected to find an interface in the file", klassInterface);
+		assertTrue("Should be able to find usages of an interface", provider.canFindUsagesFor(klassInterface));
 
-    KlassEnumeration klassEnumeration =
-        PsiTreeUtil.findChildOfType(psiFile, KlassEnumeration.class);
-    assertNotNull("Expected to find an enumeration in the file", klassEnumeration);
-    assertTrue(
-        "Should be able to find usages of an enumeration",
-        provider.canFindUsagesFor(klassEnumeration));
-  }
+		KlassKlass klassKlass = PsiTreeUtil.findChildOfType(psiFile, KlassKlass.class);
+		assertNotNull("Expected to find a class in the file", klassKlass);
+		assertTrue("Should be able to find usages of a class", provider.canFindUsagesFor(klassKlass));
 
-  public void testGetTypeReturnsCorrectStrings() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		KlassEnumeration klassEnumeration = PsiTreeUtil.findChildOfType(psiFile, KlassEnumeration.class);
+		assertNotNull("Expected to find an enumeration in the file", klassEnumeration);
+		assertTrue("Should be able to find usages of an enumeration", provider.canFindUsagesFor(klassEnumeration));
+	}
 
-    KlassInterface klassInterface = PsiTreeUtil.findChildOfType(psiFile, KlassInterface.class);
-    assertNotNull(klassInterface);
-    assertEquals("interface", provider.getType(klassInterface));
+	public void testGetTypeReturnsCorrectStrings() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
 
-    KlassKlass klassKlass = PsiTreeUtil.findChildOfType(psiFile, KlassKlass.class);
-    assertNotNull(klassKlass);
-    assertEquals("class", provider.getType(klassKlass));
+		KlassInterface klassInterface = PsiTreeUtil.findChildOfType(psiFile, KlassInterface.class);
+		assertNotNull(klassInterface);
+		assertEquals("interface", provider.getType(klassInterface));
 
-    KlassEnumeration klassEnumeration =
-        PsiTreeUtil.findChildOfType(psiFile, KlassEnumeration.class);
-    assertNotNull(klassEnumeration);
-    assertEquals("enumeration", provider.getType(klassEnumeration));
+		KlassKlass klassKlass = PsiTreeUtil.findChildOfType(psiFile, KlassKlass.class);
+		assertNotNull(klassKlass);
+		assertEquals("class", provider.getType(klassKlass));
 
-    KlassAssociation klassAssociation =
-        PsiTreeUtil.findChildOfType(psiFile, KlassAssociation.class);
-    assertNotNull(klassAssociation);
-    assertEquals("association", provider.getType(klassAssociation));
+		KlassEnumeration klassEnumeration = PsiTreeUtil.findChildOfType(psiFile, KlassEnumeration.class);
+		assertNotNull(klassEnumeration);
+		assertEquals("enumeration", provider.getType(klassEnumeration));
 
-    KlassAssociationEnd klassAssociationEnd =
-        PsiTreeUtil.findChildOfType(psiFile, KlassAssociationEnd.class);
-    assertNotNull(klassAssociationEnd);
-    assertEquals("association end", provider.getType(klassAssociationEnd));
+		KlassAssociation klassAssociation = PsiTreeUtil.findChildOfType(psiFile, KlassAssociation.class);
+		assertNotNull(klassAssociation);
+		assertEquals("association", provider.getType(klassAssociation));
 
-    KlassProjection klassProjection = PsiTreeUtil.findChildOfType(psiFile, KlassProjection.class);
-    assertNotNull(klassProjection);
-    assertEquals("projection", provider.getType(klassProjection));
+		KlassAssociationEnd klassAssociationEnd = PsiTreeUtil.findChildOfType(psiFile, KlassAssociationEnd.class);
+		assertNotNull(klassAssociationEnd);
+		assertEquals("association end", provider.getType(klassAssociationEnd));
 
-    KlassEnumerationLiteral klassEnumerationLiteral =
-        PsiTreeUtil.findChildOfType(psiFile, KlassEnumerationLiteral.class);
-    assertNotNull(klassEnumerationLiteral);
-    assertEquals("enumeration literal", provider.getType(klassEnumerationLiteral));
-  }
+		KlassProjection klassProjection = PsiTreeUtil.findChildOfType(psiFile, KlassProjection.class);
+		assertNotNull(klassProjection);
+		assertEquals("projection", provider.getType(klassProjection));
 
-  public void testGetDescriptiveNameReturnsElementName() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		KlassEnumerationLiteral klassEnumerationLiteral = PsiTreeUtil.findChildOfType(
+			psiFile,
+			KlassEnumerationLiteral.class
+		);
+		assertNotNull(klassEnumerationLiteral);
+		assertEquals("enumeration literal", provider.getType(klassEnumerationLiteral));
+	}
 
-    KlassInterface klassInterface = PsiTreeUtil.findChildOfType(psiFile, KlassInterface.class);
-    assertNotNull(klassInterface);
-    assertEquals("Named", provider.getDescriptiveName(klassInterface));
+	public void testGetDescriptiveNameReturnsElementName() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
 
-    KlassKlass klassKlass = PsiTreeUtil.findChildOfType(psiFile, KlassKlass.class);
-    assertNotNull(klassKlass);
-    assertEquals("User", provider.getDescriptiveName(klassKlass));
+		KlassInterface klassInterface = PsiTreeUtil.findChildOfType(psiFile, KlassInterface.class);
+		assertNotNull(klassInterface);
+		assertEquals("Named", provider.getDescriptiveName(klassInterface));
 
-    KlassEnumeration klassEnumeration =
-        PsiTreeUtil.findChildOfType(psiFile, KlassEnumeration.class);
-    assertNotNull(klassEnumeration);
-    assertEquals("Status", provider.getDescriptiveName(klassEnumeration));
-  }
+		KlassKlass klassKlass = PsiTreeUtil.findChildOfType(psiFile, KlassKlass.class);
+		assertNotNull(klassKlass);
+		assertEquals("User", provider.getDescriptiveName(klassKlass));
 
-  public void testGetNodeTextReturnsDescriptiveName() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		KlassEnumeration klassEnumeration = PsiTreeUtil.findChildOfType(psiFile, KlassEnumeration.class);
+		assertNotNull(klassEnumeration);
+		assertEquals("Status", provider.getDescriptiveName(klassEnumeration));
+	}
 
-    KlassKlass klassKlass = PsiTreeUtil.findChildOfType(psiFile, KlassKlass.class);
-    assertNotNull(klassKlass);
-    assertEquals("User", provider.getNodeText(klassKlass, false));
-    assertEquals("User", provider.getNodeText(klassKlass, true));
-  }
+	public void testGetNodeTextReturnsDescriptiveName() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
 
-  public void testGetTypeReturnsEmptyForUnknownElement() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		KlassKlass klassKlass = PsiTreeUtil.findChildOfType(psiFile, KlassKlass.class);
+		assertNotNull(klassKlass);
+		assertEquals("User", provider.getNodeText(klassKlass, false));
+		assertEquals("User", provider.getNodeText(klassKlass, true));
+	}
 
-    // The PsiFile itself is not a known type
-    assertEquals("", provider.getType(psiFile));
-  }
+	public void testGetTypeReturnsEmptyForUnknownElement() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
 
-  public void testWordsScannerIsNotNull() {
-    KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
-    WordsScanner wordsScanner = provider.getWordsScanner();
-    assertNotNull("Words scanner should not be null", wordsScanner);
-  }
+		// The PsiFile itself is not a known type
+		assertEquals("", provider.getType(psiFile));
+	}
 
-  public void testGetTypeForMember() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+	public void testWordsScannerIsNotNull() {
+		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		WordsScanner wordsScanner = provider.getWordsScanner();
+		assertNotNull("Words scanner should not be null", wordsScanner);
+	}
 
-    KlassMember klassMember = PsiTreeUtil.findChildOfType(psiFile, KlassMember.class);
-    if (klassMember != null) {
-      assertEquals("property", provider.getType(klassMember));
-    }
-  }
+	public void testGetTypeForMember() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
 
-  public void testGetDescriptiveNameReturnsEmptyForNonNamedElement() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		KlassMember klassMember = PsiTreeUtil.findChildOfType(psiFile, KlassMember.class);
+		if (klassMember != null) {
+			assertEquals("property", provider.getType(klassMember));
+		}
+	}
 
-    // The PsiFile itself is not a KlassNamedElement
-    assertEquals("", provider.getDescriptiveName(psiFile));
-  }
+	public void testGetDescriptiveNameReturnsEmptyForNonNamedElement() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+
+		// The PsiFile itself is not a KlassNamedElement
+		assertEquals("", provider.getDescriptiveName(psiFile));
+	}
 }

@@ -7,12 +7,13 @@ import com.klass.intellij.psi.KlassKlassName;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class KlassKlassNameMixin extends ASTWrapperPsiElement implements KlassKlassName {
-  public KlassKlassNameMixin(@NotNull ASTNode node) {
-    super(node);
-  }
 
-  @Override
-  public PsiReference getReference() {
-    return KlassPsiImplUtil.getReference(this);
-  }
+	public KlassKlassNameMixin(@NotNull ASTNode node) {
+		super(node);
+	}
+
+	@Override
+	public PsiReference getReference() {
+		return KlassPsiImplUtil.getReference(this);
+	}
 }

@@ -10,37 +10,38 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class KlassNamedElementImpl extends ASTWrapperPsiElement {
-  public KlassNamedElementImpl(@NotNull ASTNode node) {
-    super(node);
-  }
 
-  @NotNull abstract KlassNombre getNombre();
+	public KlassNamedElementImpl(@NotNull ASTNode node) {
+		super(node);
+	}
 
-  @Override
-  public int getTextOffset() {
-    return this.getNameIdentifier().getTextOffset();
-  }
+	@NotNull abstract KlassNombre getNombre();
 
-  @Override
-  public String getName() {
-    return this.getNombre().getText();
-  }
+	@Override
+	public int getTextOffset() {
+		return this.getNameIdentifier().getTextOffset();
+	}
 
-  @Nullable public PsiElement getNameIdentifier() {
-    return this.getNombre();
-  }
+	@Override
+	public String getName() {
+		return this.getNombre().getText();
+	}
 
-  public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
-    KlassNombre nombre = getNombre();
-    if (nombre != null) {
-      PsiElement nombreText = nombre.getNombreText();
-      if (nombreText != null) {
-        PsiElement identifier = nombreText.getFirstChild();
-        if (identifier instanceof LeafPsiElement) {
-          ((LeafPsiElement) identifier).replaceWithText(name);
-        }
-      }
-    }
-    return this;
-  }
+	@Nullable public PsiElement getNameIdentifier() {
+		return this.getNombre();
+	}
+
+	public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
+		KlassNombre nombre = getNombre();
+		if (nombre != null) {
+			PsiElement nombreText = nombre.getNombreText();
+			if (nombreText != null) {
+				PsiElement identifier = nombreText.getFirstChild();
+				if (identifier instanceof LeafPsiElement) {
+					((LeafPsiElement) identifier).replaceWithText(name);
+				}
+			}
+		}
+		return this;
+	}
 }

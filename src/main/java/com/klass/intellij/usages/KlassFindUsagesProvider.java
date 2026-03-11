@@ -23,68 +23,70 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassFindUsagesProvider implements FindUsagesProvider {
-  @Nullable @Override
-  public WordsScanner getWordsScanner() {
-    return new DefaultWordsScanner(
-        new KlassLexerAdapter(),
-        TokenSet.create(KlassTypes.IDENTIFIER),
-        TokenSet.create(KlassTokenType.C_STYLE_COMMENT, KlassTokenType.END_OF_LINE_COMMENT),
-        TokenSet.create(KlassTypes.STRING_LITERAL));
-  }
 
-  @Override
-  public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
-    return psiElement instanceof PsiNamedElement;
-  }
+	@Nullable @Override
+	public WordsScanner getWordsScanner() {
+		return new DefaultWordsScanner(
+			new KlassLexerAdapter(),
+			TokenSet.create(KlassTypes.IDENTIFIER),
+			TokenSet.create(KlassTokenType.C_STYLE_COMMENT, KlassTokenType.END_OF_LINE_COMMENT),
+			TokenSet.create(KlassTypes.STRING_LITERAL)
+		);
+	}
 
-  @Nullable @Override
-  public String getHelpId(@NotNull PsiElement psiElement) {
-    return null;
-  }
+	@Override
+	public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
+		return psiElement instanceof PsiNamedElement;
+	}
 
-  @NotNull @Override
-  public String getType(@NotNull PsiElement element) {
-    if (element instanceof KlassInterface) {
-      return "interface";
-    }
-    if (element instanceof KlassKlass) {
-      return "class";
-    }
-    if (element instanceof KlassAssociation) {
-      return "association";
-    }
-    if (element instanceof KlassAssociationEnd) {
-      return "association end";
-    }
-    if (element instanceof KlassEnumeration) {
-      return "enumeration";
-    }
-    if (element instanceof KlassProjection) {
-      return "projection";
-    }
-    if (element instanceof KlassMember) {
-      return "property";
-    }
-    if (element instanceof KlassEnumerationLiteral) {
-      return "enumeration literal";
-    }
-    if (element instanceof KlassParameterDeclaration) {
-      return "parameter";
-    }
-    return "";
-  }
+	@Nullable @Override
+	public String getHelpId(@NotNull PsiElement psiElement) {
+		return null;
+	}
 
-  @NotNull @Override
-  public String getDescriptiveName(@NotNull PsiElement element) {
-    if (element instanceof KlassNamedElement) {
-      return ((KlassNamedElement) element).getName();
-    }
-    return "";
-  }
+	@NotNull @Override
+	public String getType(@NotNull PsiElement element) {
+		if (element instanceof KlassInterface) {
+			return "interface";
+		}
+		if (element instanceof KlassKlass) {
+			return "class";
+		}
+		if (element instanceof KlassAssociation) {
+			return "association";
+		}
+		if (element instanceof KlassAssociationEnd) {
+			return "association end";
+		}
+		if (element instanceof KlassEnumeration) {
+			return "enumeration";
+		}
+		if (element instanceof KlassProjection) {
+			return "projection";
+		}
+		if (element instanceof KlassMember) {
+			return "property";
+		}
+		if (element instanceof KlassEnumerationLiteral) {
+			return "enumeration literal";
+		}
+		if (element instanceof KlassParameterDeclaration) {
+			return "parameter";
+		}
+		return "";
+	}
 
-  @NotNull @Override
-  public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
-    // TODO: Better implementation
-    return this.getDescriptiveName(element);
-  }
+	@NotNull @Override
+	public String getDescriptiveName(@NotNull PsiElement element) {
+		if (element instanceof KlassNamedElement) {
+			return ((KlassNamedElement) element).getName();
+		}
+		return "";
+	}
+
+	@NotNull @Override
+	public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
+		// TODO: Better implementation
+		return this.getDescriptiveName(element);
+	}
 }

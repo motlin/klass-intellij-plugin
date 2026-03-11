@@ -30,114 +30,117 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassExpressionVariableNameReference extends PsiPolyVariantReferenceBase<PsiElement> {
-  private final String expressionVariableName;
 
-  public KlassExpressionVariableNameReference(
-      @NotNull PsiElement element, String expressionVariableName) {
-    super(element, new TextRange(0, expressionVariableName.length()));
-    this.expressionVariableName = expressionVariableName;
-  }
+	private final String expressionVariableName;
 
-  @NotNull @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
-    if (klassUrlGroup != null) {
-      KlassUrl url = klassUrlGroup.getUrl();
-      KlassQueryParams queryParams = url.getQueryParams();
-      List<PsiElementResolveResult> queryParamResults =
-          queryParams == null
-              ? Arrays.asList()
-              : queryParams.getQueryParamPartList().stream()
-                  .map(KlassQueryParamPart::getParameterDeclaration)
-                  .filter(
-                      queryParameter ->
-                          queryParameter.getName().equals(this.expressionVariableName))
-                  .map(PsiElementResolveResult::new)
-                  .collect(Collectors.toList());
-      List<PsiElementResolveResult> pathParameterResults =
-          url.getUrlPartList().stream()
-              .map(KlassUrlPart::getParameterDeclaration)
-              .filter(Objects::nonNull)
-              .filter(pathParameter -> pathParameter.getName().equals(this.expressionVariableName))
-              .map(PsiElementResolveResult::new)
-              .collect(Collectors.toList());
+	public KlassExpressionVariableNameReference(@NotNull PsiElement element, String expressionVariableName) {
+		super(element, new TextRange(0, expressionVariableName.length()));
+		this.expressionVariableName = expressionVariableName;
+	}
 
-      List<PsiElementResolveResult> results = new ArrayList<>();
-      results.addAll(queryParamResults);
-      results.addAll(pathParameterResults);
-      return results.toArray(new ResolveResult[results.size()]);
-    }
+	@NotNull @Override
+	public ResolveResult[] multiResolve(boolean incompleteCode) {
+		KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
+		if (klassUrlGroup != null) {
+			KlassUrl url = klassUrlGroup.getUrl();
+			KlassQueryParams queryParams = url.getQueryParams();
+			List<PsiElementResolveResult> queryParamResults = queryParams == null
+				? Arrays.asList()
+				: queryParams
+					.getQueryParamPartList()
+					.stream()
+					.map(KlassQueryParamPart::getParameterDeclaration)
+					.filter((queryParameter) -> queryParameter.getName().equals(this.expressionVariableName))
+					.map(PsiElementResolveResult::new)
+					.collect(Collectors.toList());
+			List<PsiElementResolveResult> pathParameterResults = url
+				.getUrlPartList()
+				.stream()
+				.map(KlassUrlPart::getParameterDeclaration)
+				.filter(Objects::nonNull)
+				.filter((pathParameter) -> pathParameter.getName().equals(this.expressionVariableName))
+				.map(PsiElementResolveResult::new)
+				.collect(Collectors.toList());
 
-    KlassParameterizedProperty parameterizedProperty =
-        PsiTreeUtil.getParentOfType(this.myElement, KlassParameterizedProperty.class);
-    if (parameterizedProperty != null) {
-      List<KlassParameterDeclaration> parameterDeclarationList =
-          parameterizedProperty
-              .getPropertyParameterDeclarationsParens()
-              .getParameterDeclarations()
-              .getParameterDeclarationList();
-      ResolveResult[] resolveResults =
-          parameterDeclarationList.stream()
-              .filter(
-                  parameterDeclaration ->
-                      parameterDeclaration.getName().equals(this.expressionVariableName))
-              .map(PsiElementResolveResult::new)
-              .toArray(ResolveResult[]::new);
-      return resolveResults;
-    }
-    return new ResolveResult[] {};
-  }
+			List<PsiElementResolveResult> results = new ArrayList<>();
+			results.addAll(queryParamResults);
+			results.addAll(pathParameterResults);
+			return results.toArray(new ResolveResult[results.size()]);
+		}
 
-  @Nullable @Override
-  public PsiElement resolve() {
-    ResolveResult[] resolveResults = this.multiResolve(false);
-    return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
-  }
+		KlassParameterizedProperty parameterizedProperty = PsiTreeUtil.getParentOfType(
+			this.myElement,
+			KlassParameterizedProperty.class
+		);
+		if (parameterizedProperty != null) {
+			List<KlassParameterDeclaration> parameterDeclarationList = parameterizedProperty
+				.getPropertyParameterDeclarationsParens()
+				.getParameterDeclarations()
+				.getParameterDeclarationList();
+			ResolveResult[] resolveResults = parameterDeclarationList
+				.stream()
+				.filter((parameterDeclaration) -> parameterDeclaration.getName().equals(this.expressionVariableName))
+				.map(PsiElementResolveResult::new)
+				.toArray(ResolveResult[]::new);
+			return resolveResults;
+		}
+		return new ResolveResult[] {};
+	}
 
-  @NotNull @Override
-  public Object[] getVariants() {
-    List<LookupElement> variants = new ArrayList<>();
-    KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
+	@Nullable @Override
+	public PsiElement resolve() {
+		ResolveResult[] resolveResults = this.multiResolve(false);
+		return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+	}
 
-    if (klassUrlGroup == null) {
-      return new Object[] {};
-    }
+	@NotNull @Override
+	public Object[] getVariants() {
+		List<LookupElement> variants = new ArrayList<>();
+		KlassUrlGroup klassUrlGroup = PsiTreeUtil.getParentOfType(this.myElement, KlassUrlGroup.class);
 
-    List<KlassUrlPart> urlPartList = klassUrlGroup.getUrl().getUrlPartList();
-    if (urlPartList != null) {
-      urlPartList.stream()
-          .map(KlassUrlPart::getParameterDeclaration)
-          .filter(Objects::nonNull)
-          .map(PsiNamedElement::getName)
-          .map(LookupElementBuilder::create)
-          .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Variable))
-          .forEach(variants::add);
-    }
+		if (klassUrlGroup == null) {
+			return new Object[] {};
+		}
 
-    KlassQueryParams queryParams = klassUrlGroup.getUrl().getQueryParams();
-    if (queryParams != null) {
-      queryParams.getQueryParamPartList().stream()
-          .map(KlassQueryParamPart::getParameterDeclaration)
-          .map(PsiNamedElement::getName)
-          .map(LookupElementBuilder::create)
-          .map(lookupElementBuilder -> lookupElementBuilder.withIcon(AllIcons.Nodes.Variable))
-          .forEach(variants::add);
-    }
+		List<KlassUrlPart> urlPartList = klassUrlGroup.getUrl().getUrlPartList();
+		if (urlPartList != null) {
+			urlPartList
+				.stream()
+				.map(KlassUrlPart::getParameterDeclaration)
+				.filter(Objects::nonNull)
+				.map(PsiNamedElement::getName)
+				.map(LookupElementBuilder::create)
+				.map((lookupElementBuilder) -> lookupElementBuilder.withIcon(AllIcons.Nodes.Variable))
+				.forEach(variants::add);
+		}
 
-    return variants.toArray();
-  }
+		KlassQueryParams queryParams = klassUrlGroup.getUrl().getQueryParams();
+		if (queryParams != null) {
+			queryParams
+				.getQueryParamPartList()
+				.stream()
+				.map(KlassQueryParamPart::getParameterDeclaration)
+				.map(PsiNamedElement::getName)
+				.map(LookupElementBuilder::create)
+				.map((lookupElementBuilder) -> lookupElementBuilder.withIcon(AllIcons.Nodes.Variable))
+				.forEach(variants::add);
+		}
 
-  @Override
-  public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-    ASTNode node = this.myElement.getNode();
-    if (node != null) {
-      KlassExpressionVariableName expressionVariableName =
-          KlassElementFactory.createExpressionVariableName(
-              this.myElement.getProject(), newElementName);
+		return variants.toArray();
+	}
 
-      ASTNode newNode = expressionVariableName.getNode();
-      node.getTreeParent().replaceChild(node, newNode);
-    }
-    return this.myElement;
-  }
+	@Override
+	public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+		ASTNode node = this.myElement.getNode();
+		if (node != null) {
+			KlassExpressionVariableName expressionVariableName = KlassElementFactory.createExpressionVariableName(
+				this.myElement.getProject(),
+				newElementName
+			);
+
+			ASTNode newNode = expressionVariableName.getNode();
+			node.getTreeParent().replaceChild(node, newNode);
+		}
+		return this.myElement;
+	}
 }

@@ -9,22 +9,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassDummyMultiplicityReference extends PsiPolyVariantReferenceBase<PsiElement> {
-  public KlassDummyMultiplicityReference(KlassDummyMultiplicity klassDummyMultiplicity) {
-    super(klassDummyMultiplicity, new TextRange(0, klassDummyMultiplicity.getText().length()));
-  }
 
-  @NotNull @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    return new ResolveResult[] {};
-  }
+	public KlassDummyMultiplicityReference(KlassDummyMultiplicity klassDummyMultiplicity) {
+		super(klassDummyMultiplicity, new TextRange(0, klassDummyMultiplicity.getText().length()));
+	}
 
-  @Nullable @Override
-  public PsiElement resolve() {
-    return null;
-  }
+	@NotNull @Override
+	public ResolveResult[] multiResolve(boolean incompleteCode) {
+		return new ResolveResult[] {};
+	}
 
-  @NotNull @Override
-  public Object[] getVariants() {
-    return new Object[] {"0..1", "1..1", "0..*", "1..*"};
-  }
+	@Nullable @Override
+	public PsiElement resolve() {
+		return null;
+	}
+
+	@NotNull @Override
+	public Object[] getVariants() {
+		return new Object[] { "0..1", "1..1", "0..*", "1..*" };
+	}
 }
