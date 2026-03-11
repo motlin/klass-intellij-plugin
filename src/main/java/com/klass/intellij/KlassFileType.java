@@ -1,7 +1,7 @@
 package com.klass.intellij;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import javax.swing.*;
+import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

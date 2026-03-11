@@ -25,7 +25,7 @@ import com.klass.intellij.psi.KlassTopLevelItem;
 import com.klass.intellij.psi.KlassUrlGroup;
 import com.klass.intellij.psi.impl.KlassPsiImplUtil;
 import java.util.Arrays;
-import javax.swing.*;
+import javax.swing.Icon;
 
 public class KlassStructureViewElement implements StructureViewTreeElement {
   private final PsiElement element;
