@@ -5,7 +5,7 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 import com.klass.intellij.KlassFileType;
 import com.klass.intellij.KlassLanguage;
-import javax.swing.*;
+import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassFile extends PsiFileBase {

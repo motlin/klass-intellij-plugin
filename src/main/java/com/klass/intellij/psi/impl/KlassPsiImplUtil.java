@@ -48,7 +48,7 @@ import com.klass.intellij.reference.KlassMemberReference;
 import com.klass.intellij.reference.KlassParameterReference;
 import com.klass.intellij.reference.KlassParameterizedPropertyReference;
 import com.klass.intellij.reference.KlassProjectionReference;
-import javax.swing.*;
+import javax.swing.Icon;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassPsiImplUtil {

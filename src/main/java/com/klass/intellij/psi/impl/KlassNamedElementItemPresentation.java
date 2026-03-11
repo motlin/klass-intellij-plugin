@@ -2,7 +2,7 @@ package com.klass.intellij.psi.impl;
 
 import com.intellij.navigation.ItemPresentation;
 import com.klass.intellij.psi.KlassNamedElement;
-import javax.swing.*;
+import javax.swing.Icon;
 
 public class KlassNamedElementItemPresentation implements ItemPresentation {
   protected final KlassNamedElement element;
