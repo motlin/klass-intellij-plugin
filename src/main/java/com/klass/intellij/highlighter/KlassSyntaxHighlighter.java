@@ -90,7 +90,7 @@ public class KlassSyntaxHighlighter extends SyntaxHighlighterBase {
       XmlTokenType.XML_ATTRIBUTE_VALUE_END_DELIMITER,
       XmlTokenType.XML_CHAR_ENTITY_REF,
       XmlTokenType.XML_ENTITY_REF_TOKEN,
-      XmlTokenType.XML_EQ
+      XmlTokenType.XML_EQ,
     };
     for (IElementType idx : klassDocMarkup) {
       ourMap1.put(idx, KlassHighlightingColors.DOC_COMMENT);
