@@ -25,14 +25,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassUtil {
-  private static final Key<CachedValue<ConcurrentHashMap<Class<?>, List<?>>>>
-      ALL_ELEMENTS_CACHE_KEY = Key.create("klass.util.allElements");
+  private static final Key<CachedValue<Map<Class<?>, List<?>>>> ALL_ELEMENTS_CACHE_KEY =
+      Key.create("klass.util.allElements");
 
   @NotNull private static GlobalSearchScope getModuleScope(@NotNull PsiElement context) {
     Module module = ModuleUtilCore.findModuleForPsiElement(context);
@@ -106,7 +107,7 @@ public class KlassUtil {
   @SuppressWarnings("unchecked")
   private static <T extends PsiElement> List<T> getAllElementsOfType(
       @NotNull Project project, @NotNull Class<T> klass) {
-    ConcurrentHashMap<Class<?>, List<?>> cache =
+    Map<Class<?>, List<?>> cache =
         CachedValuesManager.getManager(project)
             .getCachedValue(
                 project,
