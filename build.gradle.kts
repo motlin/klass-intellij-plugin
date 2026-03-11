@@ -3,6 +3,7 @@ import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
     id("java")
+    id("checkstyle")
     id("org.jetbrains.intellij.platform") version "2.11.0"
     id("org.jetbrains.grammarkit") version "2023.3.0.3"
     id("com.diffplug.spotless") version "8.3.0"
@@ -67,6 +68,10 @@ intellijPlatform {
     }
 }
 
+checkstyle {
+    toolVersion = "10.23.1"
+}
+
 grammarKit {
     jflexRelease = "1.9.1"
 }
@@ -111,6 +116,10 @@ tasks {
 
     processResources {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+
+    checkstyleMain {
+        source = fileTree("src/main/java")
     }
 }
 
