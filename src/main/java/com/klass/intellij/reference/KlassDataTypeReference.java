@@ -8,29 +8,37 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassDataTypeReference extends PsiPolyVariantReferenceBase<PsiElement> {
-  public static final String[] VARIANTS = {
-    "Boolean", "Integer", "Long", "Double", "Float", "String", "Instant", "LocalDate",
-  };
 
-  private final String substring;
+	public static final String[] VARIANTS = {
+		"Boolean",
+		"Integer",
+		"Long",
+		"Double",
+		"Float",
+		"String",
+		"Instant",
+		"LocalDate",
+	};
 
-  public KlassDataTypeReference(@NotNull PsiElement element, String substring) {
-    super(element, new TextRange(0, substring.length()));
-    this.substring = substring;
-  }
+	private final String substring;
 
-  @NotNull @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    return new ResolveResult[] {};
-  }
+	public KlassDataTypeReference(@NotNull PsiElement element, String substring) {
+		super(element, new TextRange(0, substring.length()));
+		this.substring = substring;
+	}
 
-  @Nullable @Override
-  public PsiElement resolve() {
-    return null;
-  }
+	@NotNull @Override
+	public ResolveResult[] multiResolve(boolean incompleteCode) {
+		return new ResolveResult[] {};
+	}
 
-  @NotNull @Override
-  public Object[] getVariants() {
-    return VARIANTS;
-  }
+	@Nullable @Override
+	public PsiElement resolve() {
+		return null;
+	}
+
+	@NotNull @Override
+	public Object[] getVariants() {
+		return VARIANTS;
+	}
 }

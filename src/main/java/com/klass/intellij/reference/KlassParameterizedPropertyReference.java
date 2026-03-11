@@ -16,64 +16,65 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassParameterizedPropertyReference extends PsiPolyVariantReferenceBase<PsiElement> {
-  private final String parameterizedPropertyName;
 
-  public KlassParameterizedPropertyReference(
-      @NotNull PsiElement element, String parameterizedPropertyName) {
-    super(element, new TextRange(0, parameterizedPropertyName.length()));
-    this.parameterizedPropertyName = parameterizedPropertyName;
-  }
+	private final String parameterizedPropertyName;
 
-  @NotNull @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    PsiElement innerNode = this.myElement.getParent();
-    KlassTypedElement klassTypedElement =
-        (KlassTypedElement) innerNode.getParent().getParent().getParent();
-    PsiElement type = klassTypedElement.getType();
-    PsiReference reference = type.getReference();
-    if (reference == null) {
-      return new ResolveResult[] {};
-    }
-    PsiElement resolved = reference.resolve();
-    if (!(resolved instanceof KlassKlass)) {
-      return new ResolveResult[] {};
-    }
-    KlassKlass klassKlass = (KlassKlass) resolved;
+	public KlassParameterizedPropertyReference(@NotNull PsiElement element, String parameterizedPropertyName) {
+		super(element, new TextRange(0, parameterizedPropertyName.length()));
+		this.parameterizedPropertyName = parameterizedPropertyName;
+	}
 
-    ResolveResult[] resolveResults =
-        klassKlass.getClassBlock().getClassBody().getMemberList().stream()
-            .filter(KlassParameterizedProperty.class::isInstance)
-            .map(KlassParameterizedProperty.class::cast)
-            .filter(
-                klassParameterizedProperty ->
-                    klassParameterizedProperty.getName().equals(this.parameterizedPropertyName))
-            .map(PsiElementResolveResult::new)
-            .toArray(ResolveResult[]::new);
-    return resolveResults;
-  }
+	@NotNull @Override
+	public ResolveResult[] multiResolve(boolean incompleteCode) {
+		PsiElement innerNode = this.myElement.getParent();
+		KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
+		PsiElement type = klassTypedElement.getType();
+		PsiReference reference = type.getReference();
+		if (reference == null) {
+			return new ResolveResult[] {};
+		}
+		PsiElement resolved = reference.resolve();
+		if (!(resolved instanceof KlassKlass)) {
+			return new ResolveResult[] {};
+		}
+		KlassKlass klassKlass = (KlassKlass) resolved;
 
-  @Nullable @Override
-  public PsiElement resolve() {
-    ResolveResult[] resolveResults = this.multiResolve(false);
-    return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
-  }
+		ResolveResult[] resolveResults = klassKlass
+			.getClassBlock()
+			.getClassBody()
+			.getMemberList()
+			.stream()
+			.filter(KlassParameterizedProperty.class::isInstance)
+			.map(KlassParameterizedProperty.class::cast)
+			.filter((klassParameterizedProperty) ->
+				klassParameterizedProperty.getName().equals(this.parameterizedPropertyName)
+			)
+			.map(PsiElementResolveResult::new)
+			.toArray(ResolveResult[]::new);
+		return resolveResults;
+	}
 
-  @NotNull @Override
-  public Object[] getVariants() {
-    return new Object[] {};
-  }
+	@Nullable @Override
+	public PsiElement resolve() {
+		ResolveResult[] resolveResults = this.multiResolve(false);
+		return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+	}
 
-  @Override
-  public PsiElement handleElementRename(String newElementName) {
-    ASTNode node = this.myElement.getNode();
-    if (node != null) {
-      KlassParameterizedPropertyName parameterizedPropertyName =
-          KlassElementFactory.createParameterizedPropertyName(
-              this.myElement.getProject(), newElementName);
+	@NotNull @Override
+	public Object[] getVariants() {
+		return new Object[] {};
+	}
 
-      ASTNode newNode = parameterizedPropertyName.getNode();
-      node.getTreeParent().replaceChild(node, newNode);
-    }
-    return this.myElement;
-  }
+	@Override
+	public PsiElement handleElementRename(String newElementName) {
+		ASTNode node = this.myElement.getNode();
+		if (node != null) {
+			KlassParameterizedPropertyName parameterizedPropertyName =
+				KlassElementFactory.createParameterizedPropertyName(this.myElement.getProject(), newElementName);
+
+			ASTNode newNode = parameterizedPropertyName.getNode();
+			node.getTreeParent().replaceChild(node, newNode);
+		}
+		return this.myElement;
+	}
 }

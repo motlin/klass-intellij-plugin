@@ -14,32 +14,32 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassExpressionNativeValueReference extends PsiPolyVariantReferenceBase<PsiElement> {
-  @NotNull private final String expressionNativeValueText;
 
-  public KlassExpressionNativeValueReference(
-      KlassExpressionNativeValue element, String expressionNativeValueText) {
-    super(element, new TextRange(0, expressionNativeValueText.length()));
+	@NotNull private final String expressionNativeValueText;
 
-    this.expressionNativeValueText = expressionNativeValueText;
-  }
+	public KlassExpressionNativeValueReference(KlassExpressionNativeValue element, String expressionNativeValueText) {
+		super(element, new TextRange(0, expressionNativeValueText.length()));
+		this.expressionNativeValueText = expressionNativeValueText;
+	}
 
-  @NotNull @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    return KlassUtil.findClasses(this.myElement).stream()
-        .filter(klassKlass -> klassKlass.getFirstChild().getText().equals("user"))
-        .map(PsiElementResolveResult::new)
-        .toArray(ResolveResult[]::new);
-  }
+	@NotNull @Override
+	public ResolveResult[] multiResolve(boolean incompleteCode) {
+		return KlassUtil.findClasses(this.myElement)
+			.stream()
+			.filter((klassKlass) -> klassKlass.getFirstChild().getText().equals("user"))
+			.map(PsiElementResolveResult::new)
+			.toArray(ResolveResult[]::new);
+	}
 
-  @Nullable @Override
-  public PsiElement resolve() {
-    ResolveResult[] resolveResults = this.multiResolve(false);
-    return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
-  }
+	@Nullable @Override
+	public PsiElement resolve() {
+		ResolveResult[] resolveResults = this.multiResolve(false);
+		return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+	}
 
-  @NotNull @Override
-  public Object[] getVariants() {
-    List<LookupElement> variants = new ArrayList<>();
-    return variants.toArray();
-  }
+	@NotNull @Override
+	public Object[] getVariants() {
+		List<LookupElement> variants = new ArrayList<>();
+		return variants.toArray();
+	}
 }

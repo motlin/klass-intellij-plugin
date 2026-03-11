@@ -22,96 +22,100 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassKlassReference extends PsiPolyVariantReferenceBase<PsiElement> {
-  private final String name;
 
-  public KlassKlassReference(@NotNull PsiElement element, String name) {
-    super(element, new TextRange(0, name.length()));
-    this.name = name;
-  }
+	private final String name;
 
-  @Nullable @Override
-  public PsiElement resolve() {
-    ResolveResult[] resolveResults = this.multiResolve(false);
-    return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
-  }
+	public KlassKlassReference(@NotNull PsiElement element, String name) {
+		super(element, new TextRange(0, name.length()));
+		this.name = name;
+	}
 
-  @NotNull @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    ResolveResult[] klassResults =
-        KlassUtil.findClasses(this.myElement).stream()
-            .filter(klass -> klass.getName().equals(this.name))
-            .map(PsiElementResolveResult::new)
-            .toArray(ResolveResult[]::new);
-    if (klassResults.length > 0) {
-      return klassResults;
-    }
-    ResolveResult[] enumerationResults =
-        KlassUtil.findEnumerations(this.myElement).stream()
-            .filter(enumeration -> enumeration.getName().equals(this.name))
-            .map(PsiElementResolveResult::new)
-            .toArray(ResolveResult[]::new);
-    if (enumerationResults.length > 0) {
-      return enumerationResults;
-    }
+	@Nullable @Override
+	public PsiElement resolve() {
+		ResolveResult[] resolveResults = this.multiResolve(false);
+		return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+	}
 
-    if (this.name.endsWith("Version")) {
-      String baseName = this.name.substring(0, this.name.length() - "Version".length());
-      return KlassUtil.findClasses(this.myElement).stream()
-          .filter(klass -> klass.getName().equals(baseName))
-          .flatMap(klass -> klass.getClassModifierList().stream())
-          .filter(modifier -> modifier.getText().equals("versioned"))
-          .map(PsiElementResolveResult::new)
-          .toArray(ResolveResult[]::new);
-    }
+	@NotNull @Override
+	public ResolveResult[] multiResolve(boolean incompleteCode) {
+		ResolveResult[] klassResults = KlassUtil.findClasses(this.myElement)
+			.stream()
+			.filter((klass) -> klass.getName().equals(this.name))
+			.map(PsiElementResolveResult::new)
+			.toArray(ResolveResult[]::new);
+		if (klassResults.length > 0) {
+			return klassResults;
+		}
+		ResolveResult[] enumerationResults = KlassUtil.findEnumerations(this.myElement)
+			.stream()
+			.filter((enumeration) -> enumeration.getName().equals(this.name))
+			.map(PsiElementResolveResult::new)
+			.toArray(ResolveResult[]::new);
+		if (enumerationResults.length > 0) {
+			return enumerationResults;
+		}
 
-    return new ResolveResult[] {};
-  }
+		if (this.name.endsWith("Version")) {
+			String baseName = this.name.substring(0, this.name.length() - "Version".length());
+			return KlassUtil.findClasses(this.myElement)
+				.stream()
+				.filter((klass) -> klass.getName().equals(baseName))
+				.flatMap((klass) -> klass.getClassModifierList().stream())
+				.filter((modifier) -> modifier.getText().equals("versioned"))
+				.map(PsiElementResolveResult::new)
+				.toArray(ResolveResult[]::new);
+		}
 
-  @NotNull @Override
-  public Object[] getVariants() {
-    List<LookupElement> variants = new ArrayList<>();
-    BracketsInsertHandler insertHandler = new BracketsInsertHandler();
-    for (KlassKlass klassKlass : KlassUtil.findClasses(this.myElement)) {
-      if (klassKlass.getName() != null && !klassKlass.getName().isEmpty()) {
-        variants.add(
-            LookupElementBuilder.create(klassKlass.getName())
-                .withIcon(AllIcons.Nodes.Class)
-                .withTypeText(klassKlass.getContainingFile().getName())
-                .withInsertHandler(insertHandler));
-      }
-    }
-    for (KlassEnumeration enumeration : KlassUtil.findEnumerations(this.myElement)) {
-      if (enumeration.getName() != null && !enumeration.getName().isEmpty()) {
-        variants.add(
-            LookupElementBuilder.create(enumeration.getName())
-                .withIcon(AllIcons.Nodes.Enum)
-                .withTypeText(enumeration.getContainingFile().getName()));
-      }
-    }
-    return variants.toArray();
-  }
+		return new ResolveResult[] {};
+	}
 
-  private static class BracketsInsertHandler extends ParenthesesInsertHandler<LookupElement> {
-    private BracketsInsertHandler() {
-      super(false, false, true, false, '[', ']');
-    }
+	@NotNull @Override
+	public Object[] getVariants() {
+		List<LookupElement> variants = new ArrayList<>();
+		BracketsInsertHandler insertHandler = new BracketsInsertHandler();
+		for (KlassKlass klassKlass : KlassUtil.findClasses(this.myElement)) {
+			if (klassKlass.getName() != null && !klassKlass.getName().isEmpty()) {
+				variants.add(
+					LookupElementBuilder.create(klassKlass.getName())
+						.withIcon(AllIcons.Nodes.Class)
+						.withTypeText(klassKlass.getContainingFile().getName())
+						.withInsertHandler(insertHandler)
+				);
+			}
+		}
+		for (KlassEnumeration enumeration : KlassUtil.findEnumerations(this.myElement)) {
+			if (enumeration.getName() != null && !enumeration.getName().isEmpty()) {
+				variants.add(
+					LookupElementBuilder.create(enumeration.getName())
+						.withIcon(AllIcons.Nodes.Enum)
+						.withTypeText(enumeration.getContainingFile().getName())
+				);
+			}
+		}
+		return variants.toArray();
+	}
 
-    @Override
-    protected boolean placeCaretInsideParentheses(InsertionContext context, LookupElement item) {
-      return true;
-    }
-  }
+	private static class BracketsInsertHandler extends ParenthesesInsertHandler<LookupElement> {
 
-  @Override
-  public PsiElement handleElementRename(String newElementName) {
-    ASTNode node = this.myElement.getNode();
-    if (node != null) {
-      KlassKlassName klassName =
-          KlassElementFactory.createKlassName(this.myElement.getProject(), newElementName);
+		private BracketsInsertHandler() {
+			super(false, false, true, false, '[', ']');
+		}
 
-      ASTNode newNode = klassName.getNode();
-      node.getTreeParent().replaceChild(node, newNode);
-    }
-    return this.myElement;
-  }
+		@Override
+		protected boolean placeCaretInsideParentheses(InsertionContext context, LookupElement item) {
+			return true;
+		}
+	}
+
+	@Override
+	public PsiElement handleElementRename(String newElementName) {
+		ASTNode node = this.myElement.getNode();
+		if (node != null) {
+			KlassKlassName klassName = KlassElementFactory.createKlassName(this.myElement.getProject(), newElementName);
+
+			ASTNode newNode = klassName.getNode();
+			node.getTreeParent().replaceChild(node, newNode);
+		}
+		return this.myElement;
+	}
 }

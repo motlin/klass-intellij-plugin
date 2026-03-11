@@ -24,53 +24,58 @@ import com.klass.intellij.psi.KlassUrlGroup;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassStructureViewModel extends StructureViewModelBase implements ElementInfoProvider {
-  public KlassStructureViewModel(PsiFile psiFile) {
-    super(psiFile, new KlassStructureViewElement(psiFile));
-  }
 
-  @Override
-  @NotNull public Sorter[] getSorters() {
-    return new Sorter[] {};
-  }
+	public KlassStructureViewModel(PsiFile psiFile) {
+		super(psiFile, new KlassStructureViewElement(psiFile));
+	}
 
-  @Override
-  protected Class<?> @NotNull [] getSuitableClasses() {
-    return new Class[] {
-      KlassTopLevelItem.class,
-      KlassInterface.class,
-      KlassKlass.class,
-      KlassEnumeration.class,
-      KlassAssociation.class,
-      KlassProjection.class,
-      KlassServiceGroup.class,
-      KlassMember.class,
-      KlassAssociationEnd.class,
-      KlassEnumerationLiteral.class,
-      KlassUrlGroup.class,
-      KlassService.class,
-    };
-  }
+	@Override
+	@NotNull public Sorter[] getSorters() {
+		return new Sorter[] {};
+	}
 
-  @Override
-  public boolean isAlwaysShowsPlus(StructureViewTreeElement element) {
-    Object value = element.getValue();
-    return value instanceof KlassKlass
-        || value instanceof KlassInterface
-        || value instanceof KlassAssociation
-        || value instanceof KlassEnumeration
-        || value instanceof KlassServiceGroup
-        || value instanceof KlassUrlGroup;
-  }
+	@Override
+	protected Class<?>@NotNull [] getSuitableClasses() {
+		return new Class[] {
+			KlassTopLevelItem.class,
+			KlassInterface.class,
+			KlassKlass.class,
+			KlassEnumeration.class,
+			KlassAssociation.class,
+			KlassProjection.class,
+			KlassServiceGroup.class,
+			KlassMember.class,
+			KlassAssociationEnd.class,
+			KlassEnumerationLiteral.class,
+			KlassUrlGroup.class,
+			KlassService.class,
+		};
+	}
 
-  @Override
-  public boolean isAlwaysLeaf(StructureViewTreeElement element) {
-    Object value = element.getValue();
-    return value instanceof KlassPrimitiveTypeProperty
-        || value instanceof KlassEnumerationProperty
-        || value instanceof KlassParameterizedProperty
-        || value instanceof KlassParameterizedPropertySignature
-        || value instanceof KlassAssociationEnd
-        || value instanceof KlassEnumerationLiteral
-        || value instanceof KlassService;
-  }
+	@Override
+	public boolean isAlwaysShowsPlus(StructureViewTreeElement element) {
+		Object value = element.getValue();
+		return (
+			value instanceof KlassKlass
+			|| value instanceof KlassInterface
+			|| value instanceof KlassAssociation
+			|| value instanceof KlassEnumeration
+			|| value instanceof KlassServiceGroup
+			|| value instanceof KlassUrlGroup
+		);
+	}
+
+	@Override
+	public boolean isAlwaysLeaf(StructureViewTreeElement element) {
+		Object value = element.getValue();
+		return (
+			value instanceof KlassPrimitiveTypeProperty
+			|| value instanceof KlassEnumerationProperty
+			|| value instanceof KlassParameterizedProperty
+			|| value instanceof KlassParameterizedPropertySignature
+			|| value instanceof KlassAssociationEnd
+			|| value instanceof KlassEnumerationLiteral
+			|| value instanceof KlassService
+		);
+	}
 }

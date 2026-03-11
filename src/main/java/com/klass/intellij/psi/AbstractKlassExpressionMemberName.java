@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 public interface AbstractKlassExpressionMemberName extends PsiElement {
-  @NotNull List<KlassAssociationEndName> getAssociationEndNameList();
+	@NotNull List<KlassAssociationEndName> getAssociationEndNameList();
 
-  @NotNull KlassMemberName getMemberName();
+	@NotNull KlassMemberName getMemberName();
 }

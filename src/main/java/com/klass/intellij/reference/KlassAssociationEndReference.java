@@ -26,189 +26,192 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<PsiElement> {
-  private final String associationEndName;
 
-  public KlassAssociationEndReference(@NotNull PsiElement element, String associationEndName) {
-    super(element, new TextRange(0, associationEndName.length()));
-    this.associationEndName = associationEndName;
-  }
+	private final String associationEndName;
 
-  @Nullable @Override
-  public PsiElement resolve() {
-    ResolveResult[] resolveResults = this.multiResolve(false);
-    return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
-  }
+	public KlassAssociationEndReference(@NotNull PsiElement element, String associationEndName) {
+		super(element, new TextRange(0, associationEndName.length()));
+		this.associationEndName = associationEndName;
+	}
 
-  @NotNull @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    PsiElement innerNode = this.myElement.getParent();
-    if (innerNode instanceof KlassProjectionWithAssociationEnd) {
-      KlassClassifierName classifierName =
-          ((KlassProjectionWithAssociationEnd) innerNode).getClassifierName();
-      if (classifierName == null) {
-        KlassTypedElement klassTypedElement =
-            (KlassTypedElement) innerNode.getParent().getParent().getParent();
-        PsiElement type = klassTypedElement.getType();
-        PsiReference reference = type.getReference();
-        PsiElement resolve = reference.resolve();
-        if (resolve == null) {
-          return new ResolveResult[] {};
-        }
+	@Nullable @Override
+	public PsiElement resolve() {
+		ResolveResult[] resolveResults = this.multiResolve(false);
+		return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+	}
 
-        if (resolve instanceof KlassKlass) {
-          KlassKlass klassKlass = (KlassKlass) resolve;
-          return this.getAssociationEndResolveResults(klassKlass);
-        }
+	@NotNull @Override
+	public ResolveResult[] multiResolve(boolean incompleteCode) {
+		PsiElement innerNode = this.myElement.getParent();
+		if (innerNode instanceof KlassProjectionWithAssociationEnd) {
+			KlassClassifierName classifierName = ((KlassProjectionWithAssociationEnd) innerNode).getClassifierName();
+			if (classifierName == null) {
+				KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
+				PsiElement type = klassTypedElement.getType();
+				PsiReference reference = type.getReference();
+				PsiElement resolve = reference.resolve();
+				if (resolve == null) {
+					return new ResolveResult[] {};
+				}
 
-        if (resolve instanceof KlassAssociationEnd) {
-          KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
-          PsiElement klassResolved = klassAssociationEnd.getKlassName().getReference().resolve();
-          if (klassResolved instanceof KlassKlass) {
-            return this.getAssociationEndResolveResults((KlassKlass) klassResolved);
-          }
-        }
+				if (resolve instanceof KlassKlass) {
+					KlassKlass klassKlass = (KlassKlass) resolve;
+					return this.getAssociationEndResolveResults(klassKlass);
+				}
 
-        if (resolve instanceof KlassClassModifier) {
-          return new ResolveResult[] {new PsiElementResolveResult(resolve)};
-        }
+				if (resolve instanceof KlassAssociationEnd) {
+					KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
+					PsiElement klassResolved = klassAssociationEnd.getKlassName().getReference().resolve();
+					if (klassResolved instanceof KlassKlass) {
+						return this.getAssociationEndResolveResults((KlassKlass) klassResolved);
+					}
+				}
 
-        return new ResolveResult[] {};
-      }
+				if (resolve instanceof KlassClassModifier) {
+					return new ResolveResult[] { new PsiElementResolveResult(resolve) };
+				}
 
-      // Polymorphic projection
-      PsiReference reference = classifierName.getReference();
-      PsiElement resolve = reference.resolve();
-      if (resolve instanceof KlassKlass) {
-        KlassKlass klassKlass = (KlassKlass) resolve;
-        return this.getAssociationEndResolveResults(klassKlass);
-      }
+				return new ResolveResult[] {};
+			}
 
-      if (resolve instanceof KlassClassModifier) {
-        return new ResolveResult[] {new PsiElementResolveResult(resolve)};
-      }
+			// Polymorphic projection
+			PsiReference reference = classifierName.getReference();
+			PsiElement resolve = reference.resolve();
+			if (resolve instanceof KlassKlass) {
+				KlassKlass klassKlass = (KlassKlass) resolve;
+				return this.getAssociationEndResolveResults(klassKlass);
+			}
 
-      return new ResolveResult[] {};
-    }
-    if (innerNode instanceof KlassExpressionMemberName) {
-      KlassTypedElement klassTypedElement =
-          (KlassTypedElement) innerNode.getParent().getParent().getParent();
-      PsiElement type = klassTypedElement.getType();
-      PsiReference reference = type.getReference();
-      PsiElement resolve = reference.resolve();
-      if (resolve == null) {
-        return new ResolveResult[] {};
-      }
+			if (resolve instanceof KlassClassModifier) {
+				return new ResolveResult[] { new PsiElementResolveResult(resolve) };
+			}
 
-      if (resolve instanceof KlassKlass) {
-        KlassKlass klassKlass = (KlassKlass) resolve;
-        return this.getAssociationEndResolveResults(klassKlass);
-      }
+			return new ResolveResult[] {};
+		}
+		if (innerNode instanceof KlassExpressionMemberName) {
+			KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
+			PsiElement type = klassTypedElement.getType();
+			PsiReference reference = type.getReference();
+			PsiElement resolve = reference.resolve();
+			if (resolve == null) {
+				return new ResolveResult[] {};
+			}
 
-      if (resolve instanceof KlassAssociationEnd) {
-        KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
-        PsiElement klassResolved = klassAssociationEnd.getKlassName().getReference().resolve();
-        if (klassResolved instanceof KlassKlass) {
-          return this.getAssociationEndResolveResults((KlassKlass) klassResolved);
-        }
-      }
+			if (resolve instanceof KlassKlass) {
+				KlassKlass klassKlass = (KlassKlass) resolve;
+				return this.getAssociationEndResolveResults(klassKlass);
+			}
 
-      if (resolve instanceof KlassClassModifier) {
-        return new ResolveResult[] {new PsiElementResolveResult(resolve)};
-      }
+			if (resolve instanceof KlassAssociationEnd) {
+				KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
+				PsiElement klassResolved = klassAssociationEnd.getKlassName().getReference().resolve();
+				if (klassResolved instanceof KlassKlass) {
+					return this.getAssociationEndResolveResults((KlassKlass) klassResolved);
+				}
+			}
 
-      return new ResolveResult[] {};
-    } else {
-      throw new AssertionError(innerNode.getClass().getSimpleName());
-    }
-  }
+			if (resolve instanceof KlassClassModifier) {
+				return new ResolveResult[] { new PsiElementResolveResult(resolve) };
+			}
 
-  public ResolveResult[] getAssociationEndResolveResults(KlassKlass klassKlass) {
-    Objects.requireNonNull(klassKlass);
-    List<KlassAssociation> associations = KlassUtil.findAssociations(klassKlass);
-    for (KlassAssociation association : associations) {
-      List<KlassAssociationEnd> associationEndList =
-          association.getAssociationBlock().getAssociationBody().getAssociationEndList();
-      if (associationEndList.size() < 2) {
-        return new ResolveResult[] {};
-      }
+			return new ResolveResult[] {};
+		} else {
+			throw new AssertionError(innerNode.getClass().getSimpleName());
+		}
+	}
 
-      KlassAssociationEnd sourceEnd = associationEndList.get(0);
-      KlassAssociationEnd targetEnd = associationEndList.get(1);
-      String sourceName = sourceEnd.getName();
-      String targetName = targetEnd.getName();
-      KlassKlassName sourceTypeName = sourceEnd.getKlassName();
-      KlassKlassName targetTypeName = targetEnd.getKlassName();
+	public ResolveResult[] getAssociationEndResolveResults(KlassKlass klassKlass) {
+		Objects.requireNonNull(klassKlass);
+		List<KlassAssociation> associations = KlassUtil.findAssociations(klassKlass);
+		for (KlassAssociation association : associations) {
+			List<KlassAssociationEnd> associationEndList = association
+				.getAssociationBlock()
+				.getAssociationBody()
+				.getAssociationEndList();
+			if (associationEndList.size() < 2) {
+				return new ResolveResult[] {};
+			}
 
-      PsiElement sourceResolved = sourceTypeName.getReference().resolve();
-      PsiElement targetResolved = targetTypeName.getReference().resolve();
-      if (!(sourceResolved instanceof KlassKlass) || !(targetResolved instanceof KlassKlass)) {
-        continue;
-      }
-      KlassKlass sourceKlass = (KlassKlass) sourceResolved;
-      KlassKlass targetKlass = (KlassKlass) targetResolved;
+			KlassAssociationEnd sourceEnd = associationEndList.get(0);
+			KlassAssociationEnd targetEnd = associationEndList.get(1);
+			String sourceName = sourceEnd.getName();
+			String targetName = targetEnd.getName();
+			KlassKlassName sourceTypeName = sourceEnd.getKlassName();
+			KlassKlassName targetTypeName = targetEnd.getKlassName();
 
-      if (this.isInstanceOf(klassKlass, sourceKlass)
-          && targetName.equals(this.associationEndName)) {
-        return new ResolveResult[] {new PsiElementResolveResult(targetEnd)};
-      }
+			PsiElement sourceResolved = sourceTypeName.getReference().resolve();
+			PsiElement targetResolved = targetTypeName.getReference().resolve();
+			if (!(sourceResolved instanceof KlassKlass) || !(targetResolved instanceof KlassKlass)) {
+				continue;
+			}
+			KlassKlass sourceKlass = (KlassKlass) sourceResolved;
+			KlassKlass targetKlass = (KlassKlass) targetResolved;
 
-      if (this.isInstanceOf(klassKlass, targetKlass)
-          && sourceName.equals(this.associationEndName)) {
-        return new ResolveResult[] {new PsiElementResolveResult(sourceEnd)};
-      }
-    }
+			if (this.isInstanceOf(klassKlass, sourceKlass) && targetName.equals(this.associationEndName)) {
+				return new ResolveResult[] { new PsiElementResolveResult(targetEnd) };
+			}
 
-    if (this.associationEndName.equals("version")) {
-      return klassKlass.getClassModifierList().stream()
-          .filter(classModifier -> classModifier.getText().equals("versioned"))
-          .map(classModifier -> new PsiElementResolveResult(classModifier))
-          .toArray(ResolveResult[]::new);
-    }
+			if (this.isInstanceOf(klassKlass, targetKlass) && sourceName.equals(this.associationEndName)) {
+				return new ResolveResult[] { new PsiElementResolveResult(sourceEnd) };
+			}
+		}
 
-    if (this.associationEndName.equals("createdBy")
-        || this.associationEndName.equals("lastUpdatedBy")) {
-      return klassKlass.getClassModifierList().stream()
-          .filter(classModifier -> classModifier.getText().equals("audited"))
-          .map(classModifier -> new PsiElementResolveResult(classModifier))
-          .toArray(ResolveResult[]::new);
-    }
+		if (this.associationEndName.equals("version")) {
+			return klassKlass
+				.getClassModifierList()
+				.stream()
+				.filter((classModifier) -> classModifier.getText().equals("versioned"))
+				.map((classModifier) -> new PsiElementResolveResult(classModifier))
+				.toArray(ResolveResult[]::new);
+		}
 
-    return new ResolveResult[] {};
-  }
+		if (this.associationEndName.equals("createdBy") || this.associationEndName.equals("lastUpdatedBy")) {
+			return klassKlass
+				.getClassModifierList()
+				.stream()
+				.filter((classModifier) -> classModifier.getText().equals("audited"))
+				.map((classModifier) -> new PsiElementResolveResult(classModifier))
+				.toArray(ResolveResult[]::new);
+		}
 
-  public boolean isInstanceOf(KlassKlass subClass, KlassKlass superClass) {
-    if (subClass == superClass) {
-      return true;
-    }
+		return new ResolveResult[] {};
+	}
 
-    KlassExtendsClause extendsClause = subClass.getExtendsClause();
-    if (extendsClause == null) {
-      return false;
-    }
+	public boolean isInstanceOf(KlassKlass subClass, KlassKlass superClass) {
+		if (subClass == superClass) {
+			return true;
+		}
 
-    PsiElement resolvedSuperClass = extendsClause.getKlassName().getReference().resolve();
-    if (resolvedSuperClass == null) {
-      return false;
-    }
+		KlassExtendsClause extendsClause = subClass.getExtendsClause();
+		if (extendsClause == null) {
+			return false;
+		}
 
-    return this.isInstanceOf((KlassKlass) resolvedSuperClass, superClass);
-  }
+		PsiElement resolvedSuperClass = extendsClause.getKlassName().getReference().resolve();
+		if (resolvedSuperClass == null) {
+			return false;
+		}
 
-  @NotNull @Override
-  public Object[] getVariants() {
-    return new Object[] {};
-  }
+		return this.isInstanceOf((KlassKlass) resolvedSuperClass, superClass);
+	}
 
-  @Override
-  public PsiElement handleElementRename(String newElementName) {
-    ASTNode node = this.myElement.getNode();
-    if (node != null) {
-      KlassAssociationEndName associationEndName =
-          KlassElementFactory.createAssociationEndName(this.myElement.getProject(), newElementName);
+	@NotNull @Override
+	public Object[] getVariants() {
+		return new Object[] {};
+	}
 
-      ASTNode newNode = associationEndName.getNode();
-      node.getTreeParent().replaceChild(node, newNode);
-    }
-    return this.myElement;
-  }
+	@Override
+	public PsiElement handleElementRename(String newElementName) {
+		ASTNode node = this.myElement.getNode();
+		if (node != null) {
+			KlassAssociationEndName associationEndName = KlassElementFactory.createAssociationEndName(
+				this.myElement.getProject(),
+				newElementName
+			);
+
+			ASTNode newNode = associationEndName.getNode();
+			node.getTreeParent().replaceChild(node, newNode);
+		}
+		return this.myElement;
+	}
 }

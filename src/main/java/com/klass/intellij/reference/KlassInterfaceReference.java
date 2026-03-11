@@ -21,70 +21,73 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassInterfaceReference extends PsiPolyVariantReferenceBase<PsiElement> {
-  private final String name;
 
-  public KlassInterfaceReference(@NotNull PsiElement element, String name) {
-    super(element, new TextRange(0, name.length()));
-    this.name = name;
-  }
+	private final String name;
 
-  @Nullable @Override
-  public PsiElement resolve() {
-    ResolveResult[] resolveResults = this.multiResolve(false);
-    return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
-  }
+	public KlassInterfaceReference(@NotNull PsiElement element, String name) {
+		super(element, new TextRange(0, name.length()));
+		this.name = name;
+	}
 
-  @NotNull @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    ResolveResult[] interfaceResolveResults =
-        KlassUtil.findInterfaces(this.myElement).stream()
-            .filter(klassInterface -> klassInterface.getName().equals(this.name))
-            .map(PsiElementResolveResult::new)
-            .toArray(ResolveResult[]::new);
-    if (interfaceResolveResults.length > 0) {
-      return interfaceResolveResults;
-    }
+	@Nullable @Override
+	public PsiElement resolve() {
+		ResolveResult[] resolveResults = this.multiResolve(false);
+		return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
+	}
 
-    return new ResolveResult[] {};
-  }
+	@NotNull @Override
+	public ResolveResult[] multiResolve(boolean incompleteCode) {
+		ResolveResult[] interfaceResolveResults = KlassUtil.findInterfaces(this.myElement)
+			.stream()
+			.filter((klassInterface) -> klassInterface.getName().equals(this.name))
+			.map(PsiElementResolveResult::new)
+			.toArray(ResolveResult[]::new);
+		if (interfaceResolveResults.length > 0) {
+			return interfaceResolveResults;
+		}
 
-  @NotNull @Override
-  public Object[] getVariants() {
-    List<KlassInterface> interfaces = KlassUtil.findInterfaces(this.myElement);
-    List<LookupElement> variants = new ArrayList<>();
-    for (KlassInterface klassInterface : interfaces) {
-      if (klassInterface.getName() != null && !klassInterface.getName().isEmpty()) {
-        LookupElementBuilder lookupElementBuilder =
-            LookupElementBuilder.create(klassInterface.getName())
-                .withIcon(AllIcons.Nodes.Interface)
-                .withTypeText(klassInterface.getContainingFile().getName());
-        variants.add(lookupElementBuilder);
-      }
-    }
-    return variants.toArray();
-  }
+		return new ResolveResult[] {};
+	}
 
-  private static class BracketsInsertHandler extends ParenthesesInsertHandler<LookupElement> {
-    private BracketsInsertHandler() {
-      super(false, false, true, false, '[', ']');
-    }
+	@NotNull @Override
+	public Object[] getVariants() {
+		List<KlassInterface> interfaces = KlassUtil.findInterfaces(this.myElement);
+		List<LookupElement> variants = new ArrayList<>();
+		for (KlassInterface klassInterface : interfaces) {
+			if (klassInterface.getName() != null && !klassInterface.getName().isEmpty()) {
+				LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(klassInterface.getName())
+					.withIcon(AllIcons.Nodes.Interface)
+					.withTypeText(klassInterface.getContainingFile().getName());
+				variants.add(lookupElementBuilder);
+			}
+		}
+		return variants.toArray();
+	}
 
-    @Override
-    protected boolean placeCaretInsideParentheses(InsertionContext context, LookupElement item) {
-      return true;
-    }
-  }
+	private static class BracketsInsertHandler extends ParenthesesInsertHandler<LookupElement> {
 
-  @Override
-  public PsiElement handleElementRename(String newElementName) {
-    ASTNode node = this.myElement.getNode();
-    if (node != null) {
-      KlassInterfaceName interfaceName =
-          KlassElementFactory.createInterfaceName(this.myElement.getProject(), newElementName);
+		private BracketsInsertHandler() {
+			super(false, false, true, false, '[', ']');
+		}
 
-      ASTNode newNode = interfaceName.getNode();
-      node.getTreeParent().replaceChild(node, newNode);
-    }
-    return this.myElement;
-  }
+		@Override
+		protected boolean placeCaretInsideParentheses(InsertionContext context, LookupElement item) {
+			return true;
+		}
+	}
+
+	@Override
+	public PsiElement handleElementRename(String newElementName) {
+		ASTNode node = this.myElement.getNode();
+		if (node != null) {
+			KlassInterfaceName interfaceName = KlassElementFactory.createInterfaceName(
+				this.myElement.getProject(),
+				newElementName
+			);
+
+			ASTNode newNode = interfaceName.getNode();
+			node.getTreeParent().replaceChild(node, newNode);
+		}
+		return this.myElement;
+	}
 }

@@ -6,14 +6,14 @@ import com.intellij.psi.PsiReference;
 import com.klass.intellij.psi.KlassInterfaceName;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class KlassInterfaceNameMixin extends ASTWrapperPsiElement
-    implements KlassInterfaceName {
-  public KlassInterfaceNameMixin(@NotNull ASTNode node) {
-    super(node);
-  }
+public abstract class KlassInterfaceNameMixin extends ASTWrapperPsiElement implements KlassInterfaceName {
 
-  @Override
-  public PsiReference getReference() {
-    return KlassPsiImplUtil.getReference(this);
-  }
+	public KlassInterfaceNameMixin(@NotNull ASTNode node) {
+		super(node);
+	}
+
+	@Override
+	public PsiReference getReference() {
+		return KlassPsiImplUtil.getReference(this);
+	}
 }

@@ -6,14 +6,16 @@ import com.intellij.psi.PsiReference;
 import com.klass.intellij.psi.KlassParameterizedPropertyName;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class KlassParameterizedPropertyNameMixin extends ASTWrapperPsiElement
-    implements KlassParameterizedPropertyName {
-  public KlassParameterizedPropertyNameMixin(@NotNull ASTNode node) {
-    super(node);
-  }
+public abstract class KlassParameterizedPropertyNameMixin
+	extends ASTWrapperPsiElement
+	implements KlassParameterizedPropertyName {
 
-  @Override
-  public PsiReference getReference() {
-    return KlassPsiImplUtil.getReference(this);
-  }
+	public KlassParameterizedPropertyNameMixin(@NotNull ASTNode node) {
+		super(node);
+	}
+
+	@Override
+	public PsiReference getReference() {
+		return KlassPsiImplUtil.getReference(this);
+	}
 }

@@ -8,22 +8,21 @@ import java.io.IOException;
 import java.util.Collection;
 
 public class KlassParsingTest extends ParsingTestCase {
-  public KlassParsingTest() {
-    super("", "klass", new KlassParserDefinition());
-  }
 
-  @Override
-  protected String getTestDataPath() {
-    return "src/test/testData";
-  }
+	public KlassParsingTest() {
+		super("", "klass", new KlassParserDefinition());
+	}
 
-  public void testExampleParsingNoErrors() throws IOException {
-    PsiFile psiFile = parseFile("Example", loadFile("Example.klass"));
-    assertNotNull("Parsed file should not be null", psiFile);
+	@Override
+	protected String getTestDataPath() {
+		return "src/test/testData";
+	}
 
-    Collection<PsiErrorElement> errors =
-        PsiTreeUtil.collectElementsOfType(psiFile, PsiErrorElement.class);
-    assertTrue(
-        "Expected no parse errors but found " + errors.size() + ": " + errors, errors.isEmpty());
-  }
+	public void testExampleParsingNoErrors() throws IOException {
+		PsiFile psiFile = parseFile("Example", loadFile("Example.klass"));
+		assertNotNull("Parsed file should not be null", psiFile);
+
+		Collection<PsiErrorElement> errors = PsiTreeUtil.collectElementsOfType(psiFile, PsiErrorElement.class);
+		assertTrue("Expected no parse errors but found " + errors.size() + ": " + errors, errors.isEmpty());
+	}
 }

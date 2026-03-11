@@ -9,22 +9,23 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassFile extends PsiFileBase {
-  public KlassFile(@NotNull FileViewProvider viewProvider) {
-    super(viewProvider, KlassLanguage.INSTANCE);
-  }
 
-  @NotNull @Override
-  public FileType getFileType() {
-    return KlassFileType.INSTANCE;
-  }
+	public KlassFile(@NotNull FileViewProvider viewProvider) {
+		super(viewProvider, KlassLanguage.INSTANCE);
+	}
 
-  @Override
-  public String toString() {
-    return "Klass File";
-  }
+	@NotNull @Override
+	public FileType getFileType() {
+		return KlassFileType.INSTANCE;
+	}
 
-  @Override
-  public Icon getIcon(int flags) {
-    return super.getIcon(flags);
-  }
+	@Override
+	public String toString() {
+		return "Klass File";
+	}
+
+	@Override
+	public Icon getIcon(int flags) {
+		return super.getIcon(flags);
+	}
 }

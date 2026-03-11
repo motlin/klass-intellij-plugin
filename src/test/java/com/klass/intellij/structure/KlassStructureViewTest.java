@@ -17,261 +17,261 @@ import com.klass.intellij.psi.KlassServiceGroup;
 import com.klass.intellij.psi.KlassUrlGroup;
 
 public class KlassStructureViewTest extends BasePlatformTestCase {
-  @Override
-  protected String getTestDataPath() {
-    return "src/test/testData";
-  }
 
-  public void testStructureViewRendersWithoutErrors() {
-    myFixture.configureByFile("Example.klass");
-    myFixture.testStructureView(
-        structureViewComponent -> {
-          StructureViewTreeElement root = structureViewComponent.getTreeModel().getRoot();
-          assertNotNull("Root element should not be null", root);
-        });
-  }
+	@Override
+	protected String getTestDataPath() {
+		return "src/test/testData";
+	}
 
-  public void testRootFilePresentation() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+	public void testStructureViewRendersWithoutErrors() {
+		myFixture.configureByFile("Example.klass");
+		myFixture.testStructureView((structureViewComponent) -> {
+			StructureViewTreeElement root = structureViewComponent.getTreeModel().getRoot();
+			assertNotNull("Root element should not be null", root);
+		});
+	}
 
-    ItemPresentation presentation = root.getPresentation();
-    assertNotNull("Root file presentation should not be null", presentation);
-    assertEquals("Example.klass", presentation.getPresentableText());
-  }
+	public void testRootFilePresentation() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
 
-  public void testRootChildrenAreTopLevelItems() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		ItemPresentation presentation = root.getPresentation();
+		assertNotNull("Root file presentation should not be null", presentation);
+		assertEquals("Example.klass", presentation.getPresentableText());
+	}
 
-    TreeElement[] children = root.getChildren();
-    assertEquals("Example.klass should have 6 top-level items", 6, children.length);
-  }
+	public void testRootChildrenAreTopLevelItems() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
 
-  public void testInterfaceElement() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		TreeElement[] children = root.getChildren();
+		assertEquals("Example.klass should have 6 top-level items", 6, children.length);
+	}
 
-    // First top-level item is the Named interface
-    StructureViewTreeElement interfaceElement = (StructureViewTreeElement) children[0];
-    assertInstanceOf(interfaceElement.getValue(), KlassInterface.class);
+	public void testInterfaceElement() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    ItemPresentation presentation = interfaceElement.getPresentation();
-    assertNotNull("Interface presentation should not be null", presentation);
-    assertEquals("Named", presentation.getPresentableText());
-  }
+		// First top-level item is the Named interface
+		StructureViewTreeElement interfaceElement = (StructureViewTreeElement) children[0];
+		assertInstanceOf(interfaceElement.getValue(), KlassInterface.class);
 
-  public void testInterfaceMemberChildren() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		ItemPresentation presentation = interfaceElement.getPresentation();
+		assertNotNull("Interface presentation should not be null", presentation);
+		assertEquals("Named", presentation.getPresentableText());
+	}
 
-    // Named interface has 1 member property: name
-    TreeElement[] interfaceMembers = children[0].getChildren();
-    assertEquals("Named interface should have 1 member", 1, interfaceMembers.length);
+	public void testInterfaceMemberChildren() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    StructureViewTreeElement memberElement = (StructureViewTreeElement) interfaceMembers[0];
-    assertInstanceOf(memberElement.getValue(), KlassPrimitiveTypeProperty.class);
+		// Named interface has 1 member property: name
+		TreeElement[] interfaceMembers = children[0].getChildren();
+		assertEquals("Named interface should have 1 member", 1, interfaceMembers.length);
 
-    ItemPresentation memberPresentation = memberElement.getPresentation();
-    assertNotNull("Member presentation should not be null", memberPresentation);
-    assertEquals("name", memberPresentation.getPresentableText());
-  }
+		StructureViewTreeElement memberElement = (StructureViewTreeElement) interfaceMembers[0];
+		assertInstanceOf(memberElement.getValue(), KlassPrimitiveTypeProperty.class);
 
-  public void testClassElement() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		ItemPresentation memberPresentation = memberElement.getPresentation();
+		assertNotNull("Member presentation should not be null", memberPresentation);
+		assertEquals("name", memberPresentation.getPresentableText());
+	}
 
-    // Second top-level item is the User class
-    StructureViewTreeElement classElement = (StructureViewTreeElement) children[1];
-    assertInstanceOf(classElement.getValue(), KlassKlass.class);
+	public void testClassElement() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    ItemPresentation presentation = classElement.getPresentation();
-    assertNotNull("Class presentation should not be null", presentation);
-    assertEquals("User", presentation.getPresentableText());
-  }
+		// Second top-level item is the User class
+		StructureViewTreeElement classElement = (StructureViewTreeElement) children[1];
+		assertInstanceOf(classElement.getValue(), KlassKlass.class);
 
-  public void testClassMemberChildren() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		ItemPresentation presentation = classElement.getPresentation();
+		assertNotNull("Class presentation should not be null", presentation);
+		assertEquals("User", presentation.getPresentableText());
+	}
 
-    // User class has 3 members: name, email, age
-    TreeElement[] classMembers = children[1].getChildren();
-    assertEquals("User class should have 3 members", 3, classMembers.length);
+	public void testClassMemberChildren() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    StructureViewTreeElement nameElement = (StructureViewTreeElement) classMembers[0];
-    assertEquals("name", nameElement.getPresentation().getPresentableText());
+		// User class has 3 members: name, email, age
+		TreeElement[] classMembers = children[1].getChildren();
+		assertEquals("User class should have 3 members", 3, classMembers.length);
 
-    StructureViewTreeElement emailElement = (StructureViewTreeElement) classMembers[1];
-    assertEquals("email", emailElement.getPresentation().getPresentableText());
+		StructureViewTreeElement nameElement = (StructureViewTreeElement) classMembers[0];
+		assertEquals("name", nameElement.getPresentation().getPresentableText());
 
-    StructureViewTreeElement ageElement = (StructureViewTreeElement) classMembers[2];
-    assertEquals("age", ageElement.getPresentation().getPresentableText());
-  }
+		StructureViewTreeElement emailElement = (StructureViewTreeElement) classMembers[1];
+		assertEquals("email", emailElement.getPresentation().getPresentableText());
 
-  public void testEnumerationElement() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		StructureViewTreeElement ageElement = (StructureViewTreeElement) classMembers[2];
+		assertEquals("age", ageElement.getPresentation().getPresentableText());
+	}
 
-    // Third top-level item is the Status enumeration
-    StructureViewTreeElement enumerationElement = (StructureViewTreeElement) children[2];
-    assertInstanceOf(enumerationElement.getValue(), KlassEnumeration.class);
+	public void testEnumerationElement() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    ItemPresentation presentation = enumerationElement.getPresentation();
-    assertNotNull("Enumeration presentation should not be null", presentation);
-    assertEquals("Status", presentation.getPresentableText());
-  }
+		// Third top-level item is the Status enumeration
+		StructureViewTreeElement enumerationElement = (StructureViewTreeElement) children[2];
+		assertInstanceOf(enumerationElement.getValue(), KlassEnumeration.class);
 
-  public void testEnumerationLiteralChildren() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		ItemPresentation presentation = enumerationElement.getPresentation();
+		assertNotNull("Enumeration presentation should not be null", presentation);
+		assertEquals("Status", presentation.getPresentableText());
+	}
 
-    // Status enumeration has 2 literals: ACTIVE, INACTIVE
-    TreeElement[] enumLiterals = children[2].getChildren();
-    assertEquals("Status enumeration should have 2 literals", 2, enumLiterals.length);
+	public void testEnumerationLiteralChildren() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    StructureViewTreeElement activeElement = (StructureViewTreeElement) enumLiterals[0];
-    assertInstanceOf(activeElement.getValue(), KlassEnumerationLiteral.class);
-    assertEquals("ACTIVE", activeElement.getPresentation().getPresentableText());
+		// Status enumeration has 2 literals: ACTIVE, INACTIVE
+		TreeElement[] enumLiterals = children[2].getChildren();
+		assertEquals("Status enumeration should have 2 literals", 2, enumLiterals.length);
 
-    StructureViewTreeElement inactiveElement = (StructureViewTreeElement) enumLiterals[1];
-    assertInstanceOf(inactiveElement.getValue(), KlassEnumerationLiteral.class);
-    assertEquals("INACTIVE", inactiveElement.getPresentation().getPresentableText());
-  }
+		StructureViewTreeElement activeElement = (StructureViewTreeElement) enumLiterals[0];
+		assertInstanceOf(activeElement.getValue(), KlassEnumerationLiteral.class);
+		assertEquals("ACTIVE", activeElement.getPresentation().getPresentableText());
 
-  public void testAssociationElement() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		StructureViewTreeElement inactiveElement = (StructureViewTreeElement) enumLiterals[1];
+		assertInstanceOf(inactiveElement.getValue(), KlassEnumerationLiteral.class);
+		assertEquals("INACTIVE", inactiveElement.getPresentation().getPresentableText());
+	}
 
-    // Fourth top-level item is the UserStatus association
-    StructureViewTreeElement associationElement = (StructureViewTreeElement) children[3];
-    assertInstanceOf(associationElement.getValue(), KlassAssociation.class);
+	public void testAssociationElement() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    ItemPresentation presentation = associationElement.getPresentation();
-    assertNotNull("Association presentation should not be null", presentation);
-    assertEquals("UserStatus", presentation.getPresentableText());
-  }
+		// Fourth top-level item is the UserStatus association
+		StructureViewTreeElement associationElement = (StructureViewTreeElement) children[3];
+		assertInstanceOf(associationElement.getValue(), KlassAssociation.class);
 
-  public void testAssociationEndChildren() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		ItemPresentation presentation = associationElement.getPresentation();
+		assertNotNull("Association presentation should not be null", presentation);
+		assertEquals("UserStatus", presentation.getPresentableText());
+	}
 
-    // UserStatus association has 2 association ends: user, status
-    TreeElement[] associationEnds = children[3].getChildren();
-    assertEquals("UserStatus association should have 2 ends", 2, associationEnds.length);
+	public void testAssociationEndChildren() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    StructureViewTreeElement userEnd = (StructureViewTreeElement) associationEnds[0];
-    assertInstanceOf(userEnd.getValue(), KlassAssociationEnd.class);
-    assertEquals("user", userEnd.getPresentation().getPresentableText());
+		// UserStatus association has 2 association ends: user, status
+		TreeElement[] associationEnds = children[3].getChildren();
+		assertEquals("UserStatus association should have 2 ends", 2, associationEnds.length);
 
-    StructureViewTreeElement statusEnd = (StructureViewTreeElement) associationEnds[1];
-    assertInstanceOf(statusEnd.getValue(), KlassAssociationEnd.class);
-    assertEquals("status", statusEnd.getPresentation().getPresentableText());
-  }
+		StructureViewTreeElement userEnd = (StructureViewTreeElement) associationEnds[0];
+		assertInstanceOf(userEnd.getValue(), KlassAssociationEnd.class);
+		assertEquals("user", userEnd.getPresentation().getPresentableText());
 
-  public void testProjectionElement() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		StructureViewTreeElement statusEnd = (StructureViewTreeElement) associationEnds[1];
+		assertInstanceOf(statusEnd.getValue(), KlassAssociationEnd.class);
+		assertEquals("status", statusEnd.getPresentation().getPresentableText());
+	}
 
-    // Fifth top-level item is the UserProjection projection
-    StructureViewTreeElement projectionElement = (StructureViewTreeElement) children[4];
-    assertInstanceOf(projectionElement.getValue(), KlassProjection.class);
+	public void testProjectionElement() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    ItemPresentation presentation = projectionElement.getPresentation();
-    assertNotNull("Projection presentation should not be null", presentation);
-    assertEquals("UserProjection", presentation.getPresentableText());
-    assertEquals("on User", presentation.getLocationString());
-  }
+		// Fifth top-level item is the UserProjection projection
+		StructureViewTreeElement projectionElement = (StructureViewTreeElement) children[4];
+		assertInstanceOf(projectionElement.getValue(), KlassProjection.class);
 
-  public void testServiceGroupElement() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		ItemPresentation presentation = projectionElement.getPresentation();
+		assertNotNull("Projection presentation should not be null", presentation);
+		assertEquals("UserProjection", presentation.getPresentableText());
+		assertEquals("on User", presentation.getLocationString());
+	}
 
-    // Sixth top-level item is the UserService service group
-    StructureViewTreeElement serviceGroupElement = (StructureViewTreeElement) children[5];
-    assertInstanceOf(serviceGroupElement.getValue(), KlassServiceGroup.class);
+	public void testServiceGroupElement() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    ItemPresentation presentation = serviceGroupElement.getPresentation();
-    assertNotNull("ServiceGroup presentation should not be null", presentation);
-    assertEquals("User", presentation.getPresentableText());
-  }
+		// Sixth top-level item is the UserService service group
+		StructureViewTreeElement serviceGroupElement = (StructureViewTreeElement) children[5];
+		assertInstanceOf(serviceGroupElement.getValue(), KlassServiceGroup.class);
 
-  public void testServiceGroupUrlGroupChildren() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		ItemPresentation presentation = serviceGroupElement.getPresentation();
+		assertNotNull("ServiceGroup presentation should not be null", presentation);
+		assertEquals("User", presentation.getPresentableText());
+	}
 
-    // UserService has 1 url group: /user
-    TreeElement[] urlGroups = children[5].getChildren();
-    assertEquals("UserService should have 1 url group", 1, urlGroups.length);
+	public void testServiceGroupUrlGroupChildren() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    StructureViewTreeElement urlGroupElement = (StructureViewTreeElement) urlGroups[0];
-    assertInstanceOf(urlGroupElement.getValue(), KlassUrlGroup.class);
+		// UserService has 1 url group: /user
+		TreeElement[] urlGroups = children[5].getChildren();
+		assertEquals("UserService should have 1 url group", 1, urlGroups.length);
 
-    ItemPresentation urlGroupPresentation = urlGroupElement.getPresentation();
-    assertNotNull("UrlGroup presentation should not be null", urlGroupPresentation);
-  }
+		StructureViewTreeElement urlGroupElement = (StructureViewTreeElement) urlGroups[0];
+		assertInstanceOf(urlGroupElement.getValue(), KlassUrlGroup.class);
 
-  public void testServiceWithinUrlGroup() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		ItemPresentation urlGroupPresentation = urlGroupElement.getPresentation();
+		assertNotNull("UrlGroup presentation should not be null", urlGroupPresentation);
+	}
 
-    // The url group /user has 1 service: GET
-    TreeElement[] urlGroups = children[5].getChildren();
-    TreeElement[] services = urlGroups[0].getChildren();
-    assertEquals("Url group /user should have 1 service", 1, services.length);
+	public void testServiceWithinUrlGroup() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    StructureViewTreeElement serviceElement = (StructureViewTreeElement) services[0];
-    ItemPresentation servicePresentation = serviceElement.getPresentation();
-    assertNotNull("Service presentation should not be null", servicePresentation);
-    assertEquals("GET", servicePresentation.getPresentableText());
-  }
+		// The url group /user has 1 service: GET
+		TreeElement[] urlGroups = children[5].getChildren();
+		TreeElement[] services = urlGroups[0].getChildren();
+		assertEquals("Url group /user should have 1 service", 1, services.length);
 
-  public void testAllTopLevelPresentationsNonNull() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		StructureViewTreeElement serviceElement = (StructureViewTreeElement) services[0];
+		ItemPresentation servicePresentation = serviceElement.getPresentation();
+		assertNotNull("Service presentation should not be null", servicePresentation);
+		assertEquals("GET", servicePresentation.getPresentableText());
+	}
 
-    TreeElement[] children = root.getChildren();
-    for (int i = 0; i < children.length; i++) {
-      StructureViewTreeElement element = (StructureViewTreeElement) children[i];
-      ItemPresentation presentation = element.getPresentation();
-      assertNotNull(
-          "Presentation should not be null for top-level item at index " + i, presentation);
-      assertNotNull(
-          "Presentable text should not be null for top-level item at index " + i,
-          presentation.getPresentableText());
-    }
-  }
+	public void testAllTopLevelPresentationsNonNull() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
 
-  public void testLeafElementsHaveNoChildren() {
-    PsiFile psiFile = myFixture.configureByFile("Example.klass");
-    KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
-    TreeElement[] children = root.getChildren();
+		TreeElement[] children = root.getChildren();
+		for (int i = 0; i < children.length; i++) {
+			StructureViewTreeElement element = (StructureViewTreeElement) children[i];
+			ItemPresentation presentation = element.getPresentation();
+			assertNotNull("Presentation should not be null for top-level item at index " + i, presentation);
+			assertNotNull(
+				"Presentable text should not be null for top-level item at index " + i,
+				presentation.getPresentableText()
+			);
+		}
+	}
 
-    // Projection has no children in the structure view (leaf in current implementation)
-    TreeElement[] projectionChildren = children[4].getChildren();
-    assertEquals("Projection should have no children", 0, projectionChildren.length);
+	public void testLeafElementsHaveNoChildren() {
+		PsiFile psiFile = myFixture.configureByFile("Example.klass");
+		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		TreeElement[] children = root.getChildren();
 
-    // Check that enumeration literals are leaves
-    TreeElement[] enumLiterals = children[2].getChildren();
-    for (TreeElement literal : enumLiterals) {
-      assertEquals("Enumeration literal should have no children", 0, literal.getChildren().length);
-    }
+		// Projection has no children in the structure view (leaf in current implementation)
+		TreeElement[] projectionChildren = children[4].getChildren();
+		assertEquals("Projection should have no children", 0, projectionChildren.length);
 
-    // Check that association ends are leaves
-    TreeElement[] associationEnds = children[3].getChildren();
-    for (TreeElement end : associationEnds) {
-      assertEquals("Association end should have no children", 0, end.getChildren().length);
-    }
-  }
+		// Check that enumeration literals are leaves
+		TreeElement[] enumLiterals = children[2].getChildren();
+		for (TreeElement literal : enumLiterals) {
+			assertEquals("Enumeration literal should have no children", 0, literal.getChildren().length);
+		}
+
+		// Check that association ends are leaves
+		TreeElement[] associationEnds = children[3].getChildren();
+		for (TreeElement end : associationEnds) {
+			assertEquals("Association end should have no children", 0, end.getChildren().length);
+		}
+	}
 }

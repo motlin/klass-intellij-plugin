@@ -8,72 +8,75 @@ import org.eclipse.collections.impl.list.mutable.ListAdapter;
 import org.eclipse.collections.impl.set.strategy.mutable.UnifiedSetWithHashingStrategy;
 
 public class Type {
-  private final DataTypeType dataTypeType;
-  private final String typeName;
-  private final Multiplicity multiplicity;
 
-  public Type(DataTypeType dataTypeType, String typeName, Multiplicity multiplicity) {
-    this.dataTypeType = Objects.requireNonNull(dataTypeType);
-    this.typeName = Objects.requireNonNull(typeName);
-    this.multiplicity = Objects.requireNonNull(multiplicity);
-  }
+	private final DataTypeType dataTypeType;
+	private final String typeName;
+	private final Multiplicity multiplicity;
 
-  public static boolean compatible(List<Type> sourceTypes, List<Type> targetTypes) {
-    if (sourceTypes.isEmpty() || targetTypes.isEmpty()) {
-      // No point displaying an incompatible type error when we're already going to have an
-      // unresolved type error
-      return true;
-    }
+	public Type(DataTypeType dataTypeType, String typeName, Multiplicity multiplicity) {
+		this.dataTypeType = Objects.requireNonNull(dataTypeType);
+		this.typeName = Objects.requireNonNull(typeName);
+		this.multiplicity = Objects.requireNonNull(multiplicity);
+	}
 
-    HashingStrategy<Type> hashingStrategy =
-        HashingStrategies.fromFunctions(Type::getDataTypeType, Type::getTypeName);
-    UnifiedSetWithHashingStrategy<Type> set = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
-    set.addAll(sourceTypes);
-    return ListAdapter.adapt(targetTypes).anySatisfy(set::contains);
-  }
+	public static boolean compatible(List<Type> sourceTypes, List<Type> targetTypes) {
+		if (sourceTypes.isEmpty() || targetTypes.isEmpty()) {
+			// No point displaying an incompatible type error when we're already going to have an
+			// unresolved type error
+			return true;
+		}
 
-  public DataTypeType getDataTypeType() {
-    return this.dataTypeType;
-  }
+		HashingStrategy<Type> hashingStrategy = HashingStrategies.fromFunctions(
+			Type::getDataTypeType,
+			Type::getTypeName
+		);
+		UnifiedSetWithHashingStrategy<Type> set = UnifiedSetWithHashingStrategy.newSet(hashingStrategy);
+		set.addAll(sourceTypes);
+		return ListAdapter.adapt(targetTypes).anySatisfy(set::contains);
+	}
 
-  public String getTypeName() {
-    return this.typeName;
-  }
+	public DataTypeType getDataTypeType() {
+		return this.dataTypeType;
+	}
 
-  public Multiplicity getMultiplicity() {
-    return this.multiplicity;
-  }
+	public String getTypeName() {
+		return this.typeName;
+	}
 
-  @Override
-  public int hashCode() {
-    int result = this.dataTypeType.hashCode();
-    result = 31 * result + this.typeName.hashCode();
-    result = 31 * result + this.multiplicity.hashCode();
-    return result;
-  }
+	public Multiplicity getMultiplicity() {
+		return this.multiplicity;
+	}
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || this.getClass() != o.getClass()) {
-      return false;
-    }
+	@Override
+	public int hashCode() {
+		int result = this.dataTypeType.hashCode();
+		result = 31 * result + this.typeName.hashCode();
+		result = 31 * result + this.multiplicity.hashCode();
+		return result;
+	}
 
-    Type type = (Type) o;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || this.getClass() != o.getClass()) {
+			return false;
+		}
 
-    if (this.dataTypeType != type.dataTypeType) {
-      return false;
-    }
-    if (!this.typeName.equals(type.typeName)) {
-      return false;
-    }
-    return this.multiplicity == type.multiplicity;
-  }
+		Type type = (Type) o;
 
-  @Override
-  public String toString() {
-    return String.format("%s[%s]", this.typeName, this.multiplicity.getPrettyName());
-  }
+		if (this.dataTypeType != type.dataTypeType) {
+			return false;
+		}
+		if (!this.typeName.equals(type.typeName)) {
+			return false;
+		}
+		return this.multiplicity == type.multiplicity;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s[%s]", this.typeName, this.multiplicity.getPrettyName());
+	}
 }
