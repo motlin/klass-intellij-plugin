@@ -100,15 +100,20 @@ import static com.klass.intellij.psi.KlassTypes.WRITE_KEYWORD;
 
 import com.intellij.psi.tree.TokenSet;
 
-public interface TokenSets {
-  TokenSet KLASS_WHITESPACE_BIT_SET = TokenSet.create(WHITE_SPACE);
+public final class TokenSets {
+  private TokenSets() {
+    throw new AssertionError();
+  }
 
-  TokenSet KLASS_PLAIN_COMMENT_BIT_SET = TokenSet.create(END_OF_LINE_COMMENT, C_STYLE_COMMENT);
+  public static final TokenSet KLASS_WHITESPACE_BIT_SET = TokenSet.create(WHITE_SPACE);
 
-  TokenSet KLASS_COMMENT_OR_WHITESPACE_BIT_SET =
+  public static final TokenSet KLASS_PLAIN_COMMENT_BIT_SET =
+      TokenSet.create(END_OF_LINE_COMMENT, C_STYLE_COMMENT);
+
+  public static final TokenSet KLASS_COMMENT_OR_WHITESPACE_BIT_SET =
       TokenSet.orSet(KLASS_WHITESPACE_BIT_SET, KLASS_PLAIN_COMMENT_BIT_SET);
 
-  TokenSet KEYWORD_BIT_SET =
+  public static final TokenSet KEYWORD_BIT_SET =
       TokenSet.create(
           PACKAGE_KEYWORD,
           INTERFACE_KEYWORD,
@@ -174,12 +179,13 @@ public interface TokenSets {
           LAST_UPDATED_BY_MODIFIER,
           DERIVED_MODIFIER);
 
-  TokenSet LITERAL_BIT_SET = TokenSet.create(TRUE_KEYWORD, FALSE_KEYWORD, NULL_KEYWORD);
+  public static final TokenSet LITERAL_BIT_SET =
+      TokenSet.create(TRUE_KEYWORD, FALSE_KEYWORD, NULL_KEYWORD);
 
-  TokenSet OPERATION_BIT_SET =
+  public static final TokenSet OPERATION_BIT_SET =
       TokenSet.create(EQEQ, GT, GE, LT, LE, NE, ANDAND, OROR, PERCENT, QUESTION_MARK, COLON);
 
-  TokenSet KEYWORD_OPERATION_BIT_SET =
+  public static final TokenSet KEYWORD_OPERATION_BIT_SET =
       TokenSet.create(
           CONTAINS_OPERATOR,
           STARTS_WITH_OPERATOR,
@@ -187,7 +193,7 @@ public interface TokenSets {
           IN_OPERATOR,
           EQUALS_EDGEPOINT_KEYWORD);
 
-  TokenSet PRIMITIVE_TYPE_BIT_SET =
+  public static final TokenSet PRIMITIVE_TYPE_BIT_SET =
       TokenSet.create(
           ID_MODIFIER,
           BOOLEAN_KEYWORD,
@@ -201,6 +207,7 @@ public interface TokenSets {
           TEMPORAL_INSTANT_KEYWORD,
           TEMPORAL_RANGE_KEYWORD);
 
-  TokenSet CLASS_KEYWORD_BIT_SET = TokenSet.create(CLASS_KEYWORD, ASSOCIATION_KEYWORD);
-  TokenSet MEMBER_BIT_SET = TokenSet.create(KLASS, ASSOCIATION);
+  public static final TokenSet CLASS_KEYWORD_BIT_SET =
+      TokenSet.create(CLASS_KEYWORD, ASSOCIATION_KEYWORD);
+  public static final TokenSet MEMBER_BIT_SET = TokenSet.create(KLASS, ASSOCIATION);
 }
