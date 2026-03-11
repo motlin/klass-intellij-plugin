@@ -322,7 +322,7 @@
         <!--https://checkstyle.sourceforge.io/checks/regexp/index.html-->
         <module name="Regexp">
             <property name="illegalPattern" value="true" />
-            <property name="format" value="[’“”]" />
+            <property name="format" value="[‘’“”]" />
             <property name="message" value="Curly quotes aren't allowed." />
         </module>
 
