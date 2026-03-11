@@ -41,7 +41,6 @@ public class DetectExpressionThisMember extends KlassVisitor {
     if (criteriaAnd.getCriteriaAnd() != null) {
       this.visitCriteriaAnd(criteriaAnd.getCriteriaAnd());
     }
-    ;
   }
 
   @Override
