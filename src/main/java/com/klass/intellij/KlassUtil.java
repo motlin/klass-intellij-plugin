@@ -47,44 +47,44 @@ public class KlassUtil {
     return findElementsOfType(context, KlassInterface.class);
   }
 
-  public static List<KlassKlass> findClasses(@NotNull PsiElement context) {
-    return findElementsOfType(context, KlassKlass.class);
-  }
-
-  public static List<KlassAssociation> findAssociations(@NotNull PsiElement context) {
-    return findElementsOfType(context, KlassAssociation.class);
-  }
-
-  public static List<KlassAssociationEnd> findAssociationEnds(@NotNull PsiElement context) {
-    return findElementsOfType(context, KlassAssociationEnd.class);
-  }
-
-  public static List<KlassEnumeration> findEnumerations(@NotNull PsiElement context) {
-    return findElementsOfType(context, KlassEnumeration.class);
-  }
-
-  public static List<KlassProjection> findProjections(@NotNull PsiElement context) {
-    return findElementsOfType(context, KlassProjection.class);
-  }
-
   public static List<KlassInterface> findInterfaces(@NotNull Project project) {
     return findElementsOfType(project, KlassInterface.class);
+  }
+
+  public static List<KlassKlass> findClasses(@NotNull PsiElement context) {
+    return findElementsOfType(context, KlassKlass.class);
   }
 
   public static List<KlassKlass> findClasses(@NotNull Project project) {
     return findElementsOfType(project, KlassKlass.class);
   }
 
+  public static List<KlassAssociation> findAssociations(@NotNull PsiElement context) {
+    return findElementsOfType(context, KlassAssociation.class);
+  }
+
   public static List<KlassAssociation> findAssociations(@NotNull Project project) {
     return findElementsOfType(project, KlassAssociation.class);
+  }
+
+  public static List<KlassAssociationEnd> findAssociationEnds(@NotNull PsiElement context) {
+    return findElementsOfType(context, KlassAssociationEnd.class);
   }
 
   public static List<KlassAssociationEnd> findAssociationEnds(@NotNull Project project) {
     return findElementsOfType(project, KlassAssociationEnd.class);
   }
 
+  public static List<KlassEnumeration> findEnumerations(@NotNull PsiElement context) {
+    return findElementsOfType(context, KlassEnumeration.class);
+  }
+
   public static List<KlassEnumeration> findEnumerations(@NotNull Project project) {
     return findElementsOfType(project, KlassEnumeration.class);
+  }
+
+  public static List<KlassProjection> findProjections(@NotNull PsiElement context) {
+    return findElementsOfType(context, KlassProjection.class);
   }
 
   public static List<KlassProjection> findProjections(@NotNull Project project) {
