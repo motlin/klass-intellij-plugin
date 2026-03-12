@@ -106,7 +106,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 					.getAssociationBlock()
 					.getAssociationBody()
 					.getAssociationEndList()
-					.get(0);
+					.getFirst();
 				KlassKlassReference klassReference = (KlassKlassReference) associationEnd.getKlassName().getReference();
 				KlassKlass klassKlass = (KlassKlass) klassReference.resolve();
 				if (klassKlass == null) {
