@@ -9,7 +9,7 @@ public abstract class KlassExpressionNativeValueMixin
 	extends KlassExpressionValueImpl
 	implements KlassExpressionNativeValue {
 
-	public KlassExpressionNativeValueMixin(@NotNull ASTNode node) {
+	protected KlassExpressionNativeValueMixin(@NotNull ASTNode node) {
 		super(node);
 	}
 

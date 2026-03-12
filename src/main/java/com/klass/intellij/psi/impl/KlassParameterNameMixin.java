@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class KlassParameterNameMixin extends ASTWrapperPsiElement implements KlassParameterName {
 
-	public KlassParameterNameMixin(@NotNull ASTNode node) {
+	protected KlassParameterNameMixin(@NotNull ASTNode node) {
 		super(node);
 	}
 

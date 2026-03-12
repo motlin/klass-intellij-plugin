@@ -9,7 +9,7 @@ public abstract class KlassExpressionVariableNameMixin
 	extends KlassExpressionValueImpl
 	implements KlassExpressionVariableName {
 
-	public KlassExpressionVariableNameMixin(@NotNull ASTNode node) {
+	protected KlassExpressionVariableNameMixin(@NotNull ASTNode node) {
 		super(node);
 	}
 

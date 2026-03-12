@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class KlassNamedElementImpl extends ASTWrapperPsiElement {
 
-	public KlassNamedElementImpl(@NotNull ASTNode node) {
+	protected KlassNamedElementImpl(@NotNull ASTNode node) {
 		super(node);
 	}
 

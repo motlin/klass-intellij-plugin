@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class KlassPrimitiveTypeMixin extends KlassDataTypeImpl implements KlassPrimitiveType {
 
-	public KlassPrimitiveTypeMixin(@NotNull ASTNode node) {
+	protected KlassPrimitiveTypeMixin(@NotNull ASTNode node) {
 		super(node);
 	}
 
