@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class KlassProjectionNameMixin extends ASTWrapperPsiElement implements KlassProjectionName {
 
-	public KlassProjectionNameMixin(@NotNull ASTNode node) {
+	protected KlassProjectionNameMixin(@NotNull ASTNode node) {
 		super(node);
 	}
 

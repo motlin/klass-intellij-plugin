@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class KlassEnumerationTypeMixin extends KlassDataTypeImpl implements KlassEnumerationType {
 
-	public KlassEnumerationTypeMixin(@NotNull ASTNode node) {
+	protected KlassEnumerationTypeMixin(@NotNull ASTNode node) {
 		super(node);
 	}
 

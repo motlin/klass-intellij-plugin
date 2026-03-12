@@ -10,7 +10,7 @@ public abstract class KlassParameterizedPropertyNameMixin
 	extends ASTWrapperPsiElement
 	implements KlassParameterizedPropertyName {
 
-	public KlassParameterizedPropertyNameMixin(@NotNull ASTNode node) {
+	protected KlassParameterizedPropertyNameMixin(@NotNull ASTNode node) {
 		super(node);
 	}
 

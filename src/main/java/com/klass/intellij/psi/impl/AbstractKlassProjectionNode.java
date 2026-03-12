@@ -11,7 +11,7 @@ public abstract class AbstractKlassProjectionNode
 	extends KlassNombredImpl
 	implements KlassTypedElement, KlassProjectionNode {
 
-	public AbstractKlassProjectionNode(@NotNull ASTNode node) {
+	protected AbstractKlassProjectionNode(@NotNull ASTNode node) {
 		super(node);
 	}
 

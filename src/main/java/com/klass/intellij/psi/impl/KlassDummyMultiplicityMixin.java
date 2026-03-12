@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class KlassDummyMultiplicityMixin extends ASTWrapperPsiElement implements KlassDummyMultiplicity {
 
-	public KlassDummyMultiplicityMixin(@NotNull ASTNode node) {
+	protected KlassDummyMultiplicityMixin(@NotNull ASTNode node) {
 		super(node);
 	}
 
