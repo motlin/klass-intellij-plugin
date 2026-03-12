@@ -45,7 +45,7 @@ public class KlassLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
 
 	@Override
 	public CommonCodeStyleSettings getDefaultCommonSettings() {
-		CommonCodeStyleSettings defaultSettings = new CommonCodeStyleSettings(KlassLanguage.INSTANCE);
+		var defaultSettings = new CommonCodeStyleSettings(KlassLanguage.INSTANCE);
 		defaultSettings.initIndentOptions();
 		return defaultSettings;
 	}

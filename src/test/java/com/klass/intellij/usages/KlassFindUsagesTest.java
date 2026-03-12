@@ -49,7 +49,7 @@ public class KlassFindUsagesTest extends BasePlatformTestCase {
 
 	public void testCanFindUsagesForNamedElements() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		var provider = new KlassFindUsagesProvider();
 
 		KlassInterface klassInterface = PsiTreeUtil.findChildOfType(psiFile, KlassInterface.class);
 		assertNotNull("Expected to find an interface in the file", klassInterface);
@@ -66,7 +66,7 @@ public class KlassFindUsagesTest extends BasePlatformTestCase {
 
 	public void testGetTypeReturnsCorrectStrings() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		var provider = new KlassFindUsagesProvider();
 
 		KlassInterface klassInterface = PsiTreeUtil.findChildOfType(psiFile, KlassInterface.class);
 		assertNotNull(klassInterface);
@@ -102,7 +102,7 @@ public class KlassFindUsagesTest extends BasePlatformTestCase {
 
 	public void testGetDescriptiveNameReturnsElementName() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		var provider = new KlassFindUsagesProvider();
 
 		KlassInterface klassInterface = PsiTreeUtil.findChildOfType(psiFile, KlassInterface.class);
 		assertNotNull(klassInterface);
@@ -119,7 +119,7 @@ public class KlassFindUsagesTest extends BasePlatformTestCase {
 
 	public void testGetNodeTextReturnsDescriptiveName() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		var provider = new KlassFindUsagesProvider();
 
 		KlassKlass klassKlass = PsiTreeUtil.findChildOfType(psiFile, KlassKlass.class);
 		assertNotNull(klassKlass);
@@ -129,21 +129,21 @@ public class KlassFindUsagesTest extends BasePlatformTestCase {
 
 	public void testGetTypeReturnsEmptyForUnknownElement() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		var provider = new KlassFindUsagesProvider();
 
 		// The PsiFile itself is not a known type
 		assertEquals("", provider.getType(psiFile));
 	}
 
 	public void testWordsScannerIsNotNull() {
-		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		var provider = new KlassFindUsagesProvider();
 		WordsScanner wordsScanner = provider.getWordsScanner();
 		assertNotNull("Words scanner should not be null", wordsScanner);
 	}
 
 	public void testGetTypeForMember() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		var provider = new KlassFindUsagesProvider();
 
 		KlassMember klassMember = PsiTreeUtil.findChildOfType(psiFile, KlassMember.class);
 		if (klassMember != null) {
@@ -153,7 +153,7 @@ public class KlassFindUsagesTest extends BasePlatformTestCase {
 
 	public void testGetDescriptiveNameReturnsEmptyForNonNamedElement() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassFindUsagesProvider provider = new KlassFindUsagesProvider();
+		var provider = new KlassFindUsagesProvider();
 
 		// The PsiFile itself is not a KlassNamedElement
 		assertEquals("", provider.getDescriptiveName(psiFile));
