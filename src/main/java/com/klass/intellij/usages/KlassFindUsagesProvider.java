@@ -78,8 +78,8 @@ public class KlassFindUsagesProvider implements FindUsagesProvider {
 
 	@NotNull @Override
 	public String getDescriptiveName(@NotNull PsiElement element) {
-		if (element instanceof KlassNamedElement) {
-			return ((KlassNamedElement) element).getName();
+		if (element instanceof KlassNamedElement namedElement) {
+			return namedElement.getName();
 		}
 		return "";
 	}

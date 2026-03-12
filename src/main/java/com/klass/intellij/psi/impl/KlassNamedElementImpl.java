@@ -37,8 +37,8 @@ public abstract class KlassNamedElementImpl extends ASTWrapperPsiElement {
 			PsiElement nombreText = nombre.getNombreText();
 			if (nombreText != null) {
 				PsiElement identifier = nombreText.getFirstChild();
-				if (identifier instanceof LeafPsiElement) {
-					((LeafPsiElement) identifier).replaceWithText(name);
+				if (identifier instanceof LeafPsiElement element) {
+					element.replaceWithText(name);
 				}
 			}
 		}

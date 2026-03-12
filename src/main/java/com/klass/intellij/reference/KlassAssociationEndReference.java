@@ -43,8 +43,8 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 	@NotNull @Override
 	public ResolveResult[] multiResolve(boolean incompleteCode) {
 		PsiElement innerNode = this.myElement.getParent();
-		if (innerNode instanceof KlassProjectionWithAssociationEnd) {
-			KlassClassifierName classifierName = ((KlassProjectionWithAssociationEnd) innerNode).getClassifierName();
+		if (innerNode instanceof KlassProjectionWithAssociationEnd end) {
+			KlassClassifierName classifierName = end.getClassifierName();
 			if (classifierName == null) {
 				KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
 				PsiElement type = klassTypedElement.getType();
@@ -54,16 +54,14 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 					return new ResolveResult[] {};
 				}
 
-				if (resolve instanceof KlassKlass) {
-					KlassKlass klassKlass = (KlassKlass) resolve;
+				if (resolve instanceof KlassKlass klassKlass) {
 					return this.getAssociationEndResolveResults(klassKlass);
 				}
 
-				if (resolve instanceof KlassAssociationEnd) {
-					KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
+				if (resolve instanceof KlassAssociationEnd klassAssociationEnd) {
 					PsiElement klassResolved = klassAssociationEnd.getKlassName().getReference().resolve();
-					if (klassResolved instanceof KlassKlass) {
-						return this.getAssociationEndResolveResults((KlassKlass) klassResolved);
+					if (klassResolved instanceof KlassKlass klass) {
+						return this.getAssociationEndResolveResults(klass);
 					}
 				}
 
@@ -77,8 +75,7 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 			// Polymorphic projection
 			PsiReference reference = classifierName.getReference();
 			PsiElement resolve = reference.resolve();
-			if (resolve instanceof KlassKlass) {
-				KlassKlass klassKlass = (KlassKlass) resolve;
+			if (resolve instanceof KlassKlass klassKlass) {
 				return this.getAssociationEndResolveResults(klassKlass);
 			}
 
@@ -97,16 +94,14 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 				return new ResolveResult[] {};
 			}
 
-			if (resolve instanceof KlassKlass) {
-				KlassKlass klassKlass = (KlassKlass) resolve;
+			if (resolve instanceof KlassKlass klassKlass) {
 				return this.getAssociationEndResolveResults(klassKlass);
 			}
 
-			if (resolve instanceof KlassAssociationEnd) {
-				KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
+			if (resolve instanceof KlassAssociationEnd klassAssociationEnd) {
 				PsiElement klassResolved = klassAssociationEnd.getKlassName().getReference().resolve();
-				if (klassResolved instanceof KlassKlass) {
-					return this.getAssociationEndResolveResults((KlassKlass) klassResolved);
+				if (klassResolved instanceof KlassKlass klass) {
+					return this.getAssociationEndResolveResults(klass);
 				}
 			}
 

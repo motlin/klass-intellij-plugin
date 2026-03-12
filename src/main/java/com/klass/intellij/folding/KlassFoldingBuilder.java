@@ -79,45 +79,45 @@ public class KlassFoldingBuilder implements FoldingBuilder, DumbAware {
 	}
 
 	@NotNull private static TextRange getTextRange(@NotNull PsiElement psiElement) {
-		if (psiElement instanceof KlassClassBlock) {
-			KlassLBrace lBrace = ((KlassClassBlock) psiElement).getLBrace();
-			KlassRBrace rBrace = ((KlassClassBlock) psiElement).getRBrace();
+		if (psiElement instanceof KlassClassBlock block) {
+			KlassLBrace lBrace = block.getLBrace();
+			KlassRBrace rBrace = block.getRBrace();
 			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
 		}
 
-		if (psiElement instanceof KlassInterfaceBlock) {
-			KlassLBrace lBrace = ((KlassInterfaceBlock) psiElement).getLBrace();
-			KlassRBrace rBrace = ((KlassInterfaceBlock) psiElement).getRBrace();
+		if (psiElement instanceof KlassInterfaceBlock block) {
+			KlassLBrace lBrace = block.getLBrace();
+			KlassRBrace rBrace = block.getRBrace();
 			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
 		}
 
-		if (psiElement instanceof KlassEnumerationBlock) {
-			KlassLBrace lBrace = ((KlassEnumerationBlock) psiElement).getLBrace();
-			KlassRBrace rBrace = ((KlassEnumerationBlock) psiElement).getRBrace();
+		if (psiElement instanceof KlassEnumerationBlock block) {
+			KlassLBrace lBrace = block.getLBrace();
+			KlassRBrace rBrace = block.getRBrace();
 			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
 		}
 
-		if (psiElement instanceof KlassAssociationBlock) {
-			KlassLBrace lBrace = ((KlassAssociationBlock) psiElement).getLBrace();
-			KlassRBrace rBrace = ((KlassAssociationBlock) psiElement).getRBrace();
+		if (psiElement instanceof KlassAssociationBlock block) {
+			KlassLBrace lBrace = block.getLBrace();
+			KlassRBrace rBrace = block.getRBrace();
 			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
 		}
 
-		if (psiElement instanceof KlassProjectionBlock) {
-			KlassLBrace lBrace = ((KlassProjectionBlock) psiElement).getLBrace();
-			KlassRBrace rBrace = ((KlassProjectionBlock) psiElement).getRBrace();
+		if (psiElement instanceof KlassProjectionBlock block) {
+			KlassLBrace lBrace = block.getLBrace();
+			KlassRBrace rBrace = block.getRBrace();
 			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
 		}
 
-		if (psiElement instanceof KlassServiceGroupBlock) {
-			KlassLBrace lBrace = ((KlassServiceGroupBlock) psiElement).getLBrace();
-			KlassRBrace rBrace = ((KlassServiceGroupBlock) psiElement).getRBrace();
+		if (psiElement instanceof KlassServiceGroupBlock block) {
+			KlassLBrace lBrace = block.getLBrace();
+			KlassRBrace rBrace = block.getRBrace();
 			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
 		}
 
-		if (psiElement instanceof KlassServiceBlock) {
-			KlassLBrace lBrace = ((KlassServiceBlock) psiElement).getLBrace();
-			KlassRBrace rBrace = ((KlassServiceBlock) psiElement).getRBrace();
+		if (psiElement instanceof KlassServiceBlock block) {
+			KlassLBrace lBrace = block.getLBrace();
+			KlassRBrace rBrace = block.getRBrace();
 			return new TextRange(lBrace.getTextOffset(), rBrace.getTextOffset() + 1);
 		}
 
