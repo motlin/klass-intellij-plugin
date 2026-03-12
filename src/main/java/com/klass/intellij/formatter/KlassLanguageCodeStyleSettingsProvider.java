@@ -58,31 +58,32 @@ public class KlassLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
 	@Override
 	public String getCodeSample(@NotNull SettingsType settingsType) {
 		return (
-			""
-			+ "enumeration Status\n"
-			+ "{\n"
-			+ "    OPEN,\n"
-			+ "    ON_HOLD,\n"
-			+ "    CLOSED,\n"
-			+ "}\n"
-			+ "\n"
-			+ "class Question\n"
-			+ "{\n"
-			+ "    title : String\n"
-			+ "    body  : String\n"
-			+ "    status: Status\n"
-			+ "}\n"
-			+ "\n"
-			+ "class Answer\n"
-			+ "{\n"
-			+ "    body    : String?\n"
-			+ "}\n"
-			+ "\n"
-			+ "association QuestionHasAnswer\n"
-			+ "{\n"
-			+ "    question: Question[1..1]\n"
-			+ "    answer  : Answer[0..*]\n"
-			+ "}\n"
+			"""
+			enumeration Status
+			{
+			    OPEN,
+			    ON_HOLD,
+			    CLOSED,
+			}
+
+			class Question
+			{
+			    title : String
+			    body  : String
+			    status: Status
+			}
+
+			class Answer
+			{
+			    body    : String?
+			}
+
+			association QuestionHasAnswer
+			{
+			    question: Question[1..1]
+			    answer  : Answer[0..*]
+			}
+			"""
 		);
 	}
 

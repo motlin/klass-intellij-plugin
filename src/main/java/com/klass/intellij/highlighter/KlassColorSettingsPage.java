@@ -61,40 +61,41 @@ public class KlassColorSettingsPage implements ColorSettingsPage, DisplayPriorit
 	@NotNull @Override
 	public String getDemoText() {
 		return (
-			""
-			+ "enumeration <enumeration>Status</enumeration>\n"
-			+ "{\n"
-			+ "    <enumerationLiteral>OPEN</enumerationLiteral>,\n"
-			+ "    <enumerationLiteral>ON_HOLD</enumerationLiteral>,\n"
-			+ "    <enumerationLiteral>CLOSED</enumerationLiteral>,\n"
-			+ "}\n"
-			+ "\n"
-			+ "class <klass>Question</klass>\n"
-			+ "{\n"
-			+ "    <property>title</property> : String\n"
-			+ "    <property>body</property>  : String\n"
-			+ "    <property>status</property>: <enumeration>Status</enumeration>\n"
-			+ "}\n"
-			+ "\n"
-			+ "class <klass>Answer</klass>\n"
-			+ "{\n"
-			+ "    <property>body</property>    : String?\n"
-			+ "}\n"
-			+ "\n"
-			+ "association <klass>QuestionHasAnswer</klass>\n"
-			+ "{\n"
-			+ "    <property>question</property>: <klass>Question</klass>[1..1]\n"
-			+ "    <property>answer</property>  : <klass>Answer</klass>[0..*]\n"
-			+ "}\n"
-			+ "\n"
-			+ "projection QuestionReadProjection (Question)\n"
-			+ "{\n"
-			+ "    title: \"Question title\"\n"
-			+ "    body: \"Question body\" \n"
-			+ "    answers: {\n"
-			+ "        body: \"Answer body\"\n"
-			+ "    }\n"
-			+ "}\n"
+			"""
+			enumeration <enumeration>Status</enumeration>
+			{
+			    <enumerationLiteral>OPEN</enumerationLiteral>,
+			    <enumerationLiteral>ON_HOLD</enumerationLiteral>,
+			    <enumerationLiteral>CLOSED</enumerationLiteral>,
+			}
+
+			class <klass>Question</klass>
+			{
+			    <property>title</property> : String
+			    <property>body</property>  : String
+			    <property>status</property>: <enumeration>Status</enumeration>
+			}
+
+			class <klass>Answer</klass>
+			{
+			    <property>body</property>    : String?
+			}
+
+			association <klass>QuestionHasAnswer</klass>
+			{
+			    <property>question</property>: <klass>Question</klass>[1..1]
+			    <property>answer</property>  : <klass>Answer</klass>[0..*]
+			}
+
+			projection QuestionReadProjection (Question)
+			{
+			    title: "Question title"
+			    body: "Question body"\s
+			    answers: {
+			        body: "Answer body"
+			    }
+			}
+			"""
 		);
 	}
 
