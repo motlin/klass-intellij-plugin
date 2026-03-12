@@ -25,9 +25,7 @@ public class KlassCompletionContributor extends CompletionContributor {
 		.withParent(PsiErrorElement.class);
 
 	public KlassCompletionContributor() {
-		CompletionProvider<CompletionParameters> multiplicityCompletionProvider = new CompletionProvider<
-			CompletionParameters
-		>() {
+		CompletionProvider<CompletionParameters> multiplicityCompletionProvider = new CompletionProvider<>() {
 			public void addCompletions(
 				@NotNull CompletionParameters parameters,
 				ProcessingContext context,
@@ -40,9 +38,7 @@ public class KlassCompletionContributor extends CompletionContributor {
 			}
 		};
 
-		CompletionProvider<CompletionParameters> keywordCompletionProvider = new CompletionProvider<
-			CompletionParameters
-		>() {
+		CompletionProvider<CompletionParameters> keywordCompletionProvider = new CompletionProvider<>() {
 			@Override
 			protected void addCompletions(
 				@NotNull CompletionParameters parameters,
