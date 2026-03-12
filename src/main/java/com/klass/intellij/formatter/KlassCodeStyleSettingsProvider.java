@@ -38,7 +38,7 @@ public class KlassCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
 		};
 	}
 
-	private static class KlassCodeStyleMainPanel extends TabbedLanguageCodeStylePanel {
+	private static final class KlassCodeStyleMainPanel extends TabbedLanguageCodeStylePanel {
 
 		private KlassCodeStyleMainPanel(CodeStyleSettings currentSettings, CodeStyleSettings settings) {
 			super(KlassLanguage.INSTANCE, currentSettings, settings);

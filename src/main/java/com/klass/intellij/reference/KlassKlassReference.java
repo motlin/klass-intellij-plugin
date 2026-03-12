@@ -95,7 +95,7 @@ public class KlassKlassReference extends PsiPolyVariantReferenceBase<PsiElement>
 		return variants.toArray();
 	}
 
-	private static class BracketsInsertHandler extends ParenthesesInsertHandler<LookupElement> {
+	private static final class BracketsInsertHandler extends ParenthesesInsertHandler<LookupElement> {
 
 		private BracketsInsertHandler() {
 			super(false, false, true, false, '[', ']');

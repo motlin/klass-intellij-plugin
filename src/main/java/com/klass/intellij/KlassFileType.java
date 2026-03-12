@@ -5,7 +5,7 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class KlassFileType extends LanguageFileType {
+public final class KlassFileType extends LanguageFileType {
 
 	public static final KlassFileType INSTANCE = new KlassFileType();
 
