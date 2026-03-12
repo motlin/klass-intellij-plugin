@@ -240,8 +240,8 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 	}
 
 	private static boolean isUnresolved(PsiReference reference) {
-		if (reference instanceof PsiPolyVariantReference) {
-			return ((PsiPolyVariantReference) reference).multiResolve(false).length == 0;
+		if (reference instanceof PsiPolyVariantReference variantReference) {
+			return variantReference.multiResolve(false).length == 0;
 		}
 		return reference.resolve() == null;
 	}
@@ -541,8 +541,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 	}
 
 	private List<Type> getPossibleTypes(KlassExpressionValue expressionValue) {
-		if (expressionValue instanceof KlassExpressionLiteral) {
-			KlassExpressionLiteral expressionLiteral = (KlassExpressionLiteral) expressionValue;
+		if (expressionValue instanceof KlassExpressionLiteral expressionLiteral) {
 			return AnnotatorKlassVisitor.getExpressionLiteralTypes(expressionLiteral, Multiplicity.ONE_TO_ONE);
 		}
 
@@ -561,8 +560,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			);
 		}
 
-		if (expressionValue instanceof KlassExpressionNativeValue) {
-			KlassExpressionNativeValue expressionNativeValue = (KlassExpressionNativeValue) expressionValue;
+		if (expressionValue instanceof KlassExpressionNativeValue expressionNativeValue) {
 			if (expressionNativeValue.getText().equals("user")) {
 				return Collections.singletonList(
 					new Type(DataTypeType.PRIMITIVE_TYPE, "String", Multiplicity.ONE_TO_ONE)
@@ -571,9 +569,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			throw new UnsupportedOperationException(expressionNativeValue.getText());
 		}
 
-		if (expressionValue instanceof KlassExpressionMemberName) {
-			KlassExpressionMemberName expressionMemberName = (KlassExpressionMemberName) expressionValue;
-
+		if (expressionValue instanceof KlassExpressionMemberName expressionMemberName) {
 			/* TODO: factor in expressionMemberName.getAssociationEndNameList() */
 			KlassMemberName propertyName = expressionMemberName.getMemberName();
 			KlassMemberReference reference = (KlassMemberReference) propertyName.getReference();
@@ -581,8 +577,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 				return Lists.immutable.<Type>empty().castToList();
 			}
 			PsiElement resolve = reference.resolve();
-			if (resolve instanceof KlassPrimitiveTypeProperty) {
-				KlassPrimitiveTypeProperty primitiveTypeProperty = (KlassPrimitiveTypeProperty) resolve;
+			if (resolve instanceof KlassPrimitiveTypeProperty primitiveTypeProperty) {
 				KlassPrimitiveType primitiveType = primitiveTypeProperty.getPrimitiveType();
 				KlassOptionalMarker optionalMarker = primitiveTypeProperty.getOptionalMarker();
 				Multiplicity multiplicity = optionalMarker == null ? Multiplicity.ONE_TO_ONE : Multiplicity.ZERO_TO_ONE;
@@ -595,8 +590,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 				}
 				return result;
 			}
-			if (resolve instanceof KlassEnumerationProperty) {
-				KlassEnumerationProperty enumerationProperty = (KlassEnumerationProperty) resolve;
+			if (resolve instanceof KlassEnumerationProperty enumerationProperty) {
 				// TODO: Create a common interface above KlassEnumerationType and KlassDataType and reduce
 				// some code duplication
 				KlassEnumerationType enumerationType = enumerationProperty.getEnumerationType();
@@ -609,16 +603,14 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 					)
 				);
 			}
-			if (resolve instanceof KlassEnumerationLiteral) {
-				KlassEnumerationLiteral enumerationLiteral = (KlassEnumerationLiteral) resolve;
+			if (resolve instanceof KlassEnumerationLiteral enumerationLiteral) {
 				KlassEnumeration enumeration = PsiTreeUtil.getParentOfType(enumerationLiteral, KlassEnumeration.class);
 
 				return Collections.singletonList(
 					new Type(DataTypeType.PRIMITIVE_TYPE, enumeration.getName(), Multiplicity.ONE_TO_ONE)
 				);
 			}
-			if (resolve instanceof KlassClassModifier) {
-				KlassClassModifier classModifier = (KlassClassModifier) resolve;
+			if (resolve instanceof KlassClassModifier classModifier) {
 				String modifierText = classModifier.getText();
 				if (TEMPORAL_PROPERTY_MODIFIERS.contains(modifierText)) {
 					Type instantType = new Type(DataTypeType.PRIMITIVE_TYPE, "Instant", Multiplicity.ONE_TO_ONE);
@@ -653,8 +645,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			}
 		}
 
-		if (expressionValue instanceof KlassExpressionVariableName) {
-			KlassExpressionVariableName expressionVariableName = (KlassExpressionVariableName) expressionValue;
+		if (expressionValue instanceof KlassExpressionVariableName expressionVariableName) {
 			PsiReference reference = expressionVariableName.getReference();
 			if (reference == null) {
 				return Lists.immutable.<Type>empty().castToList();

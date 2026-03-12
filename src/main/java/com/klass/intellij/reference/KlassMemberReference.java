@@ -115,18 +115,15 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 
 				return this.getKlassResolveResults(klassKlass);
 			}
-		} else if (parent instanceof KlassExpressionTypeMember) {
-			KlassExpressionTypeMember expressionTypeMember = (KlassExpressionTypeMember) parent;
+		} else if (parent instanceof KlassExpressionTypeMember expressionTypeMember) {
 			KlassKlassName klassName = expressionTypeMember.getKlassName();
 
 			PsiReference klassNameReference = klassName.getReference();
 			PsiElement resolve = klassNameReference.resolve();
-			if (resolve instanceof KlassKlass) {
-				KlassKlass klass = (KlassKlass) resolve;
+			if (resolve instanceof KlassKlass klass) {
 				return this.getKlassResolveResults(klass);
 			}
-			if (resolve instanceof KlassEnumeration) {
-				KlassEnumeration enumeration = (KlassEnumeration) resolve;
+			if (resolve instanceof KlassEnumeration enumeration) {
 				return this.getEnumerationResolveResults(enumeration);
 			}
 			if (resolve != null) {
@@ -166,8 +163,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 					return this.getKlassResolveResults(klassKlass);
 				}
 			}
-		} else if (parent instanceof KlassProjectionLeafNode) {
-			KlassProjectionLeafNode projectionLeafNode = (KlassProjectionLeafNode) parent;
+		} else if (parent instanceof KlassProjectionLeafNode projectionLeafNode) {
 			KlassClassifierName classifierName = projectionLeafNode.getClassifierName();
 			if (classifierName != null) {
 				PsiReference classifierReference = classifierName.getReference();
@@ -178,28 +174,23 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 			}
 
 			PsiElement projectionNodeParent = projectionLeafNode.getParent().getParent().getParent();
-			if (projectionNodeParent instanceof KlassProjection) {
-				KlassProjection projection = (KlassProjection) projectionNodeParent;
+			if (projectionNodeParent instanceof KlassProjection projection) {
 				PsiReference classifierReference = projection.getClassifierName().getReference();
 				PsiElement resolved = classifierReference.resolve();
 
-				if (resolved instanceof KlassClassifier) {
-					return this.getClassifierResolveResults((KlassClassifier) resolved);
+				if (resolved instanceof KlassClassifier classifier) {
+					return this.getClassifierResolveResults(classifier);
 				}
 				if (resolved instanceof KlassClassModifier) {
 					return new ResolveResult[] { new PsiElementResolveResult(resolved) };
 				}
-			} else if (projectionNodeParent instanceof KlassProjectionAssociationEndNode) {
-				KlassProjectionAssociationEndNode associationEndNode =
-					(KlassProjectionAssociationEndNode) projectionNodeParent;
+			} else if (projectionNodeParent instanceof KlassProjectionAssociationEndNode associationEndNode) {
 				KlassAssociationEndName associationEndName = associationEndNode.getAssociationEndName();
 
 				PsiReference associationEndReference = associationEndName.getReference();
 				PsiElement resolve = associationEndReference.resolve();
 
-				if (resolve instanceof KlassAssociationEnd) {
-					KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
-
+				if (resolve instanceof KlassAssociationEnd klassAssociationEnd) {
 					KlassKlassName klassName = klassAssociationEnd.getKlassName();
 					PsiReference klassNameReference = klassName.getReference();
 					KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
@@ -212,9 +203,9 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 				} else if (resolve != null) {
 					throw new AssertionError(resolve);
 				}
-			} else if (projectionNodeParent instanceof KlassProjectionParameterizedPropertyNode) {
-				KlassProjectionParameterizedPropertyNode parameterizedPropertyNode =
-					(KlassProjectionParameterizedPropertyNode) projectionNodeParent;
+			} else if (
+				projectionNodeParent instanceof KlassProjectionParameterizedPropertyNode parameterizedPropertyNode
+			) {
 				KlassParameterizedPropertyName parameterizedPropertyName =
 					parameterizedPropertyNode.getParameterizedPropertyName();
 
@@ -266,8 +257,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 		PsiElement grandparent = parent.getParent();
 		PsiElement greatGrandparent = grandparent.getParent();
 
-		if (grandparent instanceof KlassProjectionAssociationEndNode) {
-			KlassProjectionAssociationEndNode associationEndNode = (KlassProjectionAssociationEndNode) grandparent;
+		if (grandparent instanceof KlassProjectionAssociationEndNode associationEndNode) {
 			KlassAssociationEndName associationEndName = associationEndNode.getAssociationEndName();
 			KlassAssociationEndReference associationEndReference =
 				(KlassAssociationEndReference) associationEndName.getReference();
@@ -289,9 +279,7 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 						.toArray();
 				}
 			}
-		} else if (grandparent instanceof KlassProjectionParameterizedPropertyNode) {
-			KlassProjectionParameterizedPropertyNode parameterizedPropertyNode =
-				(KlassProjectionParameterizedPropertyNode) grandparent;
+		} else if (grandparent instanceof KlassProjectionParameterizedPropertyNode parameterizedPropertyNode) {
 			KlassParameterizedPropertyName parameterizedPropertyName =
 				parameterizedPropertyNode.getParameterizedPropertyName();
 			KlassParameterizedPropertyReference parameterizedPropertyReference =
@@ -315,16 +303,16 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 						.toArray();
 				}
 			}
-		} else if (grandparent instanceof KlassProjection) {
-			KlassClassifierName classifierName = ((KlassProjection) grandparent).getClassifierName();
+		} else if (grandparent instanceof KlassProjection projection1) {
+			KlassClassifierName classifierName = projection1.getClassifierName();
 			PsiReference classifierReference = classifierName.getReference();
 			PsiElement resolved = classifierReference.resolve();
 
-			if (resolved instanceof KlassKlass) {
-				return this.getKlassMemberLookups((KlassKlass) resolved);
+			if (resolved instanceof KlassKlass klass) {
+				return this.getKlassMemberLookups(klass);
 			}
-			if (resolved instanceof KlassInterface) {
-				return this.getInterfaceMemberLookups((KlassInterface) resolved);
+			if (resolved instanceof KlassInterface interface1) {
+				return this.getInterfaceMemberLookups(interface1);
 			}
 			return new Object[] {};
 		} else if (parent instanceof KlassExpressionThisMember) {
@@ -340,26 +328,22 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 				KlassKlass serviceKlass = (KlassKlass) reference.resolve();
 				return this.getKlassMemberLookups(serviceKlass);
 			}
-		} else if (parent instanceof KlassExpressionTypeMember) {
-			KlassExpressionTypeMember expressionTypeMember = (KlassExpressionTypeMember) parent;
+		} else if (parent instanceof KlassExpressionTypeMember expressionTypeMember) {
 			KlassKlassName klassName = expressionTypeMember.getKlassName();
 
 			KlassKlassReference klassNameReference = (KlassKlassReference) klassName.getReference();
 			PsiElement resolve = klassNameReference.resolve();
-			if (resolve instanceof KlassKlass) {
-				KlassKlass klassKlass = (KlassKlass) resolve;
+			if (resolve instanceof KlassKlass klassKlass) {
 				return this.getKlassMemberLookups(klassKlass);
 			}
-			if (resolve instanceof KlassEnumeration) {
-				KlassEnumeration enumeration = (KlassEnumeration) resolve;
+			if (resolve instanceof KlassEnumeration enumeration) {
 				return this.getEnumerationLiteralLookups(enumeration);
 			}
 			if (resolve != null) {
 				throw new AssertionError();
 			}
 		} else if (parent instanceof KlassOrderByProperty) {
-			if (greatGrandparent instanceof KlassAssociationEnd) {
-				KlassAssociationEnd associationEnd = (KlassAssociationEnd) greatGrandparent;
+			if (greatGrandparent instanceof KlassAssociationEnd associationEnd) {
 				KlassKlassName klassName = associationEnd.getKlassName();
 				PsiReference klassNameReference = klassName.getReference();
 				KlassKlass klass = (KlassKlass) klassNameReference.resolve();
@@ -378,28 +362,23 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 		} else if (grandparent instanceof KlassProjectionLeafNode) {
 			KlassProjectionLeafNode projectionLeafNode = (KlassProjectionLeafNode) parent;
 			PsiElement projectionNodeParent = projectionLeafNode.getParent().getParent().getParent();
-			if (projectionNodeParent instanceof KlassProjection) {
-				KlassProjection projection = (KlassProjection) projectionNodeParent;
+			if (projectionNodeParent instanceof KlassProjection projection) {
 				PsiReference classifierReference = projection.getClassifierName().getReference();
 				PsiElement resolved = classifierReference.resolve();
 
-				if (resolved instanceof KlassKlass) {
-					return this.getKlassMemberLookups((KlassKlass) resolved);
+				if (resolved instanceof KlassKlass klass) {
+					return this.getKlassMemberLookups(klass);
 				}
-				if (resolved instanceof KlassInterface) {
-					return this.getInterfaceMemberLookups((KlassInterface) resolved);
+				if (resolved instanceof KlassInterface interface1) {
+					return this.getInterfaceMemberLookups(interface1);
 				}
-			} else if (projectionNodeParent instanceof KlassProjectionAssociationEndNode) {
-				KlassProjectionAssociationEndNode associationEndNode =
-					(KlassProjectionAssociationEndNode) projectionNodeParent;
+			} else if (projectionNodeParent instanceof KlassProjectionAssociationEndNode associationEndNode) {
 				KlassAssociationEndName associationEndName = associationEndNode.getAssociationEndName();
 
 				PsiReference associationEndReference = associationEndName.getReference();
 				PsiElement resolve = associationEndReference.resolve();
 
-				if (resolve instanceof KlassAssociationEnd) {
-					KlassAssociationEnd klassAssociationEnd = (KlassAssociationEnd) resolve;
-
+				if (resolve instanceof KlassAssociationEnd klassAssociationEnd) {
 					KlassKlassName klassName = klassAssociationEnd.getKlassName();
 					PsiReference klassNameReference = klassName.getReference();
 					KlassKlass klassKlass = (KlassKlass) klassNameReference.resolve();
@@ -412,9 +391,9 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 				} else if (resolve != null) {
 					throw new AssertionError(resolve);
 				}
-			} else if (projectionNodeParent instanceof KlassProjectionParameterizedPropertyNode) {
-				KlassProjectionParameterizedPropertyNode parameterizedPropertyNode =
-					(KlassProjectionParameterizedPropertyNode) projectionNodeParent;
+			} else if (
+				projectionNodeParent instanceof KlassProjectionParameterizedPropertyNode parameterizedPropertyNode
+			) {
 				KlassParameterizedPropertyName parameterizedPropertyName =
 					parameterizedPropertyNode.getParameterizedPropertyName();
 
@@ -442,11 +421,11 @@ public class KlassMemberReference extends PsiPolyVariantReferenceBase<PsiElement
 	}
 
 	private ResolveResult[] getClassifierResolveResults(KlassClassifier classifier) {
-		if (classifier instanceof KlassKlass) {
-			return getKlassResolveResults((KlassKlass) classifier);
+		if (classifier instanceof KlassKlass klass) {
+			return getKlassResolveResults(klass);
 		}
-		if (classifier instanceof KlassInterface) {
-			return getInterfaceResolveResults((KlassInterface) classifier);
+		if (classifier instanceof KlassInterface interface1) {
+			return getInterfaceResolveResults(interface1);
 		}
 		throw new AssertionError();
 	}

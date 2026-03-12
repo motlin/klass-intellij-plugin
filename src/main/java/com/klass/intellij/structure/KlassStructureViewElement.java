@@ -42,19 +42,19 @@ public class KlassStructureViewElement implements StructureViewTreeElement {
 
 	@Override
 	public void navigate(boolean requestFocus) {
-		if (this.element instanceof NavigationItem) {
-			((NavigationItem) this.element).navigate(requestFocus);
+		if (this.element instanceof NavigationItem item) {
+			item.navigate(requestFocus);
 		}
 	}
 
 	@Override
 	public boolean canNavigate() {
-		return this.element instanceof NavigationItem && ((NavigationItem) this.element).canNavigate();
+		return this.element instanceof NavigationItem ni && ni.canNavigate();
 	}
 
 	@Override
 	public boolean canNavigateToSource() {
-		return this.element instanceof NavigationItem && ((NavigationItem) this.element).canNavigateToSource();
+		return this.element instanceof NavigationItem ni && ni.canNavigateToSource();
 	}
 
 	@Override
