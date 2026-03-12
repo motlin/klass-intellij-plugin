@@ -1,7 +1,5 @@
 package com.klass.intellij.reference;
 
-import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
@@ -62,18 +60,6 @@ public class KlassInterfaceReference extends PsiPolyVariantReferenceBase<PsiElem
 			}
 		}
 		return variants.toArray();
-	}
-
-	private static final class BracketsInsertHandler extends ParenthesesInsertHandler<LookupElement> {
-
-		private BracketsInsertHandler() {
-			super(false, false, true, false, '[', ']');
-		}
-
-		@Override
-		protected boolean placeCaretInsideParentheses(InsertionContext context, LookupElement item) {
-			return true;
-		}
 	}
 
 	@Override
