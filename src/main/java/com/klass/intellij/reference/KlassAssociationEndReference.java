@@ -127,7 +127,7 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 				return new ResolveResult[] {};
 			}
 
-			KlassAssociationEnd sourceEnd = associationEndList.get(0);
+			KlassAssociationEnd sourceEnd = associationEndList.getFirst();
 			KlassAssociationEnd targetEnd = associationEndList.get(1);
 			String sourceName = sourceEnd.getName();
 			String targetName = targetEnd.getName();

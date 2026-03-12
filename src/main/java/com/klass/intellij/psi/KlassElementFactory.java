@@ -68,7 +68,7 @@ public class KlassElementFactory {
 		);
 		KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
 		List<KlassMember> memberList = klassKlass.getClassBlock().getClassBody().getMemberList();
-		return (KlassPrimitiveTypeProperty) memberList.get(0);
+		return (KlassPrimitiveTypeProperty) memberList.getFirst();
 	}
 
 	public static KlassEnumerationProperty createEnumerationProperty(Project project, String name) {
@@ -77,7 +77,7 @@ public class KlassElementFactory {
 			"package dummy\n" + "\n" + "class DummyClass\n" + "{\n" + "  " + name + ": Status;\n" + "}\n"
 		);
 		KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
-		return (KlassEnumerationProperty) klassKlass.getClassBlock().getClassBody().getMemberList().get(0);
+		return (KlassEnumerationProperty) klassKlass.getClassBlock().getClassBody().getMemberList().getFirst();
 	}
 
 	public static KlassParameterizedProperty createParameterizedProperty(Project project, String name) {
@@ -96,7 +96,7 @@ public class KlassElementFactory {
 			+ "}\n"
 		);
 		KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
-		return (KlassParameterizedProperty) klassKlass.getClassBlock().getClassBody().getMemberList().get(0);
+		return (KlassParameterizedProperty) klassKlass.getClassBlock().getClassBody().getMemberList().getFirst();
 	}
 
 	public static KlassParameterizedPropertySignature createParameterizedPropertySignature(
@@ -119,7 +119,7 @@ public class KlassElementFactory {
 			.getInterfaceBlock()
 			.getInterfaceBody()
 			.getMemberList()
-			.get(0);
+			.getFirst();
 	}
 
 	public static KlassAssociationEnd createAssociationEnd(Project project, String name) {
@@ -136,7 +136,7 @@ public class KlassElementFactory {
 			+ "}\n"
 		);
 		KlassAssociation klassAssociation = file.findChildByClass(KlassAssociation.class);
-		return klassAssociation.getAssociationBlock().getAssociationBody().getAssociationEndList().get(0);
+		return klassAssociation.getAssociationBlock().getAssociationBody().getAssociationEndList().getFirst();
 	}
 
 	public static KlassAssociationEndSignature createAssociationEndSignature(Project project, String name) {
@@ -156,7 +156,7 @@ public class KlassElementFactory {
 			.getInterfaceBlock()
 			.getInterfaceBody()
 			.getMemberList()
-			.get(0);
+			.getFirst();
 	}
 
 	public static KlassAssociationEnd createAssociationEndType(Project project, String name) {
@@ -179,7 +179,7 @@ public class KlassElementFactory {
 			+ "}\n"
 		);
 		KlassAssociation klassAssociation = file.findChildByClass(KlassAssociation.class);
-		return klassAssociation.getAssociationBlock().getAssociationBody().getAssociationEndList().get(0);
+		return klassAssociation.getAssociationBlock().getAssociationBody().getAssociationEndList().getFirst();
 	}
 
 	public static KlassParameterDeclaration createParameterDeclaration(Project project, String name) {
@@ -202,12 +202,12 @@ public class KlassElementFactory {
 			.getClassBlock()
 			.getClassBody()
 			.getMemberList()
-			.get(0);
+			.getFirst();
 		return parameterizedProperty
 			.getPropertyParameterDeclarationsParens()
 			.getParameterDeclarations()
 			.getParameterDeclarationList()
-			.get(0);
+			.getFirst();
 	}
 
 	// TODO: Try running all the rename refactorings
@@ -217,7 +217,7 @@ public class KlassElementFactory {
 			"package dummy\n" + "\n" + "enumeration DummyEnumeration\n" + "{\n" + "    " + name + ",\n" + "}"
 		);
 		KlassEnumeration klassEnumeration = file.findChildByClass(KlassEnumeration.class);
-		return klassEnumeration.getEnumerationBlock().getEnumerationBody().getEnumerationLiteralList().get(0);
+		return klassEnumeration.getEnumerationBlock().getEnumerationBody().getEnumerationLiteralList().getFirst();
 	}
 
 	public static KlassMemberName createPropertyName(Project project, String newElementName) {
@@ -237,7 +237,7 @@ public class KlassElementFactory {
 			.getProjectionBlock()
 			.getProjectionBody()
 			.getProjectionNodeList()
-			.get(0);
+			.getFirst();
 		return projectionLeafNode.getMemberName();
 	}
 
@@ -250,7 +250,7 @@ public class KlassElementFactory {
 		return file
 			.findChildByClass(KlassKlass.class)
 			.getServiceProjectionList()
-			.get(0)
+			.getFirst()
 			.getProjectNameParens()
 			.getProjectionName();
 	}
@@ -265,7 +265,7 @@ public class KlassElementFactory {
 			.getClassBlock()
 			.getClassBody()
 			.getMemberList()
-			.get(0);
+			.getFirst();
 		return klassEnumerationProperty.getEnumerationType();
 	}
 
@@ -275,7 +275,7 @@ public class KlassElementFactory {
 			"package dummy\n" + "\n" + "class DummyClass implements " + newElementName + "\n" + "{\n" + "}\n"
 		);
 		KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
-		return klassKlass.getImplementsClause().getImplementsList().getInterfaceNameList().get(0);
+		return klassKlass.getImplementsClause().getImplementsList().getInterfaceNameList().getFirst();
 	}
 
 	public static KlassKlassName createKlassName(Project project, String newElementName) {
@@ -316,7 +316,7 @@ public class KlassElementFactory {
 				.getProjectionBlock()
 				.getProjectionBody()
 				.getProjectionNodeList()
-				.get(0)
+				.getFirst()
 		).getAssociationEndName();
 	}
 
@@ -343,7 +343,7 @@ public class KlassElementFactory {
 				.getProjectionBlock()
 				.getProjectionBody()
 				.getProjectionNodeList()
-				.get(0)
+				.getFirst()
 		).getParameterizedPropertyName();
 	}
 
@@ -366,11 +366,11 @@ public class KlassElementFactory {
 			.getProjectionBlock()
 			.getProjectionBody()
 			.getProjectionNodeList()
-			.get(0);
+			.getFirst();
 		return ((KlassProjectionParameterizedPropertyNode) klassProjectionNode).getParameterNamesParens()
 			.getParameterNames()
 			.getParameterNameList()
-			.get(0);
+			.getFirst();
 	}
 
 	public static KlassExpressionVariableName createExpressionVariableName(Project project, String newElementName) {
@@ -395,7 +395,7 @@ public class KlassElementFactory {
 			.getClassBlock()
 			.getClassBody()
 			.getMemberList()
-			.get(0);
+			.getFirst();
 		KlassCriteriaExpression criteriaExpression = parameterizedProperty.getCriteriaExpression();
 		KlassCriteriaOr criteriaOr = criteriaExpression.getCriteriaAnd().getCriteriaOr();
 		KlassCriteriaOperator criteriaOperator = (KlassCriteriaOperator) criteriaOr.getAtomicCriteria();

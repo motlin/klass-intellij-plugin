@@ -109,7 +109,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 		} else if (size == 1) {
 			String message = "Expected two association ends.";
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message)
-				.range(associationEndList.get(0))
+				.range(associationEndList.getFirst())
 				.create();
 		} else if (size > 2) {
 			String message = "Expected two association ends.";
@@ -138,8 +138,8 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 		if (!Type.compatible(possibleSourceTypes, possibleTargetTypes)) {
 			String message = String.format(
 				"Incompatible types: '%s' and '%s' in '%s'.",
-				possibleSourceTypes.get(0),
-				possibleTargetTypes.get(0),
+				possibleSourceTypes.getFirst(),
+				possibleTargetTypes.getFirst(),
 				criteriaOperator.getText()
 			);
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(criteriaOperator).create();
@@ -149,7 +149,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			!possibleSourceTypes.isEmpty()
 			&& ListAdapter.adapt(possibleSourceTypes).allSatisfy((type) -> type.getMultiplicity().isToMany())
 		) {
-			String message = String.format("Invalid multiplicity '%s'.", possibleSourceTypes.get(0));
+			String message = String.format("Invalid multiplicity '%s'.", possibleSourceTypes.getFirst());
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(criteriaOperator).create();
 		}
 		KlassOperator operator = criteriaOperator.getOperator();
@@ -158,7 +158,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			type.getMultiplicity().isToMany()
 		);
 		if (!possibleTargetTypes.isEmpty() && actualMany != expectMany) {
-			String message = String.format("Invalid multiplicity '%s'.", possibleTargetTypes.get(0));
+			String message = String.format("Invalid multiplicity '%s'.", possibleTargetTypes.getFirst());
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(criteriaOperator).create();
 		}
 	}
@@ -521,8 +521,8 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			if (!Type.compatible(serviceParameterTypes, projectionParameterTypes)) {
 				String message = String.format(
 					"Incompatible types: '%s' cannot be converted to '%s'.",
-					serviceParameterTypes.get(0),
-					projectionParameterTypes.get(0)
+					serviceParameterTypes.getFirst(),
+					projectionParameterTypes.getFirst()
 				);
 				this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(parameterName).create();
 			}
@@ -555,7 +555,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			int size = expressionLiteralList.size();
 			// TODO: Test empty literal list
 			return AnnotatorKlassVisitor.getExpressionLiteralTypes(
-				expressionLiteralList.get(0),
+				expressionLiteralList.getFirst(),
 				Multiplicity.ZERO_TO_MANY
 			);
 		}
