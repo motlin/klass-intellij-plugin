@@ -51,7 +51,7 @@ import com.klass.intellij.reference.KlassProjectionReference;
 import javax.swing.Icon;
 import org.jetbrains.annotations.Nullable;
 
-public class KlassPsiImplUtil {
+public final class KlassPsiImplUtil {
 
 	public static PsiReference getReference(KlassClassifierName klassClassifierName) {
 		String classifierName = klassClassifierName.getText();
