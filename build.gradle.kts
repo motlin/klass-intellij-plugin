@@ -1,3 +1,4 @@
+import net.ltgt.gradle.errorprone.errorprone
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
@@ -95,6 +96,16 @@ spotless {
         formatAnnotations()
         trimTrailingWhitespace()
         endWithNewline()
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.errorprone {
+        // Suppressed checks (OFF)
+        // EqualsGetClass:OFF due to https://github.com/google/error-prone/issues/1144
+        disable("EqualsGetClass", "UnnecessaryParentheses")
+        // Promoted checks (ERROR)
+        error("UnusedNestedClass")
     }
 }
 
