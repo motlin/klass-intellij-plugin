@@ -74,7 +74,7 @@ public class KlassClassifierReference extends PsiPolyVariantReferenceBase<PsiEle
 	@NotNull @Override
 	public Object[] getVariants() {
 		List<LookupElement> variants = new ArrayList<>();
-		BracketsInsertHandler insertHandler = new BracketsInsertHandler();
+		var insertHandler = new BracketsInsertHandler();
 		for (KlassInterface klassInterface : KlassUtil.findInterfaces(this.myElement)) {
 			if (klassInterface.getName() != null && !klassInterface.getName().isEmpty()) {
 				variants.add(

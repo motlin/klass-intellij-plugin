@@ -72,7 +72,7 @@ public class KlassKlassReference extends PsiPolyVariantReferenceBase<PsiElement>
 	@NotNull @Override
 	public Object[] getVariants() {
 		List<LookupElement> variants = new ArrayList<>();
-		BracketsInsertHandler insertHandler = new BracketsInsertHandler();
+		var insertHandler = new BracketsInsertHandler();
 		for (KlassKlass klassKlass : KlassUtil.findClasses(this.myElement)) {
 			if (klassKlass.getName() != null && !klassKlass.getName().isEmpty()) {
 				variants.add(

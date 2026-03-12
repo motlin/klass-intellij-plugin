@@ -422,7 +422,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 
 	@Override
 	public void visitRelationship(@NotNull KlassRelationship klassRelationship) {
-		DetectExpressionThisMember visitor = new DetectExpressionThisMember();
+		var visitor = new DetectExpressionThisMember();
 		klassRelationship.getCriteriaExpression().accept(visitor);
 		if (!visitor.hasThisMember()) {
 			String message = "Expected at least one clause with a reference to 'this'.";
@@ -613,14 +613,14 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			if (resolve instanceof KlassClassModifier classModifier) {
 				String modifierText = classModifier.getText();
 				if (TEMPORAL_PROPERTY_MODIFIERS.contains(modifierText)) {
-					Type instantType = new Type(DataTypeType.PRIMITIVE_TYPE, "Instant", Multiplicity.ONE_TO_ONE);
+					var instantType = new Type(DataTypeType.PRIMITIVE_TYPE, "Instant", Multiplicity.ONE_TO_ONE);
 					// TODO: Date literals in the language, infinity and now global variables
-					Type temporalInstantType = new Type(
+					var temporalInstantType = new Type(
 						DataTypeType.PRIMITIVE_TYPE,
 						"TemporalInstant",
 						Multiplicity.ONE_TO_ONE
 					);
-					Type temporalRangeType = new Type(
+					var temporalRangeType = new Type(
 						DataTypeType.PRIMITIVE_TYPE,
 						"TemporalRange",
 						Multiplicity.ONE_TO_ONE

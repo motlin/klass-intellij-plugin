@@ -33,7 +33,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testRootFilePresentation() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 
 		ItemPresentation presentation = root.getPresentation();
 		assertNotNull("Root file presentation should not be null", presentation);
@@ -42,7 +42,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testRootChildrenAreTopLevelItems() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 
 		TreeElement[] children = root.getChildren();
 		assertEquals("Example.klass should have 6 top-level items", 6, children.length);
@@ -50,7 +50,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testInterfaceElement() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// First top-level item is the Named interface
@@ -64,7 +64,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testInterfaceMemberChildren() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// Named interface has 1 member property: name
@@ -81,7 +81,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testClassElement() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// Second top-level item is the User class
@@ -95,7 +95,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testClassMemberChildren() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// User class has 3 members: name, email, age
@@ -114,7 +114,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testEnumerationElement() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// Third top-level item is the Status enumeration
@@ -128,7 +128,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testEnumerationLiteralChildren() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// Status enumeration has 2 literals: ACTIVE, INACTIVE
@@ -146,7 +146,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testAssociationElement() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// Fourth top-level item is the UserStatus association
@@ -160,7 +160,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testAssociationEndChildren() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// UserStatus association has 2 association ends: user, status
@@ -178,7 +178,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testProjectionElement() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// Fifth top-level item is the UserProjection projection
@@ -193,7 +193,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testServiceGroupElement() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// Sixth top-level item is the UserService service group
@@ -207,7 +207,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testServiceGroupUrlGroupChildren() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// UserService has 1 url group: /user
@@ -223,7 +223,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testServiceWithinUrlGroup() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// The url group /user has 1 service: GET
@@ -239,7 +239,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testAllTopLevelPresentationsNonNull() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 
 		TreeElement[] children = root.getChildren();
 		for (int i = 0; i < children.length; i++) {
@@ -255,7 +255,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 
 	public void testLeafElementsHaveNoChildren() {
 		PsiFile psiFile = myFixture.configureByFile("Example.klass");
-		KlassStructureViewElement root = new KlassStructureViewElement(psiFile);
+		var root = new KlassStructureViewElement(psiFile);
 		TreeElement[] children = root.getChildren();
 
 		// Projection has no children in the structure view (leaf in current implementation)
