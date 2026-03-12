@@ -13,7 +13,7 @@ import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAtt
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 
-public class KlassHighlightingColors {
+public final class KlassHighlightingColors {
 
 	public static final TextAttributesKey LINE_COMMENT = createTextAttributesKey(
 		"KLASS_LINE_COMMENT",

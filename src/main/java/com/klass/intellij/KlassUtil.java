@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 
-public class KlassUtil {
+public final class KlassUtil {
 
 	private static final Key<CachedValue<Map<Class<?>, List<?>>>> ALL_ELEMENTS_CACHE_KEY = Key.create(
 		"klass.util.allElements"

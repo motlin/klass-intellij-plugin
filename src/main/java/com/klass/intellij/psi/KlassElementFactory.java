@@ -5,7 +5,7 @@ import com.intellij.psi.PsiFileFactory;
 import com.klass.intellij.KlassFileType;
 import java.util.List;
 
-public class KlassElementFactory {
+public final class KlassElementFactory {
 
 	public static KlassInterface createInterface(Project project, String name) {
 		KlassFile file = KlassElementFactory.createFile(
