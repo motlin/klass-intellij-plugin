@@ -5,7 +5,7 @@ import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 plugins {
     id("java")
     id("checkstyle")
-    id("org.jetbrains.intellij.platform") version "2.11.0"
+    id("org.jetbrains.intellij.platform") version "2.13.0"
     id("org.jetbrains.grammarkit") version "2023.3.0.3"
     id("com.diffplug.spotless") version "8.3.0"
     id("net.ltgt.errorprone") version "5.1.0"
