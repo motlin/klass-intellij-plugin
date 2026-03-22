@@ -1,0 +1,109 @@
+# Local overrides to disable HideUtilityClassConstructor and StringFormatted
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.klass.rewrite.CodeCleanup
+displayName: Code cleanup (local override)
+description: Liftwizard CodeCleanup without HideUtilityClassConstructor.
+recipeList:
+    - org.openrewrite.staticanalysis.DefaultComesLast
+    - org.openrewrite.staticanalysis.EmptyBlock
+    - org.openrewrite.staticanalysis.ForLoopControlVariablePostfixOperators
+    - org.openrewrite.staticanalysis.FinalizePrivateFields
+    - org.openrewrite.staticanalysis.TypecastParenPad
+    - org.openrewrite.staticanalysis.ExplicitInitialization
+    - org.openrewrite.staticanalysis.FallThrough
+    # Disabled - adds private constructors to utility classes
+    # - org.openrewrite.staticanalysis.HideUtilityClassConstructor
+    - org.openrewrite.staticanalysis.NeedBraces
+    - org.openrewrite.staticanalysis.ReplaceThreadRunWithThreadStart
+    - org.openrewrite.staticanalysis.ChainStringBuilderAppendCalls
+    - org.openrewrite.staticanalysis.ReplaceStringBuilderWithString
+    - org.openrewrite.java.ShortenFullyQualifiedTypeReferences
+    - org.openrewrite.java.SimplifySingleElementAnnotation
+    - org.openrewrite.staticanalysis.CustomImportOrder
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.klass.rewrite.UpgradeToJava17
+displayName: Migrate to Java 17 (local override)
+description: UpgradeToJava17 without StringFormatted.
+tags:
+    - java17
+preconditions:
+    - org.openrewrite.Singleton
+recipeList:
+    - org.openrewrite.java.migrate.Java8toJava11
+    - org.openrewrite.java.migrate.UpgradeBuildToJava17
+    - org.openrewrite.staticanalysis.InstanceOfPatternMatch
+    - org.openrewrite.staticanalysis.AddSerialAnnotationToSerialVersionUID
+    - org.openrewrite.java.migrate.RemovedRuntimeTraceMethods
+    - org.openrewrite.java.migrate.RemovedToolProviderConstructor
+    - org.openrewrite.java.migrate.RemovedModifierAndConstantBootstrapsConstructors
+    - org.openrewrite.java.migrate.lang.ExplicitRecordImport
+    - org.openrewrite.java.migrate.lang.UseTextBlocks:
+          convertStringsWithoutNewlines: false
+    # Disabled - String.format() -> .formatted() conversion
+    # - org.openrewrite.java.migrate.lang.StringFormatted:
+    #     addParentheses: false
+    - org.openrewrite.java.migrate.DeprecatedJavaxSecurityCert
+    - org.openrewrite.java.migrate.DeprecatedLogRecordThreadID
+    - org.openrewrite.java.migrate.RemovedLegacySunJSSEProviderName
+    - org.openrewrite.java.migrate.Jre17AgentMainPreMainPublic
+    - org.openrewrite.java.migrate.DeprecatedCountStackFramesMethod
+    - org.openrewrite.java.migrate.RemovedZipFinalizeMethods
+    - org.openrewrite.java.migrate.RemovedSSLSessionGetPeerCertificateChainMethodImpl
+    - org.openrewrite.java.migrate.SunNetSslPackageUnavailable
+    - org.openrewrite.java.migrate.RemovedRMIConnectorServerCredentialTypesConstant
+    - org.openrewrite.java.migrate.RemovedFileIOFinalizeMethods
+    - org.openrewrite.java.migrate.UpgradePluginsForJava17
+    - org.openrewrite.java.dependencies.UpgradeDependencyVersion:
+          groupId: com.google.inject
+          artifactId: guice
+          newVersion: 5.x
+    - org.openrewrite.java.dependencies.UpgradeDependencyVersion:
+          groupId: commons-codec
+          artifactId: commons-codec
+          newVersion: 1.17.x
+    - org.openrewrite.maven.UpgradeDependencyVersion:
+          groupId: com.github.spotbugs
+          artifactId: spotbugs-maven-plugin
+          newVersion: 4.9.x
+    - org.openrewrite.maven.UpgradePluginVersion:
+          groupId: com.github.spotbugs
+          artifactId: spotbugs-maven-plugin
+          newVersion: 4.9.x
+    - org.openrewrite.java.dependencies.UpgradeDependencyVersion:
+          groupId: org.mapstruct
+          artifactId: mapstruct*
+          newVersion: 1.6.x
+    - org.openrewrite.java.migrate.AddLombokMapstructBinding
+    - org.openrewrite.java.migrate.EnableLombokAnnotationProcessor
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.klass.rewrite.UpgradeToJava21
+displayName: Migrate to Java 21 (local override)
+description: UpgradeToJava21 using local UpgradeToJava17 override.
+tags:
+    - java21
+preconditions:
+    - org.openrewrite.Singleton
+recipeList:
+    - com.klass.rewrite.UpgradeToJava17
+    - org.openrewrite.java.migrate.UpgradeBuildToJava21
+    - org.openrewrite.staticanalysis.RemoveExtraSemicolons
+    - org.openrewrite.java.migrate.lang.ThreadStopUnsupported
+    - org.openrewrite.java.migrate.net.URLConstructorToURICreate
+    - org.openrewrite.java.migrate.util.SequencedCollection
+    - org.openrewrite.java.migrate.util.UseLocaleOf
+    - org.openrewrite.staticanalysis.ReplaceDeprecatedRuntimeExecMethods
+    - org.openrewrite.github.SetupJavaUpgradeJavaVersion
+    - org.openrewrite.java.migrate.UpgradePluginsForJava21
+    - org.openrewrite.java.migrate.DeleteDeprecatedFinalize
+    - org.openrewrite.java.migrate.RemovedSubjectMethods
+    - org.openrewrite.java.migrate.lang.SwitchCaseAssignmentsToSwitchExpression
+    - org.openrewrite.java.migrate.lang.SwitchCaseReturnsToSwitchExpression
+    - org.openrewrite.java.migrate.lang.SwitchExpressionYieldToArrow
+    - org.openrewrite.java.migrate.lang.IfElseIfConstructToSwitch
+    - org.openrewrite.java.migrate.SwitchPatternMatching
+    - org.openrewrite.java.migrate.lang.NullCheckAsSwitchCase
