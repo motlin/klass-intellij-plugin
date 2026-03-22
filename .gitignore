@@ -26,6 +26,9 @@ idea-flex.skeleton
 # Justfile temp files
 JUSTFILE_BRANCH
 
+# OpenRewrite build artifacts
+org/
+
 # Local config
 .envrc
 .llm/
