@@ -79,10 +79,10 @@ intellijPlatform {
 rewrite {
     activeRecipe(
         "io.liftwizard.staticanalysis.CommonStaticAnalysis",
-        "io.liftwizard.staticanalysis.CodeCleanup",
+        "com.klass.rewrite.CodeCleanup",
         "io.liftwizard.rewrite.LiftwizardRecommendations",
         "io.liftwizard.testing.junit.JupiterBestPractices",
-        "org.openrewrite.java.migrate.UpgradeToJava21",
+        "com.klass.rewrite.UpgradeToJava21",
     )
     activeStyle("io.liftwizard.NoStarImports")
     exclusion(
