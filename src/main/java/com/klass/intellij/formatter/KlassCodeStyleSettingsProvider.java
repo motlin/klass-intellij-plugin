@@ -3,6 +3,7 @@ package com.klass.intellij.formatter;
 import com.intellij.application.options.CodeStyleAbstractConfigurable;
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.application.options.TabbedLanguageCodeStylePanel;
+import com.intellij.lang.Language;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
@@ -12,6 +13,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class KlassCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
+
+	@Nullable @Override
+	public Language getLanguage() {
+		return KlassLanguage.INSTANCE;
+	}
 
 	@Override
 	public CustomCodeStyleSettings createCustomSettings(CodeStyleSettings settings) {
