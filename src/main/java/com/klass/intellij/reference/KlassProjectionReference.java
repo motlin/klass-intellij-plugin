@@ -35,11 +35,14 @@ public class KlassProjectionReference extends PsiPolyVariantReferenceBase<PsiEle
 			return new PsiElementResolveResult[] { new PsiElementResolveResult(this.projection) };
 		}
 
-		ResolveResult[] resolveResults = KlassUtil.findProjections(this.myElement)
-			.stream()
-			.filter((projection) -> projection.getName().equals(this.projectionName))
-			.map(PsiElementResolveResult::new)
-			.toArray(ResolveResult[]::new);
+		ResolveResult[] resolveResults = KlassUtil.preferSamePackage(
+			this.myElement,
+			KlassUtil.findProjections(this.myElement)
+				.stream()
+				.filter((projection) -> projection.getName().equals(this.projectionName))
+				.map(PsiElementResolveResult::new)
+				.toArray(ResolveResult[]::new)
+		);
 		if (resolveResults.length == 1) {
 			this.projection = (KlassProjection) resolveResults[0].getElement();
 		}

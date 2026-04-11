@@ -29,11 +29,12 @@ public class KlassEnumerationReference extends PsiPolyVariantReferenceBase<PsiEl
 
 	@NotNull @Override
 	public ResolveResult[] multiResolve(boolean incompleteCode) {
-		return KlassUtil.findEnumerations(this.myElement)
+		ResolveResult[] results = KlassUtil.findEnumerations(this.myElement)
 			.stream()
 			.filter((klassEnumeration) -> klassEnumeration.getName().equals(this.enumerationName))
 			.map(PsiElementResolveResult::new)
 			.toArray(ResolveResult[]::new);
+		return KlassUtil.preferSamePackage(this.myElement, results);
 	}
 
 	@Nullable @Override

@@ -6,7 +6,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.ResolveResult;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.CachedValue;
@@ -20,8 +22,10 @@ import com.klass.intellij.psi.KlassEnumeration;
 import com.klass.intellij.psi.KlassFile;
 import com.klass.intellij.psi.KlassInterface;
 import com.klass.intellij.psi.KlassKlass;
+import com.klass.intellij.psi.KlassPackage;
 import com.klass.intellij.psi.KlassProjection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -159,5 +163,33 @@ public final class KlassUtil {
 			.forEach((classes) -> Collections.addAll(result, classes));
 
 		return Collections.unmodifiableList(result);
+	}
+
+	public static ResolveResult[] preferSamePackage(PsiElement referenceElement, ResolveResult[] results) {
+		if (results.length <= 1) {
+			return results;
+		}
+
+		String referencePackage = getPackageName(referenceElement);
+		ResolveResult[] samePackageResults = Arrays.stream(results)
+			.filter((result) -> {
+				PsiElement element = result.getElement();
+				return element != null && getPackageName(element).equals(referencePackage);
+			})
+			.toArray(ResolveResult[]::new);
+
+		return samePackageResults.length > 0 ? samePackageResults : results;
+	}
+
+	public static String getPackageName(PsiElement element) {
+		PsiFile file = element.getContainingFile();
+		if (!(file instanceof KlassFile)) {
+			return "";
+		}
+		KlassPackage klassPackage = PsiTreeUtil.getChildOfType(file, KlassPackage.class);
+		if (klassPackage == null) {
+			return "";
+		}
+		return klassPackage.getFullyQualifiedPackageName().getText();
 	}
 }
