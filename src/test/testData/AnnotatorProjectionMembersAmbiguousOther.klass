@@ -1,0 +1,7 @@
+package other
+
+class Base
+{
+    id: Long key;
+    name: String;
+}

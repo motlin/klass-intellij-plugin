@@ -34,6 +34,19 @@ public class KlassAnnotatorTest extends BasePlatformTestCase {
 		myFixture.checkHighlighting(false, false, false);
 	}
 
+	public void testProjectionMemberReferencesAreNotErrors() {
+		myFixture.configureByFile("AnnotatorProjectionMembers.klass");
+		myFixture.checkHighlighting(false, false, false);
+	}
+
+	public void testProjectionMemberReferencesWithAmbiguousClassNames() {
+		myFixture.configureByFiles(
+			"AnnotatorProjectionMembersAmbiguous.klass",
+			"AnnotatorProjectionMembersAmbiguousOther.klass"
+		);
+		myFixture.checkHighlighting(false, false, false);
+	}
+
 	public void testReservedJavaKeywordIsHighlightedAsError() {
 		myFixture.configureByFile("AnnotatorReservedKeyword.klass");
 		myFixture.checkHighlighting(false, false, false);

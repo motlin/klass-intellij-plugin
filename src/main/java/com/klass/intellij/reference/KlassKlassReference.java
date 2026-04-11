@@ -44,7 +44,7 @@ public class KlassKlassReference extends PsiPolyVariantReferenceBase<PsiElement>
 			.map(PsiElementResolveResult::new)
 			.toArray(ResolveResult[]::new);
 		if (klassResults.length > 0) {
-			return klassResults;
+			return KlassUtil.preferSamePackage(this.myElement, klassResults);
 		}
 		ResolveResult[] enumerationResults = KlassUtil.findEnumerations(this.myElement)
 			.stream()
@@ -52,7 +52,7 @@ public class KlassKlassReference extends PsiPolyVariantReferenceBase<PsiElement>
 			.map(PsiElementResolveResult::new)
 			.toArray(ResolveResult[]::new);
 		if (enumerationResults.length > 0) {
-			return enumerationResults;
+			return KlassUtil.preferSamePackage(this.myElement, enumerationResults);
 		}
 
 		if (this.name.endsWith("Version")) {

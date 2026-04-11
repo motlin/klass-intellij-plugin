@@ -41,7 +41,7 @@ public class KlassInterfaceReference extends PsiPolyVariantReferenceBase<PsiElem
 			.map(PsiElementResolveResult::new)
 			.toArray(ResolveResult[]::new);
 		if (interfaceResolveResults.length > 0) {
-			return interfaceResolveResults;
+			return KlassUtil.preferSamePackage(this.myElement, interfaceResolveResults);
 		}
 
 		return new ResolveResult[] {};

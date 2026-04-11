@@ -45,7 +45,7 @@ public class KlassClassifierReference extends PsiPolyVariantReferenceBase<PsiEle
 			.map(PsiElementResolveResult::new)
 			.toArray(ResolveResult[]::new);
 		if (interfaceResolveResults.length > 0) {
-			return interfaceResolveResults;
+			return KlassUtil.preferSamePackage(this.myElement, interfaceResolveResults);
 		}
 
 		ResolveResult[] klassResolveResults = KlassUtil.findClasses(this.myElement)
@@ -54,7 +54,7 @@ public class KlassClassifierReference extends PsiPolyVariantReferenceBase<PsiEle
 			.map(PsiElementResolveResult::new)
 			.toArray(ResolveResult[]::new);
 		if (klassResolveResults.length > 0) {
-			return klassResolveResults;
+			return KlassUtil.preferSamePackage(this.myElement, klassResolveResults);
 		}
 
 		if (this.name.endsWith("Version")) {
