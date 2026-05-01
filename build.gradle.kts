@@ -41,7 +41,7 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
 
-    errorprone("com.google.errorprone:error_prone_core:2.36.0")
+    errorprone("com.google.errorprone:error_prone_core:2.49.0")
 
     rewrite("io.liftwizard:liftwizard-rewrite:2.1.43")
     rewrite("org.openrewrite.recipe:rewrite-static-analysis:2.34.0")
