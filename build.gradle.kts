@@ -47,7 +47,7 @@ dependencies {
     rewrite("org.openrewrite.recipe:rewrite-static-analysis:2.34.1")
     rewrite("org.openrewrite.recipe:rewrite-migrate-java:3.34.0")
     rewrite("org.openrewrite.recipe:rewrite-testing-frameworks:3.34.0")
-    rewrite("org.openrewrite.recipe:rewrite-logging-frameworks:3.27.3")
+    rewrite("org.openrewrite.recipe:rewrite-logging-frameworks:3.28.0")
 }
 
 intellijPlatform {
