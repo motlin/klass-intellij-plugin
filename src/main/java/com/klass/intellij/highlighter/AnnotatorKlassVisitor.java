@@ -325,15 +325,13 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 				.range(klassNombreText)
 				.textAttributes(KlassHighlightingColors.URL_CONSTANT)
 				.create();
-		} else if (parent instanceof KlassExpressionVariableName) {
-			this.annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-				.range(klassNombreText)
-				.textAttributes(KlassHighlightingColors.LOCAL_VARIABLE_ATTRIBUTES)
-				.create();
 		} else {
+			var textAttributes = parent instanceof KlassExpressionVariableName
+				? KlassHighlightingColors.LOCAL_VARIABLE_ATTRIBUTES
+				: KlassHighlightingColors.CLASS_NAME_ATTRIBUTES;
 			this.annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
 				.range(klassNombreText)
-				.textAttributes(KlassHighlightingColors.CLASS_NAME_ATTRIBUTES)
+				.textAttributes(textAttributes)
 				.create();
 		}
 	}
