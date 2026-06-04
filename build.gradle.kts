@@ -44,7 +44,7 @@ dependencies {
     errorprone("com.google.errorprone:error_prone_core:2.36.0")
 
     rewrite("io.liftwizard:liftwizard-rewrite:2.1.43")
-    rewrite("org.openrewrite.recipe:rewrite-static-analysis:2.35.0")
+    rewrite("org.openrewrite.recipe:rewrite-static-analysis:2.36.0")
     rewrite("org.openrewrite.recipe:rewrite-migrate-java:3.36.0")
     rewrite("org.openrewrite.recipe:rewrite-testing-frameworks:3.36.0")
     rewrite("org.openrewrite.recipe:rewrite-logging-frameworks:3.28.0")
