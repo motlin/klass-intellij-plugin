@@ -9,7 +9,7 @@ plugins {
     id("org.jetbrains.grammarkit") version "2023.3.0.3"
     id("com.diffplug.spotless") version "8.6.0"
     id("net.ltgt.errorprone") version "5.1.0"
-    id("org.openrewrite.rewrite") version "7.33.0"
+    id("org.openrewrite.rewrite") version "7.34.0"
 }
 
 group = "com.klass"
