@@ -5,7 +5,6 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 import com.klass.intellij.KlassFileType;
 import com.klass.intellij.KlassLanguage;
-import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 
 public class KlassFile extends PsiFileBase {
@@ -22,10 +21,5 @@ public class KlassFile extends PsiFileBase {
 	@Override
 	public String toString() {
 		return "Klass File";
-	}
-
-	@Override
-	public Icon getIcon(int flags) {
-		return super.getIcon(flags);
 	}
 }

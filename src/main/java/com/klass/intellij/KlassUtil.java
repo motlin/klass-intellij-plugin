@@ -192,4 +192,8 @@ public final class KlassUtil {
 		}
 		return klassPackage.getFullyQualifiedPackageName().getText();
 	}
+
+	private KlassUtil() {
+		throw new AssertionError("Suppress default constructor for noninstantiability");
+	}
 }

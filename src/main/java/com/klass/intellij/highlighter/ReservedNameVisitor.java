@@ -81,10 +81,10 @@ public class ReservedNameVisitor extends KlassVisitor {
 			return;
 		}
 		if (JAVA_KEYWORDS.contains(nombre.getText())) {
-			String message = "Reserved Java keyword";
+			var message = "Reserved Java keyword";
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(nombre).create();
 		} else if (JAVA_LITERALS.contains(nombre.getText())) {
-			String message = "Reserved Java literal";
+			var message = "Reserved Java literal";
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(nombre).create();
 		}
 	}

@@ -58,9 +58,4 @@ public class KlassCompletionContributor extends CompletionContributor {
 
 		// this.extend(CompletionType.BASIC, KEYWORD, keywordCompletionProvider);
 	}
-
-	@Override
-	public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
-		super.fillCompletionVariants(parameters, result);
-	}
 }
