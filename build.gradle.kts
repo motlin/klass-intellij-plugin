@@ -43,7 +43,7 @@ dependencies {
 
     errorprone("com.google.errorprone:error_prone_core:2.36.0")
 
-    rewrite("io.liftwizard:liftwizard-rewrite:2.1.43")
+    rewrite("io.liftwizard:liftwizard-rewrite:2.1.46")
     rewrite("org.openrewrite.recipe:rewrite-static-analysis:2.36.0")
     rewrite("org.openrewrite.recipe:rewrite-migrate-java:3.36.0")
     rewrite("org.openrewrite.recipe:rewrite-testing-frameworks:3.36.0")
@@ -80,7 +80,7 @@ rewrite {
     activeRecipe(
         "io.liftwizard.staticanalysis.CommonStaticAnalysis",
         "io.liftwizard.staticanalysis.CodeCleanup",
-        "io.liftwizard.rewrite.BestPractices",
+        "io.liftwizard.rewrite.LiftwizardRecommendations",
         "io.liftwizard.testing.junit.JupiterBestPractices",
         "org.openrewrite.java.migrate.UpgradeToJava21",
     )

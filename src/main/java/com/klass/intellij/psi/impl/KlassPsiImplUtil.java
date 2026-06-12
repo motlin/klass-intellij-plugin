@@ -297,4 +297,8 @@ public final class KlassPsiImplUtil {
 			}
 		};
 	}
+
+	private KlassPsiImplUtil() {
+		throw new AssertionError("Suppress default constructor for noninstantiability");
+	}
 }

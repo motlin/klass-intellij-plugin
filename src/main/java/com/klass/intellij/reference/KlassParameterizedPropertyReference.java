@@ -27,7 +27,7 @@ public class KlassParameterizedPropertyReference extends PsiPolyVariantReference
 	@NotNull @Override
 	public ResolveResult[] multiResolve(boolean incompleteCode) {
 		PsiElement innerNode = this.myElement.getParent();
-		KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
+		var klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
 		PsiElement type = klassTypedElement.getType();
 		PsiReference reference = type.getReference();
 		if (reference == null) {
@@ -37,7 +37,7 @@ public class KlassParameterizedPropertyReference extends PsiPolyVariantReference
 		if (!(resolved instanceof KlassKlass)) {
 			return new ResolveResult[] {};
 		}
-		KlassKlass klassKlass = (KlassKlass) resolved;
+		var klassKlass = (KlassKlass) resolved;
 
 		ResolveResult[] resolveResults = klassKlass
 			.getClassBlock()

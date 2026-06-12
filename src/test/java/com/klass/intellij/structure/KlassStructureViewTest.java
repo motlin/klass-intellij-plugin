@@ -54,7 +54,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] children = root.getChildren();
 
 		// First top-level item is the Named interface
-		StructureViewTreeElement interfaceElement = (StructureViewTreeElement) children[0];
+		var interfaceElement = (StructureViewTreeElement) children[0];
 		assertInstanceOf(interfaceElement.getValue(), KlassInterface.class);
 
 		ItemPresentation presentation = interfaceElement.getPresentation();
@@ -71,7 +71,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] interfaceMembers = children[0].getChildren();
 		assertEquals("Named interface should have 1 member", 1, interfaceMembers.length);
 
-		StructureViewTreeElement memberElement = (StructureViewTreeElement) interfaceMembers[0];
+		var memberElement = (StructureViewTreeElement) interfaceMembers[0];
 		assertInstanceOf(memberElement.getValue(), KlassPrimitiveTypeProperty.class);
 
 		ItemPresentation memberPresentation = memberElement.getPresentation();
@@ -85,7 +85,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] children = root.getChildren();
 
 		// Second top-level item is the User class
-		StructureViewTreeElement classElement = (StructureViewTreeElement) children[1];
+		var classElement = (StructureViewTreeElement) children[1];
 		assertInstanceOf(classElement.getValue(), KlassKlass.class);
 
 		ItemPresentation presentation = classElement.getPresentation();
@@ -102,13 +102,13 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] classMembers = children[1].getChildren();
 		assertEquals("User class should have 3 members", 3, classMembers.length);
 
-		StructureViewTreeElement nameElement = (StructureViewTreeElement) classMembers[0];
+		var nameElement = (StructureViewTreeElement) classMembers[0];
 		assertEquals("name", nameElement.getPresentation().getPresentableText());
 
-		StructureViewTreeElement emailElement = (StructureViewTreeElement) classMembers[1];
+		var emailElement = (StructureViewTreeElement) classMembers[1];
 		assertEquals("email", emailElement.getPresentation().getPresentableText());
 
-		StructureViewTreeElement ageElement = (StructureViewTreeElement) classMembers[2];
+		var ageElement = (StructureViewTreeElement) classMembers[2];
 		assertEquals("age", ageElement.getPresentation().getPresentableText());
 	}
 
@@ -118,7 +118,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] children = root.getChildren();
 
 		// Third top-level item is the Status enumeration
-		StructureViewTreeElement enumerationElement = (StructureViewTreeElement) children[2];
+		var enumerationElement = (StructureViewTreeElement) children[2];
 		assertInstanceOf(enumerationElement.getValue(), KlassEnumeration.class);
 
 		ItemPresentation presentation = enumerationElement.getPresentation();
@@ -135,11 +135,11 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] enumLiterals = children[2].getChildren();
 		assertEquals("Status enumeration should have 2 literals", 2, enumLiterals.length);
 
-		StructureViewTreeElement activeElement = (StructureViewTreeElement) enumLiterals[0];
+		var activeElement = (StructureViewTreeElement) enumLiterals[0];
 		assertInstanceOf(activeElement.getValue(), KlassEnumerationLiteral.class);
 		assertEquals("ACTIVE", activeElement.getPresentation().getPresentableText());
 
-		StructureViewTreeElement inactiveElement = (StructureViewTreeElement) enumLiterals[1];
+		var inactiveElement = (StructureViewTreeElement) enumLiterals[1];
 		assertInstanceOf(inactiveElement.getValue(), KlassEnumerationLiteral.class);
 		assertEquals("INACTIVE", inactiveElement.getPresentation().getPresentableText());
 	}
@@ -150,7 +150,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] children = root.getChildren();
 
 		// Fourth top-level item is the UserStatus association
-		StructureViewTreeElement associationElement = (StructureViewTreeElement) children[3];
+		var associationElement = (StructureViewTreeElement) children[3];
 		assertInstanceOf(associationElement.getValue(), KlassAssociation.class);
 
 		ItemPresentation presentation = associationElement.getPresentation();
@@ -167,11 +167,11 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] associationEnds = children[3].getChildren();
 		assertEquals("UserStatus association should have 2 ends", 2, associationEnds.length);
 
-		StructureViewTreeElement userEnd = (StructureViewTreeElement) associationEnds[0];
+		var userEnd = (StructureViewTreeElement) associationEnds[0];
 		assertInstanceOf(userEnd.getValue(), KlassAssociationEnd.class);
 		assertEquals("user", userEnd.getPresentation().getPresentableText());
 
-		StructureViewTreeElement statusEnd = (StructureViewTreeElement) associationEnds[1];
+		var statusEnd = (StructureViewTreeElement) associationEnds[1];
 		assertInstanceOf(statusEnd.getValue(), KlassAssociationEnd.class);
 		assertEquals("status", statusEnd.getPresentation().getPresentableText());
 	}
@@ -182,7 +182,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] children = root.getChildren();
 
 		// Fifth top-level item is the UserProjection projection
-		StructureViewTreeElement projectionElement = (StructureViewTreeElement) children[4];
+		var projectionElement = (StructureViewTreeElement) children[4];
 		assertInstanceOf(projectionElement.getValue(), KlassProjection.class);
 
 		ItemPresentation presentation = projectionElement.getPresentation();
@@ -197,7 +197,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] children = root.getChildren();
 
 		// Sixth top-level item is the UserService service group
-		StructureViewTreeElement serviceGroupElement = (StructureViewTreeElement) children[5];
+		var serviceGroupElement = (StructureViewTreeElement) children[5];
 		assertInstanceOf(serviceGroupElement.getValue(), KlassServiceGroup.class);
 
 		ItemPresentation presentation = serviceGroupElement.getPresentation();
@@ -214,7 +214,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] urlGroups = children[5].getChildren();
 		assertEquals("UserService should have 1 url group", 1, urlGroups.length);
 
-		StructureViewTreeElement urlGroupElement = (StructureViewTreeElement) urlGroups[0];
+		var urlGroupElement = (StructureViewTreeElement) urlGroups[0];
 		assertInstanceOf(urlGroupElement.getValue(), KlassUrlGroup.class);
 
 		ItemPresentation urlGroupPresentation = urlGroupElement.getPresentation();
@@ -231,7 +231,7 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		TreeElement[] services = urlGroups[0].getChildren();
 		assertEquals("Url group /user should have 1 service", 1, services.length);
 
-		StructureViewTreeElement serviceElement = (StructureViewTreeElement) services[0];
+		var serviceElement = (StructureViewTreeElement) services[0];
 		ItemPresentation servicePresentation = serviceElement.getPresentation();
 		assertNotNull("Service presentation should not be null", servicePresentation);
 		assertEquals("GET", servicePresentation.getPresentableText());
@@ -242,8 +242,8 @@ public class KlassStructureViewTest extends BasePlatformTestCase {
 		var root = new KlassStructureViewElement(psiFile);
 
 		TreeElement[] children = root.getChildren();
-		for (int i = 0; i < children.length; i++) {
-			StructureViewTreeElement element = (StructureViewTreeElement) children[i];
+		for (var i = 0; i < children.length; i++) {
+			var element = (StructureViewTreeElement) children[i];
 			ItemPresentation presentation = element.getPresentation();
 			assertNotNull("Presentation should not be null for top-level item at index " + i, presentation);
 			assertNotNull(

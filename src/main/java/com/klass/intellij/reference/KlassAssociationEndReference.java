@@ -46,7 +46,7 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 		if (innerNode instanceof KlassProjectionWithAssociationEnd end) {
 			KlassClassifierName classifierName = end.getClassifierName();
 			if (classifierName == null) {
-				KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
+				var klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
 				PsiElement type = klassTypedElement.getType();
 				PsiReference reference = type.getReference();
 				PsiElement resolve = reference.resolve();
@@ -86,7 +86,7 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 			return new ResolveResult[] {};
 		}
 		if (innerNode instanceof KlassExpressionMemberName) {
-			KlassTypedElement klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
+			var klassTypedElement = (KlassTypedElement) innerNode.getParent().getParent().getParent();
 			PsiElement type = klassTypedElement.getType();
 			PsiReference reference = type.getReference();
 			PsiElement resolve = reference.resolve();
@@ -139,8 +139,8 @@ public class KlassAssociationEndReference extends PsiPolyVariantReferenceBase<Ps
 			if (!(sourceResolved instanceof KlassKlass) || !(targetResolved instanceof KlassKlass)) {
 				continue;
 			}
-			KlassKlass sourceKlass = (KlassKlass) sourceResolved;
-			KlassKlass targetKlass = (KlassKlass) targetResolved;
+			var sourceKlass = (KlassKlass) sourceResolved;
+			var targetKlass = (KlassKlass) targetResolved;
 
 			if (this.isInstanceOf(klassKlass, sourceKlass) && targetName.equals(this.associationEndName)) {
 				return new ResolveResult[] { new PsiElementResolveResult(targetEnd) };

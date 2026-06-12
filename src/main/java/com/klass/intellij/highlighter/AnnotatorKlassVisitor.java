@@ -104,15 +104,15 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			.getAssociationEndList();
 		int size = associationEndList.size();
 		if (size == 0) {
-			String message = "Expected association ends.";
+			var message = "Expected association ends.";
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(klassAssociation).create();
 		} else if (size == 1) {
-			String message = "Expected two association ends.";
+			var message = "Expected two association ends.";
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message)
 				.range(associationEndList.getFirst())
 				.create();
 		} else if (size > 2) {
-			String message = "Expected two association ends.";
+			var message = "Expected two association ends.";
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message)
 				.range(associationEndList.get(2))
 				.create();
@@ -250,14 +250,14 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 	public void visitLowerBound(@NotNull KlassLowerBound klassLowerBound) {
 		String text = klassLowerBound.getText();
 		if (!text.equals("0") && !text.equals("1")) {
-			String message = "Expected 0 or 1 for the lower bound.";
+			var message = "Expected 0 or 1 for the lower bound.";
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(klassLowerBound).create();
 		}
 	}
 
 	@Override
 	public void visitMemberName(@NotNull KlassMemberName propertyName) {
-		KlassMemberReference memberReference = (KlassMemberReference) propertyName.getReference();
+		var memberReference = (KlassMemberReference) propertyName.getReference();
 		if (memberReference == null) {
 			return;
 		}
@@ -361,13 +361,12 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 	) {
 		KlassParameterizedPropertyName parameterizedPropertyName =
 			projectionParameterizedPropertyNode.getParameterizedPropertyName();
-		KlassParameterizedPropertyReference parameterizedPropertyReference =
+		var parameterizedPropertyReference =
 			(KlassParameterizedPropertyReference) parameterizedPropertyName.getReference();
 		if (parameterizedPropertyReference == null) {
 			return;
 		}
-		KlassParameterizedProperty parameterizedProperty =
-			(KlassParameterizedProperty) parameterizedPropertyReference.resolve();
+		var parameterizedProperty = (KlassParameterizedProperty) parameterizedPropertyReference.resolve();
 
 		if (parameterizedProperty == null) {
 			return;
@@ -425,7 +424,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 		var visitor = new DetectExpressionThisMember();
 		klassRelationship.getCriteriaExpression().accept(visitor);
 		if (!visitor.hasThisMember()) {
-			String message = "Expected at least one clause with a reference to 'this'.";
+			var message = "Expected at least one clause with a reference to 'this'.";
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(klassRelationship).create();
 		}
 	}
@@ -438,11 +437,11 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			: parameterNames.getParameterNameList();
 
 		KlassProjectionName projectionName = projectionClause.getProjectionName();
-		KlassProjectionReference projectionReference = (KlassProjectionReference) projectionName.getReference();
+		var projectionReference = (KlassProjectionReference) projectionName.getReference();
 		if (projectionReference == null) {
 			return;
 		}
-		KlassProjection projection = (KlassProjection) projectionReference.resolve();
+		var projection = (KlassProjection) projectionReference.resolve();
 		if (projection != null) {
 			MutableList<KlassParameterDeclaration> serviceParameterDeclarations = ListAdapter.adapt(parameterNameList)
 				.collect(KlassParameterName::getReference)
@@ -492,7 +491,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 	public void visitUpperBound(@NotNull KlassUpperBound klassUpperBound) {
 		String text = klassUpperBound.getText();
 		if (!text.equals("1") && !text.equals("*")) {
-			String message = "Expected 1 or * for the upper bound.";
+			var message = "Expected 1 or * for the upper bound.";
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(klassUpperBound).create();
 		}
 	}
@@ -510,7 +509,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 		MutableList<KlassParameterDeclaration> propertyParameterDeclarations,
 		MutableList<KlassParameterDeclaration> projectionParameterDeclarations
 	) {
-		for (int i = 0; i < parameterNameList.size(); i++) {
+		for (var i = 0; i < parameterNameList.size(); i++) {
 			KlassParameterName parameterName = parameterNameList.get(i);
 			KlassParameterDeclaration serviceParameterDeclaration = projectionParameterDeclarations.get(i);
 			KlassParameterDeclaration projectionParameterDeclaration = propertyParameterDeclarations.get(i);
@@ -572,7 +571,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 		if (expressionValue instanceof KlassExpressionMemberName expressionMemberName) {
 			/* TODO: factor in expressionMemberName.getAssociationEndNameList() */
 			KlassMemberName propertyName = expressionMemberName.getMemberName();
-			KlassMemberReference reference = (KlassMemberReference) propertyName.getReference();
+			var reference = (KlassMemberReference) propertyName.getReference();
 			if (reference == null) {
 				return Lists.immutable.<Type>empty().castToList();
 			}
@@ -650,7 +649,7 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			if (reference == null) {
 				return Lists.immutable.<Type>empty().castToList();
 			}
-			KlassParameterDeclaration parameterDeclaration = (KlassParameterDeclaration) reference.resolve();
+			var parameterDeclaration = (KlassParameterDeclaration) reference.resolve();
 			if (parameterDeclaration != null) {
 				List<Type> result = this.getParameterDeclarationType(parameterDeclaration);
 				if (result != null) {

@@ -24,7 +24,7 @@ public final class KlassElementFactory {
 	}
 
 	public static KlassFile createFile(Project project, String text) {
-		String name = "dummy.klass";
+		var name = "dummy.klass";
 		return (KlassFile) PsiFileFactory.getInstance(project).createFileFromText(name, KlassFileType.INSTANCE, text);
 	}
 
@@ -198,7 +198,7 @@ public final class KlassElementFactory {
 			+ "}\n"
 		);
 		KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
-		KlassParameterizedProperty parameterizedProperty = (KlassParameterizedProperty) klassKlass
+		var parameterizedProperty = (KlassParameterizedProperty) klassKlass
 			.getClassBlock()
 			.getClassBody()
 			.getMemberList()
@@ -233,7 +233,7 @@ public final class KlassElementFactory {
 			+ "}\n"
 		);
 		KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
-		KlassProjectionLeafNode projectionLeafNode = (KlassProjectionLeafNode) klassProjection
+		var projectionLeafNode = (KlassProjectionLeafNode) klassProjection
 			.getProjectionBlock()
 			.getProjectionBody()
 			.getProjectionNodeList()
@@ -261,7 +261,7 @@ public final class KlassElementFactory {
 			"package dummy\n" + "\n" + "class DummyClass\n" + "{\n" + "  dummyProperty: " + name + ";\n" + "}\n"
 		);
 		KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
-		KlassEnumerationProperty klassEnumerationProperty = (KlassEnumerationProperty) klassKlass
+		var klassEnumerationProperty = (KlassEnumerationProperty) klassKlass
 			.getClassBlock()
 			.getClassBody()
 			.getMemberList()
@@ -391,14 +391,18 @@ public final class KlassElementFactory {
 			+ "}\n"
 		);
 		KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
-		KlassParameterizedProperty parameterizedProperty = (KlassParameterizedProperty) klassKlass
+		var parameterizedProperty = (KlassParameterizedProperty) klassKlass
 			.getClassBlock()
 			.getClassBody()
 			.getMemberList()
 			.getFirst();
 		KlassCriteriaExpression criteriaExpression = parameterizedProperty.getCriteriaExpression();
 		KlassCriteriaOr criteriaOr = criteriaExpression.getCriteriaAnd().getCriteriaOr();
-		KlassCriteriaOperator criteriaOperator = (KlassCriteriaOperator) criteriaOr.getAtomicCriteria();
+		var criteriaOperator = (KlassCriteriaOperator) criteriaOr.getAtomicCriteria();
 		return (KlassExpressionVariableName) criteriaOperator.getTargetExpressionValue().getExpressionValue();
+	}
+
+	private KlassElementFactory() {
+		throw new AssertionError("Suppress default constructor for noninstantiability");
 	}
 }

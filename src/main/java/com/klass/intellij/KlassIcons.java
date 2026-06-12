@@ -6,4 +6,8 @@ import javax.swing.Icon;
 public final class KlassIcons {
 
 	public static final Icon FILE = IconLoader.getIcon("/com/klass/intellij/icons/jar-gray.png");
+
+	private KlassIcons() {
+		throw new AssertionError("Suppress default constructor for noninstantiability");
+	}
 }

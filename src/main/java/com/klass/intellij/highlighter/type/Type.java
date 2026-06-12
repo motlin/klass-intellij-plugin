@@ -64,7 +64,7 @@ public class Type {
 			return false;
 		}
 
-		Type type = (Type) o;
+		var type = (Type) o;
 
 		if (this.dataTypeType != type.dataTypeType) {
 			return false;

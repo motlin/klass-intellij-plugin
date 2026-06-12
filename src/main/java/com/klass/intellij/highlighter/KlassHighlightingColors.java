@@ -120,4 +120,8 @@ public final class KlassHighlightingColors {
 
 	public static final TextAttributesKey VERB = createTextAttributesKey("VERB", KEYWORD);
 	public static final TextAttributesKey URL_CONSTANT = createTextAttributesKey("URL_CONSTANT", NUMBER);
+
+	private KlassHighlightingColors() {
+		throw new AssertionError("Suppress default constructor for noninstantiability");
+	}
 }
