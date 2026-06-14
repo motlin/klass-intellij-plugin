@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
         inputs:
             next-version:
-                description: "Next development version (e.g., 1.0.1). Leave empty to auto-increment patch."
+                description: 'Next development version (e.g., 1.0.1). Leave empty to auto-increment patch.'
                 required: false
                 type: string
 
