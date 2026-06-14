@@ -30,43 +30,6 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    biome-fix:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: write
-            pull-requests: write
-        steps:
-            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-              with:
-                  ref: ${{ github.event.pull_request.head.ref }}
-                  repository: ${{ github.event.pull_request.head.repo.full_name }}
-                  token: ${{ secrets.GITHUB_TOKEN }}
-
-            - uses: jdx/mise-action@f10502fc09dadecfefb962fff68ce77213930204 # v4.2.2
-
-            - name: Configure Git
-              run: |
-                  git config --global user.name "GitHub Actions"
-                  git config --global user.email "github-actions@github.com"
-
-            - name: Run Biome Format
-              run: |
-                  npx @biomejs/biome format --write
-
-                  if [[ -n $(git status --porcelain) ]]; then
-                    FIX_BRANCH="fix-${{ github.event.pull_request.number }}-biome"
-                    git switch --create $FIX_BRANCH
-
-                    git add --all
-                    git commit --message "Apply Biome formatting."
-                    git push --force origin $FIX_BRANCH
-
-                    echo "Biome formatting fixes have been pushed to the $FIX_BRANCH branch."
-                    exit 1
-                  else
-                    echo "No changes needed by Biome"
-                  fi
-
     pre-commit-fix:
         runs-on: ubuntu-latest
         permissions:
@@ -81,7 +44,7 @@ jobs:
 
             - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
               with:
-                  python-version: "3.x"
+                  python-version: '3.x'
 
             - uses: jdx/mise-action@f10502fc09dadecfefb962fff68ce77213930204 # v4.2.2
 
@@ -108,43 +71,6 @@ jobs:
                     echo "No changes needed by pre-commit"
                   fi
 
-    prettier-fix:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: write
-            pull-requests: write
-        steps:
-            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-              with:
-                  ref: ${{ github.event.pull_request.head.ref }}
-                  repository: ${{ github.event.pull_request.head.repo.full_name }}
-                  token: ${{ secrets.GITHUB_TOKEN }}
-
-            - uses: jdx/mise-action@f10502fc09dadecfefb962fff68ce77213930204 # v4.2.2
-
-            - name: Configure Git
-              run: |
-                  git config --global user.name "GitHub Actions"
-                  git config --global user.email "github-actions@github.com"
-
-            - name: Run Prettier Format
-              run: |
-                  npx prettier --write . '!.github/workflows/**'
-
-                  if [[ -n $(git status --porcelain) ]]; then
-                    FIX_BRANCH="fix-${{ github.event.pull_request.number }}-prettier"
-                    git switch --create $FIX_BRANCH
-
-                    git add --all
-                    git commit --message "Apply Prettier formatting."
-                    git push --force origin $FIX_BRANCH
-
-                    echo "Prettier formatting fixes have been pushed to the $FIX_BRANCH branch."
-                    exit 1
-                  else
-                    echo "No changes needed by Prettier"
-                  fi
-
     rewrite-fix:
         runs-on: ubuntu-latest
         permissions:
@@ -159,8 +85,8 @@ jobs:
 
             - uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
               with:
-                  distribution: "temurin"
-                  java-version: "21"
+                  distribution: 'temurin'
+                  java-version: '21'
 
             - uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
 
