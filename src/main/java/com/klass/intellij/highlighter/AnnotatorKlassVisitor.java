@@ -374,11 +374,6 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			.getParameterNames()
 			.getParameterNameList();
 
-		KlassProjection projection = PsiTreeUtil.getParentOfType(
-			projectionParameterizedPropertyNode,
-			KlassProjection.class
-		);
-
 		MutableList<KlassParameterDeclaration> propertyParameterDeclarations = ListAdapter.adapt(
 			parameterizedProperty
 				.getPropertyParameterDeclarationsParens()
@@ -549,7 +544,6 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 			KlassExpressionLiterals expressionLiteralListNode =
 				((KlassExpressionLiteralsParens) expressionValue).getExpressionLiterals();
 			List<KlassExpressionLiteral> expressionLiteralList = expressionLiteralListNode.getExpressionLiteralList();
-			int size = expressionLiteralList.size();
 			// TODO: Test empty literal list
 			return AnnotatorKlassVisitor.getExpressionLiteralTypes(
 				expressionLiteralList.getFirst(),
