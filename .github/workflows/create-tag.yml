@@ -40,9 +40,11 @@ jobs:
                   git push origin "v$CURRENT_VERSION"
 
             - name: Bump to next version
+              env:
+                  CURRENT_VERSION: ${{ steps.version.outputs.current }}
+                  INPUT_NEXT_VERSION: ${{ inputs.next-version }}
               run: |
-                  CURRENT_VERSION="${{ steps.version.outputs.current }}"
-                  NEXT_VERSION="${{ inputs.next-version }}"
+                  NEXT_VERSION="$INPUT_NEXT_VERSION"
 
                   # Auto-increment patch version if not specified
                   if [ -z "$NEXT_VERSION" ]; then
