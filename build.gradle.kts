@@ -7,7 +7,7 @@ plugins {
     id("checkstyle")
     id("org.jetbrains.intellij.platform") version "2.17.0"
     id("org.jetbrains.grammarkit") version "2023.3.0.3"
-    id("com.diffplug.spotless") version "8.7.0"
+    id("com.diffplug.spotless") version "8.8.0"
     id("net.ltgt.errorprone") version "5.1.0"
     id("org.openrewrite.rewrite") version "7.35.0"
 }
