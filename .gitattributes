@@ -5,5 +5,8 @@
 *.cmd text eol=crlf
 *.bat text eol=crlf
 
+# Dependabot commits generated Gradle wrappers with CRLF bytes
+/gradlew.bat -text whitespace=cr-at-eol
+
 # Keep .idea files visible in diffs (not marked as generated)
 /.idea/** linguist-generated=false
