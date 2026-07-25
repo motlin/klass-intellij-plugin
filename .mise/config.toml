@@ -1,6 +1,6 @@
 [tools]
 java = "temurin-21.0.10+7.0.LTS"
-just = "1.52.0"
+just = "1.56.0"
 node = "24.14.1"
 pre-commit = "4.6.0"
 "npm:markdownlint-cli2" = "0.22.1"
