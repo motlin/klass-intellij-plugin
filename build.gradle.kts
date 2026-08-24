@@ -45,8 +45,8 @@ dependencies {
 
     rewrite("io.liftwizard:liftwizard-rewrite:2.1.49")
     rewrite("org.openrewrite.recipe:rewrite-static-analysis:2.41.1")
-    rewrite("org.openrewrite.recipe:rewrite-migrate-java:3.42.0")
-    rewrite("org.openrewrite.recipe:rewrite-testing-frameworks:3.42.0")
+    rewrite("org.openrewrite.recipe:rewrite-migrate-java:3.42.1")
+    rewrite("org.openrewrite.recipe:rewrite-testing-frameworks:3.42.1")
     rewrite("org.openrewrite.recipe:rewrite-logging-frameworks:3.32.0")
 }
 
