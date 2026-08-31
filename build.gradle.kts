@@ -8,7 +8,7 @@ plugins {
     id("org.jetbrains.intellij.platform") version "2.18.1"
     id("org.jetbrains.grammarkit") version "2023.3.0.4"
     id("com.diffplug.spotless") version "8.10.1"
-    id("net.ltgt.errorprone") version "5.1.0"
+    id("net.ltgt.errorprone") version "5.1.1"
     id("org.openrewrite.rewrite") version "7.39.0"
 }
 
