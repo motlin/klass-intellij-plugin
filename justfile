@@ -6,7 +6,10 @@ default:
     @just --list --unsorted
 
 # Run build and auto-formatters
-precommit: mise gradle-build
+verify: mise gradle-build
+
+# Deprecated alias for `verify`
+precommit: verify
 
 # `mise install`
 mise:
@@ -34,7 +37,7 @@ generate:
     ./gradlew generateLexer generateParser
 
 # Verify the IntelliJ plugin
-verify:
+verify-plugin:
     ./gradlew verifyPlugin
 
 # Override this with a command called `woof` which notifies you in whatever ways you prefer.
