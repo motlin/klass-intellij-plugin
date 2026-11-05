@@ -47,16 +47,16 @@ public final class KlassElementFactory {
 	public static KlassAssociation createAssociation(Project project, String name) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			""
-			+ "package dummy\n"
-			+ "\n"
-			+ "association "
-			+ name
-			+ "\n"
-			+ "{\n"
-			+ "    firstSide: Dummy[1..1];\n"
-			+ "    secondSide: Dummy[0..*];\n"
-			+ "}"
+			"" +
+			"package dummy\n" +
+			"\n" +
+			"association " +
+			name +
+			"\n" +
+			"{\n" +
+			"    firstSide: Dummy[1..1];\n" +
+			"    secondSide: Dummy[0..*];\n" +
+			"}"
 		);
 		return file.findChildByClass(KlassAssociation.class);
 	}
@@ -83,17 +83,17 @@ public final class KlassElementFactory {
 	public static KlassParameterizedProperty createParameterizedProperty(Project project, String name) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			"package dummy\n"
-			+ "\n"
-			+ "class DummyClass\n"
-			+ "{\n"
-			+ "  "
-			+ name
-			+ "(): DummyClass[1..1]\n"
-			+ "    {\n"
-			+ "        this.id == DummyClass.id\n"
-			+ "    }\n"
-			+ "}\n"
+			"package dummy\n" +
+			"\n" +
+			"class DummyClass\n" +
+			"{\n" +
+			"  " +
+			name +
+			"(): DummyClass[1..1]\n" +
+			"    {\n" +
+			"        this.id == DummyClass.id\n" +
+			"    }\n" +
+			"}\n"
 		);
 		KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
 		return (KlassParameterizedProperty) klassKlass.getClassBlock().getClassBody().getMemberList().getFirst();
@@ -105,14 +105,14 @@ public final class KlassElementFactory {
 	) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			"package dummy\n"
-			+ "\n"
-			+ "interface DummyInterface\n"
-			+ "{\n"
-			+ "  "
-			+ name
-			+ "(): DummyClass[1..1];\n"
-			+ "}\n"
+			"package dummy\n" +
+			"\n" +
+			"interface DummyInterface\n" +
+			"{\n" +
+			"  " +
+			name +
+			"(): DummyClass[1..1];\n" +
+			"}\n"
 		);
 		KlassInterface klassInterface = file.findChildByClass(KlassInterface.class);
 		return (KlassParameterizedPropertySignature) klassInterface
@@ -125,15 +125,15 @@ public final class KlassElementFactory {
 	public static KlassAssociationEnd createAssociationEnd(Project project, String name) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			"package dummy\n"
-			+ "\n"
-			+ "association DummyAssociation\n"
-			+ "{\n"
-			+ "  "
-			+ name
-			+ ": DummyType[0..1];\n"
-			+ "  target: DummyType[0..*];\n"
-			+ "}\n"
+			"package dummy\n" +
+			"\n" +
+			"association DummyAssociation\n" +
+			"{\n" +
+			"  " +
+			name +
+			": DummyType[0..1];\n" +
+			"  target: DummyType[0..*];\n" +
+			"}\n"
 		);
 		KlassAssociation klassAssociation = file.findChildByClass(KlassAssociation.class);
 		return klassAssociation.getAssociationBlock().getAssociationBody().getAssociationEndList().getFirst();
@@ -142,14 +142,14 @@ public final class KlassElementFactory {
 	public static KlassAssociationEndSignature createAssociationEndSignature(Project project, String name) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			"package dummy\n"
-			+ "\n"
-			+ "interface DummyInterface\n"
-			+ "{\n"
-			+ "  "
-			+ name
-			+ ": DummyClass[1..1];\n"
-			+ "}\n"
+			"package dummy\n" +
+			"\n" +
+			"interface DummyInterface\n" +
+			"{\n" +
+			"  " +
+			name +
+			": DummyClass[1..1];\n" +
+			"}\n"
 		);
 		KlassInterface klassInterface = file.findChildByClass(KlassInterface.class);
 		return (KlassAssociationEndSignature) klassInterface
@@ -162,21 +162,21 @@ public final class KlassElementFactory {
 	public static KlassAssociationEnd createAssociationEndType(Project project, String name) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			"package dummy\n"
-			+ "\n"
-			+ "association DummyAssociation\n"
-			+ "{\n"
-			+ "  source: "
-			+ name
-			+ "[0..1];\n"
-			+ "  target: "
-			+ name
-			+ "[0..*];\n"
-			+ "\n"
-			+ "  relationship: this.id == "
-			+ name
-			+ ".sourceId\n"
-			+ "}\n"
+			"package dummy\n" +
+			"\n" +
+			"association DummyAssociation\n" +
+			"{\n" +
+			"  source: " +
+			name +
+			"[0..1];\n" +
+			"  target: " +
+			name +
+			"[0..*];\n" +
+			"\n" +
+			"  relationship: this.id == " +
+			name +
+			".sourceId\n" +
+			"}\n"
 		);
 		KlassAssociation klassAssociation = file.findChildByClass(KlassAssociation.class);
 		return klassAssociation.getAssociationBlock().getAssociationBody().getAssociationEndList().getFirst();
@@ -185,17 +185,17 @@ public final class KlassElementFactory {
 	public static KlassParameterDeclaration createParameterDeclaration(Project project, String name) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			"package dummy\n"
-			+ "\n"
-			+ "class Dummy\n"
-			+ "{\n"
-			+ "    dummyProperty("
-			+ name
-			+ ": String[1..1]): Dummy[0..*]\n"
-			+ "    {\n"
-			+ "        this.id == Dummy.id\n"
-			+ "    }\n"
-			+ "}\n"
+			"package dummy\n" +
+			"\n" +
+			"class Dummy\n" +
+			"{\n" +
+			"    dummyProperty(" +
+			name +
+			": String[1..1]): Dummy[0..*]\n" +
+			"    {\n" +
+			"        this.id == Dummy.id\n" +
+			"    }\n" +
+			"}\n"
 		);
 		KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
 		var parameterizedProperty = (KlassParameterizedProperty) klassKlass
@@ -223,14 +223,14 @@ public final class KlassElementFactory {
 	public static KlassMemberName createPropertyName(Project project, String newElementName) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			"package dummy\n"
-			+ "\n"
-			+ "projection DummyProjection on DummyClass\n"
-			+ "{\n"
-			+ "  "
-			+ newElementName
-			+ ": \"Dummy Header\",\n"
-			+ "}\n"
+			"package dummy\n" +
+			"\n" +
+			"projection DummyProjection on DummyClass\n" +
+			"{\n" +
+			"  " +
+			newElementName +
+			": \"Dummy Header\",\n" +
+			"}\n"
 		);
 		KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
 		var projectionLeafNode = (KlassProjectionLeafNode) klassProjection
@@ -299,16 +299,16 @@ public final class KlassElementFactory {
 	public static KlassAssociationEndName createAssociationEndName(Project project, String newElementName) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			"package dummy\n"
-			+ "\n"
-			+ "projection DummyProjection on DummyClass\n"
-			+ "{\n"
-			+ "    "
-			+ newElementName
-			+ ":\n"
-			+ "    {\n"
-			+ "    },\n"
-			+ "}\n"
+			"package dummy\n" +
+			"\n" +
+			"projection DummyProjection on DummyClass\n" +
+			"{\n" +
+			"    " +
+			newElementName +
+			":\n" +
+			"    {\n" +
+			"    },\n" +
+			"}\n"
 		);
 		KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
 		return (
@@ -326,16 +326,16 @@ public final class KlassElementFactory {
 	) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			"package dummy\n"
-			+ "\n"
-			+ "projection DummyProjection on DummyClass\n"
-			+ "{\n"
-			+ "    "
-			+ newElementName
-			+ "():\n"
-			+ "    {\n"
-			+ "    },\n"
-			+ "}\n"
+			"package dummy\n" +
+			"\n" +
+			"projection DummyProjection on DummyClass\n" +
+			"{\n" +
+			"    " +
+			newElementName +
+			"():\n" +
+			"    {\n" +
+			"    },\n" +
+			"}\n"
 		);
 		KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
 		return (
@@ -350,16 +350,16 @@ public final class KlassElementFactory {
 	public static KlassParameterName createParameterName(Project project, String newElementName) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			"package dummy\n"
-			+ "\n"
-			+ "projection DummyProjection on DummyClass\n"
-			+ "{\n"
-			+ "    dummyParameterizedProperty("
-			+ newElementName
-			+ "):\n"
-			+ "    {\n"
-			+ "    },\n"
-			+ "}\n"
+			"package dummy\n" +
+			"\n" +
+			"projection DummyProjection on DummyClass\n" +
+			"{\n" +
+			"    dummyParameterizedProperty(" +
+			newElementName +
+			"):\n" +
+			"    {\n" +
+			"    },\n" +
+			"}\n"
 		);
 		KlassProjection klassProjection = file.findChildByClass(KlassProjection.class);
 		KlassProjectionNode klassProjectionNode = klassProjection
@@ -376,19 +376,19 @@ public final class KlassElementFactory {
 	public static KlassExpressionVariableName createExpressionVariableName(Project project, String newElementName) {
 		KlassFile file = KlassElementFactory.createFile(
 			project,
-			"package dummy\n"
-			+ "\n"
-			+ "class Dummy\n"
-			+ "{\n"
-			+ "    dummyProperty("
-			+ newElementName
-			+ ": Long[1..1]): Dummy[0..*]\n"
-			+ "    {\n"
-			+ "        this.id == "
-			+ newElementName
-			+ "\n"
-			+ "    }\n"
-			+ "}\n"
+			"package dummy\n" +
+			"\n" +
+			"class Dummy\n" +
+			"{\n" +
+			"    dummyProperty(" +
+			newElementName +
+			": Long[1..1]): Dummy[0..*]\n" +
+			"    {\n" +
+			"        this.id == " +
+			newElementName +
+			"\n" +
+			"    }\n" +
+			"}\n"
 		);
 		KlassKlass klassKlass = file.findChildByClass(KlassKlass.class);
 		var parameterizedProperty = (KlassParameterizedProperty) klassKlass

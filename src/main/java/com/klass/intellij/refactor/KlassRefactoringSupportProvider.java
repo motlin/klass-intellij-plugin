@@ -19,10 +19,10 @@ public class KlassRefactoringSupportProvider extends RefactoringSupportProvider 
 	@Override
 	public boolean isSafeDeleteAvailable(@NotNull PsiElement element) {
 		return (
-			element instanceof KlassNombre
-			|| element instanceof KlassKlass
-			|| element instanceof KlassAssociation
-			|| element instanceof KlassEnumeration
+			element instanceof KlassNombre ||
+			element instanceof KlassKlass ||
+			element instanceof KlassAssociation ||
+			element instanceof KlassEnumeration
 		);
 	}
 
@@ -38,8 +38,8 @@ public class KlassRefactoringSupportProvider extends RefactoringSupportProvider 
 
 	public static boolean mayRenameInplace(PsiElement elementToRename, PsiElement nameSuggestionContext) {
 		if (
-			nameSuggestionContext != null
-			&& nameSuggestionContext.getContainingFile() != elementToRename.getContainingFile()
+			nameSuggestionContext != null &&
+			nameSuggestionContext.getContainingFile() != elementToRename.getContainingFile()
 		) {
 			return false;
 		}

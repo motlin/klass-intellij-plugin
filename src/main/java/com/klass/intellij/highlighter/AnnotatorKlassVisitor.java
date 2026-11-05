@@ -146,8 +146,8 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 		}
 
 		if (
-			!possibleSourceTypes.isEmpty()
-			&& ListAdapter.adapt(possibleSourceTypes).allSatisfy((type) -> type.getMultiplicity().isToMany())
+			!possibleSourceTypes.isEmpty() &&
+			ListAdapter.adapt(possibleSourceTypes).allSatisfy((type) -> type.getMultiplicity().isToMany())
 		) {
 			String message = String.format("Invalid multiplicity '%s'.", possibleSourceTypes.getFirst());
 			this.annotationHolder.newAnnotation(HighlightSeverity.ERROR, message).range(criteriaOperator).create();
@@ -269,9 +269,9 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 		}
 		PsiElement resolved = resolveResults[0].getElement();
 		if (
-			resolved instanceof KlassPrimitiveTypeProperty
-			|| resolved instanceof KlassEnumerationProperty
-			|| resolved instanceof KlassClassModifier
+			resolved instanceof KlassPrimitiveTypeProperty ||
+			resolved instanceof KlassEnumerationProperty ||
+			resolved instanceof KlassClassModifier
 		) {
 			this.annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
 				.range(propertyName)
@@ -296,10 +296,10 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 				.textAttributes(KlassHighlightingColors.ENUM_NAME_ATTRIBUTES)
 				.create();
 		} else if (
-			parent instanceof KlassMember
-			|| parent instanceof KlassAssociationEnd
-			|| parent instanceof KlassAssociationEndName
-			|| parent instanceof KlassParameterizedPropertyName
+			parent instanceof KlassMember ||
+			parent instanceof KlassAssociationEnd ||
+			parent instanceof KlassAssociationEndName ||
+			parent instanceof KlassParameterizedPropertyName
 		) {
 			this.annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
 				.range(klassNombreText)
@@ -538,8 +538,8 @@ public class AnnotatorKlassVisitor extends KlassVisitor {
 		}
 
 		if (
-			expressionValue instanceof KlassExpressionLiteralsParens
-			|| expressionValue instanceof KlassExpressionLiterals
+			expressionValue instanceof KlassExpressionLiteralsParens ||
+			expressionValue instanceof KlassExpressionLiterals
 		) {
 			KlassExpressionLiterals expressionLiteralListNode =
 				((KlassExpressionLiteralsParens) expressionValue).getExpressionLiterals();
