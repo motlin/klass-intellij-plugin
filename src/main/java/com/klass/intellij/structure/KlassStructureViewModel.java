@@ -56,12 +56,12 @@ public class KlassStructureViewModel extends StructureViewModelBase implements E
 	public boolean isAlwaysShowsPlus(StructureViewTreeElement element) {
 		Object value = element.getValue();
 		return (
-			value instanceof KlassKlass
-			|| value instanceof KlassInterface
-			|| value instanceof KlassAssociation
-			|| value instanceof KlassEnumeration
-			|| value instanceof KlassServiceGroup
-			|| value instanceof KlassUrlGroup
+			value instanceof KlassKlass ||
+			value instanceof KlassInterface ||
+			value instanceof KlassAssociation ||
+			value instanceof KlassEnumeration ||
+			value instanceof KlassServiceGroup ||
+			value instanceof KlassUrlGroup
 		);
 	}
 
@@ -69,13 +69,13 @@ public class KlassStructureViewModel extends StructureViewModelBase implements E
 	public boolean isAlwaysLeaf(StructureViewTreeElement element) {
 		Object value = element.getValue();
 		return (
-			value instanceof KlassPrimitiveTypeProperty
-			|| value instanceof KlassEnumerationProperty
-			|| value instanceof KlassParameterizedProperty
-			|| value instanceof KlassParameterizedPropertySignature
-			|| value instanceof KlassAssociationEnd
-			|| value instanceof KlassEnumerationLiteral
-			|| value instanceof KlassService
+			value instanceof KlassPrimitiveTypeProperty ||
+			value instanceof KlassEnumerationProperty ||
+			value instanceof KlassParameterizedProperty ||
+			value instanceof KlassParameterizedPropertySignature ||
+			value instanceof KlassAssociationEnd ||
+			value instanceof KlassEnumerationLiteral ||
+			value instanceof KlassService
 		);
 	}
 }
