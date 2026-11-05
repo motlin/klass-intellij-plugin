@@ -33,8 +33,8 @@
 	// Default: 80
 	printWidth: 120,
 
-	// prettier-plugin-java: Position of binary operators in wrapped lines
+	// prettier-plugin-java: Position of binary and ternary operators in wrapped lines
 	// Default: "end"
 	// Options: "start" | "end"
-	experimentalOperatorPosition: 'start',
+	experimentalOperatorPosition: 'end',
 }
