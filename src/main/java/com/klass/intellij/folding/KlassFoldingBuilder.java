@@ -68,13 +68,13 @@ public class KlassFoldingBuilder implements FoldingBuilder, DumbAware {
 
 	private static boolean hasBlock(PsiElement psiElement) {
 		return (
-			psiElement instanceof KlassClassBlock
-			|| psiElement instanceof KlassInterfaceBlock
-			|| psiElement instanceof KlassEnumerationBlock
-			|| psiElement instanceof KlassAssociationBlock
-			|| psiElement instanceof KlassProjectionBlock
-			|| psiElement instanceof KlassServiceGroupBlock
-			|| psiElement instanceof KlassServiceBlock
+			psiElement instanceof KlassClassBlock ||
+			psiElement instanceof KlassInterfaceBlock ||
+			psiElement instanceof KlassEnumerationBlock ||
+			psiElement instanceof KlassAssociationBlock ||
+			psiElement instanceof KlassProjectionBlock ||
+			psiElement instanceof KlassServiceGroupBlock ||
+			psiElement instanceof KlassServiceBlock
 		);
 	}
 
@@ -128,13 +128,13 @@ public class KlassFoldingBuilder implements FoldingBuilder, DumbAware {
 	public String getPlaceholderText(@NotNull ASTNode node) {
 		IElementType type = node.getElementType();
 		if (
-			type == KlassTypes.CLASS_BLOCK
-			|| type == KlassTypes.INTERFACE_BLOCK
-			|| type == KlassTypes.ENUMERATION_BLOCK
-			|| type == KlassTypes.ASSOCIATION_BLOCK
-			|| type == KlassTypes.PROJECTION_BLOCK
-			|| type == KlassTypes.SERVICE_GROUP_BLOCK
-			|| type == KlassTypes.SERVICE_BLOCK
+			type == KlassTypes.CLASS_BLOCK ||
+			type == KlassTypes.INTERFACE_BLOCK ||
+			type == KlassTypes.ENUMERATION_BLOCK ||
+			type == KlassTypes.ASSOCIATION_BLOCK ||
+			type == KlassTypes.PROJECTION_BLOCK ||
+			type == KlassTypes.SERVICE_GROUP_BLOCK ||
+			type == KlassTypes.SERVICE_BLOCK
 		) {
 			return "{...}";
 		}

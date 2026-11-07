@@ -150,11 +150,11 @@ public class KlassBlock extends AbstractBlock {
 
 		IElementType parentElementType = this.myNode.getElementType();
 		if (
-			parentElementType == KlassTypes.PRIMITIVE_TYPE_PROPERTY
-			|| parentElementType == KlassTypes.ENUMERATION_PROPERTY
-			|| parentElementType == KlassTypes.ASSOCIATION_END_SIGNATURE
-			|| parentElementType == KlassTypes.PARAMETERIZED_PROPERTY_SIGNATURE
-			|| parentElementType == KlassTypes.ASSOCIATION_END
+			parentElementType == KlassTypes.PRIMITIVE_TYPE_PROPERTY ||
+			parentElementType == KlassTypes.ENUMERATION_PROPERTY ||
+			parentElementType == KlassTypes.ASSOCIATION_END_SIGNATURE ||
+			parentElementType == KlassTypes.PARAMETERIZED_PROPERTY_SIGNATURE ||
+			parentElementType == KlassTypes.ASSOCIATION_END
 		) {
 			return this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS ? COLON_ALIGNMENT : null;
 		}
@@ -170,11 +170,11 @@ public class KlassBlock extends AbstractBlock {
 		}
 
 		if (
-			parentElementType == KlassTypes.PROJECTION
-			|| parentElementType == KlassTypes.PROJECTION_ASSOCIATION_END_NODE
-			|| parentElementType == KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE
-			|| parentElementType == KlassTypes.PROJECTION_LEAF_NODE
-			|| parentElementType == KlassTypes.PROJECTION_PROJECTION_NODE
+			parentElementType == KlassTypes.PROJECTION ||
+			parentElementType == KlassTypes.PROJECTION_ASSOCIATION_END_NODE ||
+			parentElementType == KlassTypes.PROJECTION_PARAMETERIZED_PROPERTY_NODE ||
+			parentElementType == KlassTypes.PROJECTION_LEAF_NODE ||
+			parentElementType == KlassTypes.PROJECTION_PROJECTION_NODE
 		) {
 			return this.commonSettings.ALIGN_GROUP_FIELD_DECLARATIONS ? this.projectionColonAlignment : null;
 		}
